@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>JS Client</title>
+  <script src="dist/addsearch-js-client.js"></script>
+</head>
+<body>
+
+<script>
+  var addsearch = new AddSearchClient('1bed1ffde465fddba2a53ad3ce69e6c2');
+  var instereo = new AddSearchClient('f4423a9eae6c50bec0a536791cb229e1');
+  instereo.search('a');
+  addsearch.search('price');
+  addsearch.search('api');
+  addsearch.suggest('api');
+
+  instereo.search('a');
+  addsearch.suggest('a');
+  addsearch.suggest('rest');
+</script>
+
+</body>
+</html>
