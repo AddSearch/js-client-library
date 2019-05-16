@@ -5,7 +5,7 @@
   "main": "index.js",
   "private": true,
   "scripts": {
-    "test": "./node_modules/mocha/bin/mocha --compilers js:babel-core/register",
+    "test": "./node_modules/mocha/bin/mocha -r esm --compilers js:babel-core/register",
     "build": "./node_modules/webpack-cli/bin/webpack.js"
   },
   "author": "",
@@ -17,9 +17,12 @@
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.4",
     "babel-preset-env": "^1.6.1",
+    "esm": "^3.2.22",
+    "fetch-mock": "^7.3.3",
     "mocha": "^5.0.5",
+    "node-fetch": "^2.5.0",
+    "uglify-js": "1.3.5",
     "webpack": "4.4.1",
-    "webpack-cli": "^2.0.13",
-    "uglify-js": "1.3.5"
+    "webpack-cli": "^2.0.13"
   }
 }

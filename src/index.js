@@ -1,5 +1,6 @@
 import 'whatwg-fetch'
-import { executeApiFetch } from './apifetch';
+import { settings, setPageSize } from './settings';
+import { executeApiFetch, executeApiPost } from './apifetch';
 
 function client(sitekey) {
   this.sitekey = sitekey;
@@ -9,8 +10,9 @@ function client(sitekey) {
    *
    * @param keyword
    */
-  this.search = function(keyword) {
-    this.apiFetch('search', keyword);
+  this.search = function(keyword, cb) {
+    //this.apiFetch('search', keyword, cb);
+    executeApiPost(this.sitekey, settings, keyword, cb);
   };
 
 
@@ -19,15 +21,11 @@ function client(sitekey) {
    *
    * @param keyword
    */
-  this.suggest = function(keyword) {
-    this.apiFetch('suggest', keyword);
+  this.suggest = function(keyword, cb) {
+    this.executeApiFetch('suggest', keyword, cb);
   };
 
-
-  /**
-   * Fetch from the API
-   */
-  this.apiFetch = executeApiFetch;
+  this.setPageSize = setPageSize;
 }
 
 module.exports = client;
