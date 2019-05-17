@@ -1,15 +1,40 @@
 {
-  "name": "js-client",
-  "version": "1.0.0",
-  "description": "",
+  "name": "addsearch-js-client",
+  "version": "0.1.0",
+  "description": "AddSearch API JavaScript client",
   "main": "index.js",
+  "jsdelivr": "./dist/addsearch-js-client.min.js",
   "private": true,
   "scripts": {
     "test": "./node_modules/mocha/bin/mocha -r esm --compilers js:babel-core/register",
     "build": "./node_modules/webpack-cli/bin/webpack.js"
   },
-  "author": "",
-  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/AddSearch/js-client-library.git"
+  },
+  "keywords": [
+    "addsearch",
+    "search",
+    "search api",
+    "autocomplete",
+    "instant search",
+    "predictive search",
+    "search suggestions"
+  ],
+  "homepage": "https://www.addsearch.com/",
+  "bugs": "https://github.com/AddSearch/js-client-library/issues",
+  "author": {
+    "name": "AddSearch",
+    "url": "https://www.addsearch.com"
+  },
+  "contributors": [
+    {
+      "name": "AddSearch Developers <developers@addsearch.com>",
+      "url": "https://www.addsearch.com"
+    }
+  ],
+  "license": "MIT",
   "dependencies": {
     "whatwg-fetch": "^3.0.0"
   },
