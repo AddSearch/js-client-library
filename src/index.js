@@ -22,7 +22,7 @@ function client(sitekey) {
    * @param keyword
    */
   this.suggest = function(keyword, cb) {
-    this.executeApiFetch('suggest', keyword, cb);
+    executeApiFetch('suggest', keyword, cb);
   };
 
   this.setPageSize = setPageSize;

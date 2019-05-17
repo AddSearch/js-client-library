@@ -6,10 +6,9 @@ export function executeApiFetch(type, keyword, cb) {
     .then(function(response) {
       return response.json();
     }).then(function(json) {
-    //console.log('parsed json', json);
     cb(json);
   }).catch(function(ex) {
-    console.log('parsing failed', ex);
+    console.log('JSON parsing failed', ex);
   });
 };
 
