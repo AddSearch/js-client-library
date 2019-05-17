@@ -20,7 +20,7 @@ export function executeApiPost(sitekey, settings, keyword, cb) {
   var payload = settings || {};
   payload.term = keyword;
 
-  fetch('https://apitest.addsearch.com/v1/search/' + sitekey, {
+  fetch('https://api.addsearch.com/v1/search/' + sitekey, {
           method: 'POST',
           body: JSON.stringify(payload),
           headers:{
