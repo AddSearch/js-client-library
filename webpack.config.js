@@ -1,7 +1,7 @@
 module.exports = {
   entry: './src/index.js',
   output: {
-    filename: 'addsearch-js-client.js',
+    filename: 'addsearch-js-client.min.js',
     library: 'AddSearchClient',
     libraryTarget: 'global'
   },
