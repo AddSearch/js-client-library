@@ -19,7 +19,7 @@ var cb = function(res) {
 client.search('keyword', cb);
 
 // Get search suggestions for a keyword
-client.suggest('api');
+client.suggest('api', cb);
 ```
 
 ## Browser support
