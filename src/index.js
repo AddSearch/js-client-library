@@ -1,8 +1,6 @@
 'use strict';
 
-require ('whatwg-fetch');
 var executeApiFetch = require ('./apifetch');
-//import { executeApiFetch } from './apifetch';
 
 var client = function(sitekey) {
   this.sitekey = sitekey;

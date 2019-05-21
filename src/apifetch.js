@@ -1,5 +1,8 @@
 'use strict';
 
+require('es6-promise').polyfill();
+require('isomorphic-fetch');
+
 /**
  * Fetch search results of search suggestions from the Addsearch API
  */
