@@ -6,7 +6,9 @@ from your JavaScript code. This client works on web browsers and with Node.js.
 
 ## Quick Start
 ```js
+// Callback function
 var cb = function(res) {
+  // Print results to console
   console.log(res);
 }
 
@@ -16,7 +18,16 @@ var client = new AddSearchClient('YOUR PUBLIC SITEKEY');
 client.search('keyword', cb);
 ```
 
-## How to develop
+## Browser support
+The client is tested on following browsers
+- Chrome
+- Firefox
+- Edge
+- Safari 6.1+
+- Internet Explorer 10+
+
+## Development
+To modify this client library, clone this repository to your computer and execute following commands.
 ### Install dependencies
 ```sh
 npm install
