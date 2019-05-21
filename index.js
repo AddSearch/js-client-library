@@ -1,3 +1,3 @@
 "use strict"
 
-module.exports = require("./dist/node.js")
+module.exports = require("./src/index.js")
