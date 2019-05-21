@@ -6,16 +6,18 @@ from your JavaScript code. This client works on web browsers and with Node.js.
 
 ## Quick Start
 ```js
+// Create client with your 32-character SITEKEY
+var client = new AddSearchClient('YOUR PUBLIC SITEKEY');
+
 // Callback function
 var cb = function(res) {
   // Print results to console
   console.log(res);
 }
 
-// Create client with your 32-character SITEKEY
-var client = new AddSearchClient('YOUR PUBLIC SITEKEY');
 // Execute search. Callback function cb will be called with search results
 client.search('keyword', cb);
+
 // Get search suggestions for a keyword
 client.suggest('api');
 ```
