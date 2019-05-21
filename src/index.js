@@ -1,7 +1,10 @@
-import 'whatwg-fetch'
-import { executeApiFetch } from './apifetch';
+'use strict';
 
-function client(sitekey) {
+require ('whatwg-fetch');
+var executeApiFetch = require ('./apifetch');
+//import { executeApiFetch } from './apifetch';
+
+var client = function(sitekey) {
   this.sitekey = sitekey;
 
   /**
@@ -10,7 +13,7 @@ function client(sitekey) {
    * @param keyword
    */
   this.search = function(keyword, cb) {
-    this.executeApiFetch('search', keyword, cb);
+    this.apiFetch('search', keyword, cb);
   };
 
 
@@ -20,14 +23,14 @@ function client(sitekey) {
    * @param keyword
    */
   this.suggest = function(keyword, cb) {
-    this.executeApiFetch('suggest', keyword, cb);
+    this.apiFetch('suggest', keyword, cb);
   };
 
 
   /**
    *
    */
-  this.executeApiFetch = executeApiFetch;
+  this.apiFetch = executeApiFetch;
 }
 
 module.exports = client;

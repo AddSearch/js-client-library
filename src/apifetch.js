@@ -1,7 +1,9 @@
+'use strict';
+
 /**
  * Fetch search results of search suggestions from the Addsearch API
  */
-export function executeApiFetch(type, keyword, cb) {
+var executeApiFetch = function(type, keyword, cb) {
 
   const RESPONSE_BAD_REQUEST = 400;
   const RESPONSE_SERVER_ERROR = 500;
@@ -31,3 +33,4 @@ export function executeApiFetch(type, keyword, cb) {
     cb({error: {response: RESPONSE_SERVER_ERROR, message: 'invalid server response'}});
   });
 };
+module.exports = executeApiFetch;
