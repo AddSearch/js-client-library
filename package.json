@@ -4,7 +4,6 @@
   "description": "AddSearch API JavaScript client",
   "main": "index.js",
   "jsdelivr": "./dist/addsearch-js-client.min.js",
-  "private": true,
   "scripts": {
     "test": "./node_modules/mocha/bin/mocha -r esm --compilers js:babel-core/register",
     "build": "./node_modules/webpack-cli/bin/webpack.js"
