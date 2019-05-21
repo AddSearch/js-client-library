@@ -15,24 +15,13 @@ describe('apifetch', function() {
       });
     });
 
-    it('should return server error when response is not JSON', function() {
-      fetchMock.config.overwriteRoutes = true;
-      fetchMock.get('*', 'foo');
-      const expect = {response: 500};
-
-      apifetch.executeApiFetch('search', 'keyword', (res) => {
-        assert.equal(res.response, expect.response);
-      });
-    });
-
-
     it('should return client error when request type is invalid', function() {
       fetchMock.config.overwriteRoutes = true;
       fetchMock.get('*', 'foo');
-      const expect = {response: 400};
+      const expect = 400;
 
       apifetch.executeApiFetch('ping', 'keyword', (res) => {
-        assert.equal(res.response, expect.response);
+        assert.equal(res.error.response, expect);
       });
     });
 
