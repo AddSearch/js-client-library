@@ -16,6 +16,8 @@ var cb = function(res) {
 var client = new AddSearchClient('YOUR PUBLIC SITEKEY');
 // Execute search. Callback function cb will be called with search results
 client.search('keyword', cb);
+// Get search suggestions for a keyword
+client.suggest('api');
 ```
 
 ## Browser support
