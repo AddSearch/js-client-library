@@ -27,7 +27,7 @@ var executeApiFetch = function(type, keyword, cb) {
   kw = encodeURIComponent(kw);
 
   // Execute API call
-  fetch('https://api.addsearch.com/v1/' + type + '/' + this.sitekey + '?term=' + kw)
+  fetch('https://api.addsearch.com/v1/' + type + '/' + (this ? this.sitekey : null) + '?term=' + kw)
     .then(function(response) {
       return response.json();
     }).then(function(json) {

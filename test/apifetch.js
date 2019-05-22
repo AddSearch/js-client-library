@@ -10,7 +10,7 @@ describe('apifetch', function() {
       fetchMock.get('*', { response: 200 });
       const expect = {response: 200};
 
-      apifetch.executeApiFetch('search', 'keyword', (res) => {
+      apifetch('search', 'keyword', (res) => {
         assert.deepEqual(res, expect);
       });
     });
@@ -20,7 +20,7 @@ describe('apifetch', function() {
       fetchMock.get('*', 'foo');
       const expect = 400;
 
-      apifetch.executeApiFetch('ping', 'keyword', (res) => {
+      apifetch('ping', 'keyword', (res) => {
         assert.equal(res.error.response, expect);
       });
     });
