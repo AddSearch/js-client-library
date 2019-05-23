@@ -1,6 +1,6 @@
 {
   "name": "addsearch-js-client",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "AddSearch API JavaScript client",
   "main": "index.js",
   "jsdelivr": "./dist/addsearch-js-client.min.js",
