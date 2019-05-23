@@ -6,10 +6,18 @@ require('isomorphic-fetch');
 /**
  * Fetch search results of search suggestions from the Addsearch API
  */
-var executeApiFetch = function(sitekey, type, keyword, settings, cb) {
+var executeApiFetch = function(sitekey, type, settings, cb) {
 
   const RESPONSE_BAD_REQUEST = 400;
   const RESPONSE_SERVER_ERROR = 500;
+
+  var settingToQueryParam = function(setting, key) {
+    if (setting) {
+      return '&' + key + '=' + setting;
+    }
+    return '';
+  }
+
 
   // Validate query type
   if (type !== 'search' && type !== 'suggest') {
@@ -17,8 +25,8 @@ var executeApiFetch = function(sitekey, type, keyword, settings, cb) {
     return;
   }
 
-  // If no keyword, fetch all results
-  let kw = keyword || '*';
+  // Keyword
+  let kw = settings.keyword;
 
   // Boolean operators (AND, OR, NOT) uppercase
   kw = kw.replace(/ and /g, ' AND ').replace(/ or /g, ' OR ').replace(/ not /g, ' NOT ');
@@ -29,9 +37,11 @@ var executeApiFetch = function(sitekey, type, keyword, settings, cb) {
   // Construct query string from settings
   var qs = '';
   if (type === 'search') {
-    if (settings.lang) {
-      qs = qs + '&lang=' + settings.lang;
-    }
+    qs = settingToQueryParam(settings.lang, 'lang') +
+         settingToQueryParam(settings.paging.page, 'page') +
+         settingToQueryParam(settings.paging.pageSize, 'limit') +
+         settingToQueryParam(settings.paging.sortBy, 'sort') +
+         settingToQueryParam(settings.paging.order, 'order');
   }
 
 
@@ -42,6 +52,7 @@ var executeApiFetch = function(sitekey, type, keyword, settings, cb) {
     }).then(function(json) {
     cb(json);
   }).catch(function(ex) {
+    console.log(ex);
     cb({error: {response: RESPONSE_SERVER_ERROR, message: 'invalid server response'}});
   });
 };

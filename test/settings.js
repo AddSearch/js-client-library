@@ -1,5 +1,5 @@
 var assert = require('assert');
-var settings = require('../src/settings');
+var Settings = require('../src/settings');
 
 
 describe('settings', function() {
@@ -7,8 +7,9 @@ describe('settings', function() {
 
     it('language setting should be set', function() {
       const expect = {lang: 'en'};
-      settings.setLanguage('en');
-      assert.deepEqual(settings.getSettings(), expect);
+      var s = new Settings();
+      s.setLanguage('en');
+      assert.equal(s.getSettings().lang, expect.lang);
     });
 
   });

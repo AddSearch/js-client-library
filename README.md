@@ -22,14 +22,35 @@ client.search('keyword', cb);
 client.suggest('api', cb);
 ```
 
-## Settings
+## Publicly accessible functions
 
-The following settings are supported by the client
+The client provides the following functions.
+
+#### Fetch search results
 ```js
-// Get search results only in a specified language (e.g. "en" or "de")
+// Search with a specific keyword
+client.search('keyword', callback);
+
+// Search with the previously used keyword or execute a "match all" query
+client.search(callback);
+```
+
+#### Define language filter (e.g. "en" or "de")
+```js
 client.setLanguage('en');
 ```
 
+#### Manage paging
+```js
+// Defaults: page "1", pageSize "10", sortBy "relevance", sortOrder "desc"
+client.setPaging(page, pageSize, sortBy, sortOrder);
+
+// Next {pageSize} results
+client.nextPage();
+
+// Previous {pageSize} results
+client.previousPage();
+```
 
 ## Browser support
 The client is tested on following browsers
