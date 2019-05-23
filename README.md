@@ -5,6 +5,16 @@ Client lets you easily use the [AddSearch Search API](https://www.addsearch.com/
 from your JavaScript code on web browsers or with Node.js.
 
 ## Quick Start
+The library is available on the global CDN [jsDelivr:](https://www.jsdelivr.com/)
+```html
+<script src="https://cdn.jsdelivr.net/npm/addsearch-js-client@0.1/dist/addsearch-js-client.min.js"></script>
+```
+To install the library locally or to use it with Node.js:
+```sh
+npm install addsearch-js-client --save
+```
+
+####Make the first search
 ```js
 // Create client with your 32-character SITEKEY
 var client = new AddSearchClient('YOUR PUBLIC SITEKEY');
@@ -52,7 +62,7 @@ client.setDateFilter('2019-01-01', '2019-01-31');
 
 #### Define category filters 
 Filter by URL patterns, document types or *addsearch-category* meta tag values.
-See [full documentation.](https://www.addsearch.com/support/documentation/ranking-relevance-filters/filters/#category-filters)
+See the [full documentation.](https://www.addsearch.com/support/documentation/ranking-relevance-filters/filters/#category-filters)
 
 ```js
 // Only PDF files or products
@@ -61,7 +71,7 @@ client.setCategoryFilters('doctype_pdf,products');
 
 #### Custom field filters
 Filter by custom fields. Custon fields can be defined in meta tags or AddSearch crawler can pick them up from your HTML or JSON data.
-See [full documentation.](https://www.addsearch.com/support/documentation/ranking-relevance-filters/custom-field/)
+See the [full documentation.](https://www.addsearch.com/support/documentation/ranking-relevance-filters/custom-field/)
 
 ```js
 // Search by specific city (Berlin, Paris or Boston)
@@ -69,7 +79,7 @@ client.addCustomFieldFilter('city','berlin');
 client.addCustomFieldFilter('city','paris');
 client.addCustomFieldFilter('city','boston');
 
-// Remove paris (Berlin and Boston remaining)
+// Remove Paris (Berlin and Boston remaining)
 client.removeCustomFieldFilter('city','paris');
 
 // Remove all cities
