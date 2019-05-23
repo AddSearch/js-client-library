@@ -39,12 +39,20 @@ var executeApiFetch = function(sitekey, type, settings, cb) {
   if (type === 'search') {
     qs = settingToQueryParam(settings.lang, 'lang') +
          settingToQueryParam(settings.fuzzy, 'fuzzy') +
+         settingToQueryParam(settings.categories, 'categories') +
          settingToQueryParam(settings.dateFrom, 'dateFrom') +
          settingToQueryParam(settings.dateTo, 'dateTo') +
          settingToQueryParam(settings.paging.page, 'page') +
          settingToQueryParam(settings.paging.pageSize, 'limit') +
          settingToQueryParam(settings.paging.sortBy, 'sort') +
          settingToQueryParam(settings.paging.sortOrder, 'order');
+
+    // Add custom field filters
+    if (settings.customFieldFilters) {
+      for (var i=0; i<settings.customFieldFilters.length; i++) {
+        qs = qs + '&customField=' + settings.customFieldFilters[i];
+      }
+    }
   }
 
 

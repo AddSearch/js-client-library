@@ -9,7 +9,8 @@ var settings = function() {
       pageSize: 10,
       sortBy: 'relevance',
       sortOrder: 'desc'
-    }
+    },
+    customFieldFilters: []
   };
 
   this.getSettings = function() {
@@ -29,6 +30,37 @@ var settings = function() {
 
   this.useFuzzyMatch = function(fuzzy) {
     this.settings.fuzzy = fuzzy;
+  }
+
+  this.setCategoryFilters = function(categories) {
+    this.settings.categories = categories;
+  }
+
+  this.addCustomFieldFilter = function(fieldName, value) {
+    var filter = encodeURIComponent(fieldName + '=' + value);
+    this.settings.customFieldFilters.push(filter);
+  }
+
+  this.removeCustomFieldFilter = function(fieldName, value) {
+    var removeAll = false;
+    var filter = encodeURIComponent(fieldName + '=' + value);
+
+    // Remove all by fieldName
+    if (!value) {
+      removeAll = true;
+      filter = encodeURIComponent(fieldName + '=');
+    }
+
+    for (var i=this.settings.customFieldFilters.length; i>0; i--) {
+      var v = this.settings.customFieldFilters[i-1];
+
+      if (removeAll && v.indexOf(filter) === 0) {
+        this.settings.customFieldFilters.splice(i-1, 1);
+      }
+      else if (v === filter) {
+        this.settings.customFieldFilters.splice(i-1, 1);
+      }
+    }
   }
 
   this.setDateFilter = function(dateFrom, dateTo) {

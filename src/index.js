@@ -29,7 +29,7 @@ var client = function(sitekey) {
 
     this.settings.setKeyword(keyword);
     executeApiFetch(this.sitekey, 'search', this.settings.getSettings(), callback);
-  };
+  }
 
 
   /**
@@ -39,19 +39,22 @@ var client = function(sitekey) {
    */
   this.suggest = function(keyword, callback) {
     executeApiFetch(this.sitekey, 'suggest', this.settings.getSettings(), callback);
-  };
+  }
 
 
   /**
    * Public functions
    */
   this.getSettings = function() { return this.settings.getSettings(); }
-  this.setLanguage = function(lang) { this.settings.setLanguage(lang); };
-  this.useFuzzyMatch = function(use) { this.settings.useFuzzyMatch(use); };
-  this.setDateFilter = function(dateFrom, dateTo) { this.settings.setDateFilter(dateFrom, dateTo); };
-  this.setPaging = function(page, pageSize, sortBy, sortOder) { this.settings.setPaging(page, pageSize, sortBy, sortOder); };
-  this.nextPage = function() { this.settings.nextPage(); };
-  this.previousPage = function() { this.settings.previousPage(); };
+  this.setLanguage = function(lang) { this.settings.setLanguage(lang); }
+  this.useFuzzyMatch = function(use) { this.settings.useFuzzyMatch(use); }
+  this.setCategoryFilters = function(categories) { this.settings.setCategoryFilters(categories); }
+  this.addCustomFieldFilter = function(fieldName, value) { this.settings.addCustomFieldFilter(fieldName, value); }
+  this.removeCustomFieldFilter = function(fieldName, value) { this.settings.removeCustomFieldFilter(fieldName, value); }
+  this.setDateFilter = function(dateFrom, dateTo) { this.settings.setDateFilter(dateFrom, dateTo); }
+  this.setPaging = function(page, pageSize, sortBy, sortOder) { this.settings.setPaging(page, pageSize, sortBy, sortOder); }
+  this.nextPage = function() { this.settings.nextPage(); }
+  this.previousPage = function() { this.settings.previousPage(); }
 
 }
 
