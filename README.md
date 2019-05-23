@@ -22,6 +22,15 @@ client.search('keyword', cb);
 client.suggest('api', cb);
 ```
 
+## Settings
+
+The following settings are supported by the client
+```js
+// Get search results only in a specified language (e.g. "en" or "de")
+client.setLanguage('en');
+```
+
+
 ## Browser support
 The client is tested on following browsers
 - Chrome
