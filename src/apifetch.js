@@ -6,7 +6,7 @@ require('isomorphic-fetch');
 /**
  * Fetch search results of search suggestions from the Addsearch API
  */
-var executeApiFetch = function(type, keyword, cb) {
+var executeApiFetch = function(sitekey, type, keyword, settings, cb) {
 
   const RESPONSE_BAD_REQUEST = 400;
   const RESPONSE_SERVER_ERROR = 500;
@@ -26,8 +26,17 @@ var executeApiFetch = function(type, keyword, cb) {
   // Escape
   kw = encodeURIComponent(kw);
 
+  // Construct query string from settings
+  var qs = '';
+  if (type === 'search') {
+    if (settings.lang) {
+      qs = qs + '&lang=' + settings.lang;
+    }
+  }
+
+
   // Execute API call
-  fetch('https://api.addsearch.com/v1/' + type + '/' + (this ? this.sitekey : null) + '?term=' + kw)
+  fetch('https://api.addsearch.com/v1/' + type + '/' + sitekey + '?term=' + kw + qs)
     .then(function(response) {
       return response.json();
     }).then(function(json) {
