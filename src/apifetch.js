@@ -44,7 +44,7 @@ var executeApiFetch = function(sitekey, type, settings, cb) {
          settingToQueryParam(settings.paging.page, 'page') +
          settingToQueryParam(settings.paging.pageSize, 'limit') +
          settingToQueryParam(settings.paging.sortBy, 'sort') +
-         settingToQueryParam(settings.paging.order, 'order');
+         settingToQueryParam(settings.paging.sortOrder, 'order');
   }
 
 

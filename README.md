@@ -37,8 +37,8 @@ client.search(callback);
 
 #### Use fuzzy matching
 ```js
-// Enable fuzzy matching for typo tolerance (default "false")
-client.useFuzzyMatch(true);
+// Enable/disable fuzzy matching used in typo tolerance (default "true")
+client.useFuzzyMatch(false);
 ```
 
 #### Define language filter

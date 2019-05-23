@@ -3,6 +3,7 @@
 var settings = function() {
   this.settings = {
     keyword: '*',
+    fuzzy: true,
     paging: {
       page: 1,
       pageSize: 10,
@@ -39,7 +40,7 @@ var settings = function() {
     this.settings.keyword = keyword || '*';
   }
 
-  this.setPaging = function(page, pageSize, sortBy, sortOder) {
+  this.setPaging = function(page, pageSize, sortBy, sortOrder) {
     // Validate
     if (page < 1) {
       throw "page must be 1 or bigger";
@@ -54,7 +55,7 @@ var settings = function() {
     this.settings.paging.page = page;
     this.settings.paging.pageSize = pageSize;
     this.settings.paging.sortBy = sortBy;
-    this.settings.paging.sortOder = sortOder;
+    this.settings.paging.sortOrder = sortOrder;
   }
 
   this.nextPage = function() {
