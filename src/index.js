@@ -1,6 +1,7 @@
 'use strict';
 
-var executeApiFetch = require ('./apifetch');
+var executeApiFetch = require('./apifetch');
+var settings = require('./settings');
 
 var client = function(sitekey) {
   this.sitekey = sitekey;
@@ -11,7 +12,7 @@ var client = function(sitekey) {
    * @param keyword
    */
   this.search = function(keyword, cb) {
-    this.apiFetch('search', keyword, cb);
+    executeApiFetch(this.sitekey, 'search', keyword, settings.getSettings(), cb);
   };
 
 
@@ -21,14 +22,14 @@ var client = function(sitekey) {
    * @param keyword
    */
   this.suggest = function(keyword, cb) {
-    this.apiFetch('suggest', keyword, cb);
+    executeApiFetch(this.sitekey, 'suggest', keyword, settings.getSettings(), cb);
   };
 
 
   /**
-   *
+   * Public functions
    */
-  this.apiFetch = executeApiFetch;
+  this.setLanguage = settings.setLanguage;
 }
 
 module.exports = client;
