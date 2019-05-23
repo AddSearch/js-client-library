@@ -47,6 +47,8 @@ var client = function(sitekey) {
    */
   this.getSettings = function() { return this.settings.getSettings(); }
   this.setLanguage = function(lang) { this.settings.setLanguage(lang); };
+  this.useFuzzyMatch = function(use) { this.settings.useFuzzyMatch(use); };
+  this.setDateFilter = function(dateFrom, dateTo) { this.settings.setDateFilter(dateFrom, dateTo); };
   this.setPaging = function(page, pageSize, sortBy, sortOder) { this.settings.setPaging(page, pageSize, sortBy, sortOder); };
   this.nextPage = function() { this.settings.nextPage(); };
   this.previousPage = function() { this.settings.previousPage(); };

@@ -35,9 +35,22 @@ client.search('keyword', callback);
 client.search(callback);
 ```
 
-#### Define language filter (e.g. "en" or "de")
+#### Use fuzzy matching
 ```js
+// Enable fuzzy matching for typo tolerance (default "false")
+client.useFuzzyMatch(true);
+```
+
+#### Define language filter
+```js
+// Documents in specific language (e.g. "en" or "de")
 client.setLanguage('en');
+```
+
+#### Define publishing date filters 
+```js
+// Documents published between specific date range
+client.setDateFilter('2019-01-01', '2019-01-31');
 ```
 
 #### Manage paging

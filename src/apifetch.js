@@ -38,6 +38,9 @@ var executeApiFetch = function(sitekey, type, settings, cb) {
   var qs = '';
   if (type === 'search') {
     qs = settingToQueryParam(settings.lang, 'lang') +
+         settingToQueryParam(settings.fuzzy, 'fuzzy') +
+         settingToQueryParam(settings.dateFrom, 'dateFrom') +
+         settingToQueryParam(settings.dateTo, 'dateTo') +
          settingToQueryParam(settings.paging.page, 'page') +
          settingToQueryParam(settings.paging.pageSize, 'limit') +
          settingToQueryParam(settings.paging.sortBy, 'sort') +
