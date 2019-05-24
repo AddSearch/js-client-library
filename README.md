@@ -12,9 +12,12 @@ The library is available on the global CDN [jsDelivr:](https://www.jsdelivr.com/
 To install the library locally or to use it with Node.js:
 ```sh
 npm install addsearch-js-client --save
+
+# After installation, add the library to your JS code
+# var AddSearchClient = require('addsearch-js-client');
 ```
 
-####Make the first search
+####Execute the first search
 ```js
 // Create client with your 32-character SITEKEY
 var client = new AddSearchClient('YOUR PUBLIC SITEKEY');
