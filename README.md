@@ -17,7 +17,7 @@ npm install addsearch-js-client --save
 # var AddSearchClient = require('addsearch-js-client');
 ```
 
-####Execute the first search
+#### Execute the first search query
 ```js
 // Create client with your 32-character SITEKEY
 var client = new AddSearchClient('YOUR PUBLIC SITEKEY');
