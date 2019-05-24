@@ -132,4 +132,4 @@ Built bundle is saved under the *dist/* folder
 
 ## Support
 
-Feel free to semd any questions, ideas and suggestions at [support@addsearch.com](support@addsearch.com).
+Feel free to send any questions, ideas and suggestions at [support@addsearch.com](support@addsearch.com).
