@@ -3,6 +3,7 @@
 var executeApiFetch = require('./apifetch');
 var Settings = require('./settings');
 var util = require('./util');
+var sendClickHit = require('./stats');
 
 var client = function(sitekey) {
   this.sitekey = sitekey;
@@ -18,13 +19,21 @@ var client = function(sitekey) {
    */
   this.search = function(a1, a2) {
 
-    var keyword = a1;
-    var callback = a2;
+    var keyword = null;
+    var callback = null;
 
+    // Keyword and callback
+    if (a1 && util.isFunction(a2)) {
+      keyword = a1;
+      callback = a2;
+    }
     // If function is called with callback only, use previous keyword from settings object
-    if (!a2 && util.isFunction(a1)) {
+    else if (!a2 && util.isFunction(a1)) {
       keyword = this.settings.getSettings().keyword;
       callback = a1;
+    }
+    else {
+      throw "Illegal search parameters. Should be (keyword, callbackFunction) or just (callbackFunction)";
     }
 
     this.settings.setKeyword(keyword);
@@ -55,7 +64,7 @@ var client = function(sitekey) {
   this.setPaging = function(page, pageSize, sortBy, sortOder) { this.settings.setPaging(page, pageSize, sortBy, sortOder); }
   this.nextPage = function() { this.settings.nextPage(); }
   this.previousPage = function() { this.settings.previousPage(); }
-
+  this.hitClicked = function(docid, position) { sendClickHit(this.sitekey, this.settings.getSettings().keyword, docid, position); }
 }
 
 module.exports = client;
