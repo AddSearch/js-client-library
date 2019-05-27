@@ -3,7 +3,7 @@
 var executeApiFetch = require('./apifetch');
 var Settings = require('./settings');
 var util = require('./util');
-var sendClickHit = require('./stats');
+//var sendClickHit = require('./stats');
 
 var client = function(sitekey) {
   this.sitekey = sitekey;
@@ -68,7 +68,7 @@ var client = function(sitekey) {
   this.setPaging = function(page, pageSize, sortBy, sortOder) { this.settings.setPaging(page, pageSize, sortBy, sortOder); }
   this.nextPage = function() { this.settings.nextPage(); }
   this.previousPage = function() { this.settings.previousPage(); }
-  this.hitClicked = function(docid, position) { sendClickHit(this.sitekey, this.settings.getSettings().keyword, docid, position); }
+  //this.hitClicked = function(docid, position) { sendClickHit(this.sitekey, this.settings.getSettings().keyword, docid, position); }
 }
 
 module.exports = client;
