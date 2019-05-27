@@ -45,6 +45,13 @@ client.search('keyword', callback);
 client.search(callback);
 ```
 
+#### Fetch search suggestions
+```js
+// Configure Search suggestions on AddSearch Dashboard first
+// Get suggestions starting with a specific prefix
+client.suggestions('a', callback);
+```
+
 #### Use fuzzy matching
 ```js
 // Enable/disable fuzzy matching used in typo tolerance (default "true")

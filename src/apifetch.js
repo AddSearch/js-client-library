@@ -25,34 +25,45 @@ var executeApiFetch = function(sitekey, type, settings, cb) {
     return;
   }
 
-  // Keyword
-  let kw = settings.keyword;
-
-  // Boolean operators (AND, OR, NOT) uppercase
-  kw = kw.replace(/ and /g, ' AND ').replace(/ or /g, ' OR ').replace(/ not /g, ' NOT ');
-
-  // Escape
-  kw = encodeURIComponent(kw);
-
-  // Construct query string from settings
+  // Keyword and query string
+  var kw = '';
   var qs = '';
-  if (type === 'search') {
-    qs = settingToQueryParam(settings.lang, 'lang') +
-         settingToQueryParam(settings.fuzzy, 'fuzzy') +
-         settingToQueryParam(settings.categories, 'categories') +
-         settingToQueryParam(settings.dateFrom, 'dateFrom') +
-         settingToQueryParam(settings.dateTo, 'dateTo') +
-         settingToQueryParam(settings.paging.page, 'page') +
-         settingToQueryParam(settings.paging.pageSize, 'limit') +
-         settingToQueryParam(settings.paging.sortBy, 'sort') +
-         settingToQueryParam(settings.paging.sortOrder, 'order');
 
-    // Add custom field filters
-    if (settings.customFieldFilters) {
-      for (var i=0; i<settings.customFieldFilters.length; i++) {
-        qs = qs + '&customField=' + settings.customFieldFilters[i];
+  // Search
+  if (type === 'search') {
+    // Keyword
+    kw = settings.keyword;
+
+    // Boolean operators (AND, OR, NOT) uppercase
+    kw = kw.replace(/ and /g, ' AND ').replace(/ or /g, ' OR ').replace(/ not /g, ' NOT ');
+
+    // Escape
+    kw = encodeURIComponent(kw);
+
+    // Construct query string from settings
+    if (type === 'search') {
+      qs = settingToQueryParam(settings.lang, 'lang') +
+        settingToQueryParam(settings.fuzzy, 'fuzzy') +
+        settingToQueryParam(settings.categories, 'categories') +
+        settingToQueryParam(settings.dateFrom, 'dateFrom') +
+        settingToQueryParam(settings.dateTo, 'dateTo') +
+        settingToQueryParam(settings.paging.page, 'page') +
+        settingToQueryParam(settings.paging.pageSize, 'limit') +
+        settingToQueryParam(settings.paging.sortBy, 'sort') +
+        settingToQueryParam(settings.paging.sortOrder, 'order');
+
+      // Add custom field filters
+      if (settings.customFieldFilters) {
+        for (var i = 0; i < settings.customFieldFilters.length; i++) {
+          qs = qs + '&customField=' + settings.customFieldFilters[i];
+        }
       }
     }
+  }
+
+  // Suggest
+  else if (type === 'suggest') {
+    kw = settings.suggestionsPrefix;
   }
 
 

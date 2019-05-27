@@ -21,6 +21,10 @@ var settings = function() {
     this.settings.keyword = keyword || '*';
   }
 
+  this.setSuggestionsPrefix = function(prefix) {
+    this.settings.suggestionsPrefix = prefix;
+  }
+
   this.setLanguage = function(language) {
     if (language && language.length !== 2) {
       throw "use 2-char language code (e.g. \"en\")";

@@ -46,7 +46,11 @@ var client = function(sitekey) {
    *
    * @param keyword
    */
-  this.suggest = function(keyword, callback) {
+  this.suggestions = function(prefix, callback) {
+    if (!prefix || !callback || !util.isFunction(callback)) {
+      throw "Illegal suggestions parameters. Should be (prefix, callbackFunction)";
+    }
+    this.settings.setSuggestionsPrefix(prefix);
     executeApiFetch(this.sitekey, 'suggest', this.settings.getSettings(), callback);
   }
 
