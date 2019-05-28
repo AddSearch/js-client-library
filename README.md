@@ -101,10 +101,10 @@ client.removeCustomFieldFilter('city');
 // Defaults: page "1", pageSize "10", sortBy "relevance", sortOrder "desc"
 client.setPaging(page, pageSize, sortBy, sortOrder);
 
-// Next {pageSize} results
+// Next page (call search function to fetch results)
 client.nextPage();
 
-// Previous {pageSize} results
+// Previous page
 client.previousPage();
 ```
 
