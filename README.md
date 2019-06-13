@@ -58,6 +58,12 @@ client.suggestions('a', callback);
 client.useFuzzyMatch(false);
 ```
 
+#### Set JSON Web Token (for authentication)
+```js
+// Add JWT to the HTTPS request (if protected search index)
+client.setJWT(token);
+```
+
 #### Define language filter
 ```js
 // Documents in specific language (e.g. "en" or "de")
