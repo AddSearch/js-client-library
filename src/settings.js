@@ -76,6 +76,10 @@ var settings = function() {
     this.settings.keyword = keyword || '*';
   }
 
+  this.setJWT = function(jwt) {
+    this.settings.jwt = jwt;
+  }
+
   this.setPaging = function(page, pageSize, sortBy, sortOrder) {
     // Validate
     if (page < 1) {
