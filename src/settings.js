@@ -10,7 +10,8 @@ var settings = function() {
       sortBy: 'relevance',
       sortOrder: 'desc'
     },
-    customFieldFilters: []
+    customFieldFilters: [],
+    userToken: null
   };
 
   this.getSettings = function() {
@@ -78,6 +79,10 @@ var settings = function() {
 
   this.setJWT = function(jwt) {
     this.settings.jwt = jwt;
+  }
+
+  this.setUserToken = function(token) {
+    this.settings.userToken = token;
   }
 
   this.setPaging = function(page, pageSize, sortBy, sortOrder) {

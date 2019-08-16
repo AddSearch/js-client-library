@@ -51,7 +51,8 @@ var executeApiFetch = function(sitekey, type, settings, cb) {
         settingToQueryParam(settings.paging.pageSize, 'limit') +
         settingToQueryParam(settings.paging.sortBy, 'sort') +
         settingToQueryParam(settings.paging.sortOrder, 'order') +
-        settingToQueryParam(settings.jwt, 'jwt');
+        settingToQueryParam(settings.jwt, 'jwt') +
+        settingToQueryParam(settings.userToken, 'userToken');
 
       // Add custom field filters
       if (settings.customFieldFilters) {
