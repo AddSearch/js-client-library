@@ -3,5 +3,5 @@ var isFunction = function(fn) {
 }
 
 module.exports = {
-  isFunction
+  isFunction: isFunction
 }
