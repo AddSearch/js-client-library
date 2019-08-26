@@ -41,6 +41,9 @@ The client provides the following functions.
 // Search with a specific keyword
 client.search('keyword', callback);
 
+// Match all query
+client.search('*', callback);
+
 // Search with the previously used keyword or execute a "match all" query
 client.search(callback);
 ```
@@ -60,8 +63,14 @@ client.useFuzzyMatch(false);
 
 #### Set JSON Web Token (for authentication)
 ```js
-// Add JWT to the HTTPS request (if protected search index)
+// Add JWT to the search request (if protected search index)
 client.setJWT(token);
+```
+
+#### Set user token (for personalized search results)
+```js
+// Add a user token to the search request (if personalization in use)
+client.setUserToken('uuid');
 ```
 
 #### Define language filter
@@ -70,10 +79,16 @@ client.setJWT(token);
 client.setLanguage('en');
 ```
 
-#### Define publishing date filters 
+#### Define publishing date filter 
 ```js
 // Documents published between specific date range
 client.setDateFilter('2019-01-01', '2019-01-31');
+```
+
+#### Define price range filter
+```js
+// Products in specific price range (in cents. e.g. 100,00 - 200,00)
+client.setPriceRangeFilter('10000', '20000');
 ```
 
 #### Define category filters 
