@@ -64,6 +64,7 @@ var client = function(sitekey) {
   this.setCategoryFilters = function(categories) { this.settings.setCategoryFilters(categories); }
   this.addCustomFieldFilter = function(fieldName, value) { this.settings.addCustomFieldFilter(fieldName, value); }
   this.removeCustomFieldFilter = function(fieldName, value) { this.settings.removeCustomFieldFilter(fieldName, value); }
+  this.setPriceRangeFilter = function(minCents, maxCents) { this.settings.setPriceRangeFilter(minCents, maxCents); }
   this.setDateFilter = function(dateFrom, dateTo) { this.settings.setDateFilter(dateFrom, dateTo); }
   this.setJWT = function(jwt) { this.settings.setJWT(jwt); }
   this.setUserToken = function(token) { this.settings.setUserToken(token); }

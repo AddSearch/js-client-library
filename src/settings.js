@@ -41,6 +41,11 @@ var settings = function() {
     this.settings.categories = categories;
   }
 
+  this.setPriceRangeFilter = function(minCents, maxCents) {
+    this.settings.priceFromCents = minCents;
+    this.settings.priceToCents = maxCents;
+  }
+
   this.addCustomFieldFilter = function(fieldName, value) {
     var filter = encodeURIComponent(fieldName + '=' + value);
     this.settings.customFieldFilters.push(filter);

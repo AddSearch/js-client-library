@@ -45,6 +45,8 @@ var executeApiFetch = function(sitekey, type, settings, cb) {
       qs = settingToQueryParam(settings.lang, 'lang') +
         settingToQueryParam(settings.fuzzy, 'fuzzy') +
         settingToQueryParam(settings.categories, 'categories') +
+        settingToQueryParam(settings.priceFromCents, 'priceFromCents') +
+        settingToQueryParam(settings.priceToCents, 'priceToCents') +
         settingToQueryParam(settings.dateFrom, 'dateFrom') +
         settingToQueryParam(settings.dateTo, 'dateTo') +
         settingToQueryParam(settings.paging.page, 'page') +
