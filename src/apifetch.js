@@ -62,11 +62,19 @@ var executeApiFetch = function(sitekey, type, settings, cb) {
           qs = qs + '&customField=' + settings.customFieldFilters[i];
         }
       }
+
+      // Add facet fields
+      if (settings.facetFields) {
+        for (var i = 0; i < settings.facetFields.length; i++) {
+          qs = qs + '&facet=' + settings.facetFields[i];
+        }
+      }
     }
   }
 
   // Suggest
   else if (type === 'suggest') {
+    qs = settingToQueryParam(settings.suggestionsSize, 'size');
     kw = settings.suggestionsPrefix;
   }
 

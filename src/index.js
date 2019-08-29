@@ -32,10 +32,16 @@ var client = function(sitekey) {
       keyword = this.settings.getSettings().keyword;
       callback = a1;
     }
+    // Use previous keyword and callback
+    else if (this.settings.getSettings().callback) {
+      keyword = this.settings.getSettings().keyword;
+      callback = this.settings.getSettings().callback;
+    }
     else {
-      throw "Illegal search parameters. Should be (keyword, callbackFunction) or just (callbackFunction)";
+      throw "Illegal search parameters. Should be (keyword, callbackFunction) or (callbackFunction)";
     }
 
+    this.settings.setCallback(callback);
     this.settings.setKeyword(keyword);
     executeApiFetch(this.sitekey, 'search', this.settings.getSettings(), callback);
   }
@@ -71,6 +77,8 @@ var client = function(sitekey) {
   this.setPaging = function(page, pageSize, sortBy, sortOder) { this.settings.setPaging(page, pageSize, sortBy, sortOder); }
   this.nextPage = function() { this.settings.nextPage(); }
   this.previousPage = function() { this.settings.previousPage(); }
+  this.setSuggestionsSize = function(size) { this.settings.setSuggestionsSize(size); }
+  this.addFacetField = function(fieldName) { this.settings.addFacetField(fieldName); }
   //this.hitClicked = function(docid, position) { sendClickHit(this.sitekey, this.settings.getSettings().keyword, docid, position); }
 }
 

@@ -3,6 +3,7 @@
 var settings = function() {
   this.settings = {
     keyword: '*',
+    callback: null,
     fuzzy: true,
     paging: {
       page: 1,
@@ -11,7 +12,9 @@ var settings = function() {
       sortOrder: 'desc'
     },
     customFieldFilters: [],
-    userToken: null
+    userToken: null,
+    suggestionsSize: 10,
+    facetFields: []
   };
 
   this.getSettings = function() {
@@ -22,8 +25,16 @@ var settings = function() {
     this.settings.keyword = keyword || '*';
   }
 
+  this.setCallback = function(cb) {
+    this.settings.callback = cb;
+  }
+
   this.setSuggestionsPrefix = function(prefix) {
     this.settings.suggestionsPrefix = prefix;
+  }
+
+  this.setSuggestionsSize = function(size) {
+    this.settings.suggestionsSize = size;
   }
 
   this.setLanguage = function(language) {
@@ -88,6 +99,10 @@ var settings = function() {
 
   this.setUserToken = function(token) {
     this.settings.userToken = token;
+  }
+
+  this.addFacetField = function(field) {
+    this.settings.facetFields.push(field);
   }
 
   this.setPaging = function(page, pageSize, sortBy, sortOrder) {

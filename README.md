@@ -41,11 +41,11 @@ The client provides the following functions.
 // Search with a specific keyword
 client.search('keyword', callback);
 
-// Match all query
-client.search('*', callback);
-
 // Search with the previously used keyword or execute a "match all" query
 client.search(callback);
+
+// Search with the previously used keyword and callback (e.g. after modifying filters)
+client.search();
 ```
 
 #### Fetch search suggestions
@@ -55,9 +55,15 @@ client.search(callback);
 client.suggestions('a', callback);
 ```
 
-#### Use fuzzy matching
+#### Number of search suggestions
 ```js
-// Enable/disable fuzzy matching used in typo tolerance (default "true")
+// Number of search suggestions to fetch (default 10)
+client.setSuggestionsSize(20);
+```
+
+#### Search with fuzzy matching
+```js
+// Enable/disable fuzzy matching for typo tolerance (default "true")
 client.useFuzzyMatch(false);
 ```
 
@@ -127,6 +133,14 @@ client.nextPage();
 
 // Previous page
 client.previousPage();
+```
+
+#### Facets
+```js
+// Declare fields for faceting. Number of hits found from
+// these fields will be returned
+client.addFacetField('category');
+client.addFacetField('custom_fields.genre');
 ```
 
 ## Supported web browsers and node.js versions
