@@ -12,9 +12,17 @@ The library is available on the global CDN [jsDelivr:](https://www.jsdelivr.com/
 To install the library locally or to use it with Node.js:
 ```sh
 npm install addsearch-js-client --save
+```
 
-# After installation, add the library to your JS code
-# var AddSearchClient = require('addsearch-js-client');
+After installation, add the library to your JS code
+
+```js
+var AddSearchClient = require('addsearch-js-client');
+```
+
+Or use import in ES6
+```js
+import AddSearchClient from 'addsearch-js-client';
 ```
 
 #### Execute the first search query
@@ -28,7 +36,7 @@ var cb = function(res) {
   console.log(res);
 }
 
-// Execute search. Callback function cb will be called with search results
+// Execute search. Callback function will be called with search results
 client.search('keyword', cb);
 ```
 
