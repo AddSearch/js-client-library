@@ -54,6 +54,7 @@ var executeApiFetch = function(sitekey, type, settings, cb) {
         settingToQueryParam(settings.paging.sortBy, 'sort') +
         settingToQueryParam(settings.paging.sortOrder, 'order') +
         settingToQueryParam(settings.jwt, 'jwt') +
+        settingToQueryParam(settings.resultType, 'resultType') +
         settingToQueryParam(settings.userToken, 'userToken');
 
       // Add custom field filters
@@ -65,10 +66,20 @@ var executeApiFetch = function(sitekey, type, settings, cb) {
 
       // Add facet fields
       if (settings.facetFields) {
-        for (var i = 0; i < settings.facetFields.length; i++) {
+        for (var i = 0; i<settings.facetFields.length; i++) {
           qs = qs + '&facet=' + settings.facetFields[i];
         }
       }
+
+      // Personalization events
+      if (settings.personalizationEvents && Array.isArray(settings.personalizationEvents)) {
+        for (var i = 0; i<settings.personalizationEvents.length; i++) {
+          var obj = settings.personalizationEvents[i];
+          var key = Object.keys(obj);
+          qs = qs + '&personalizationEvent=' + encodeURIComponent(key + '=' + obj[key]);
+        }
+      }
+
     }
   }
 

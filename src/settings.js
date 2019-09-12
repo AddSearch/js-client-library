@@ -101,6 +101,14 @@ var settings = function() {
     this.settings.userToken = token;
   }
 
+  this.setPersonalizationEvents = function(events) {
+    this.settings.personalizationEvents = events;
+  }
+
+  this.setResultType = function(type) {
+    this.settings.resultType = type;
+  }
+
   this.addFacetField = function(field) {
     this.settings.facetFields.push(field);
   }

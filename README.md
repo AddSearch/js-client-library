@@ -87,6 +87,23 @@ client.setJWT(token);
 client.setUserToken('uuid');
 ```
 
+#### Send personalization events with search query
+In personalized search, user events are typically sent to AddSearch via API and a user token
+is passed with the search query (see setUserToken function). 
+An alternative way is to send user events needed for personalization with the search query.
+
+```js
+// Events depend on the personalization strategy
+// Contact AddSearch for more information
+var events = [
+  {favorite_genre: 'rock'},
+  {favorite_band: 'Red Hot Chili Peppers'},
+  {least_favorite_genre: 'country'}
+];
+
+client.setPersonalizationEvents(events);
+```
+
 #### Define language filter
 ```js
 // Documents in specific language (e.g. "en" or "de")
@@ -141,6 +158,13 @@ client.nextPage();
 
 // Previous page
 client.previousPage();
+```
+
+#### Set result type
+```js
+// By default, fetch all search results
+// If "organic", Pinned results and Promotions are left out
+client.setResultType('organic');
 ```
 
 #### Facets
