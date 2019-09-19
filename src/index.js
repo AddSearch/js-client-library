@@ -79,8 +79,10 @@ var client = function(sitekey) {
   this.previousPage = function() { this.settings.previousPage(); }
   this.setSuggestionsSize = function(size) { this.settings.setSuggestionsSize(size); }
   this.addFacetField = function(fieldName) { this.settings.addFacetField(fieldName); }
+  this.setNumberOfFacets = function(numFacets) { this.settings.setNumberOfFacets(numFacets); }
   this.setResultType = function(type) { this.settings.setResultType(type); }
   this.setPersonalizationEvents = function(events) { this.settings.setPersonalizationEvents(events); }
+  this.setFilterObject = function(filter) { this.settings.setFilterObject(filter); }
   //this.hitClicked = function(docid, position) { sendClickHit(this.sitekey, this.settings.getSettings().keyword, docid, position); }
 }
 

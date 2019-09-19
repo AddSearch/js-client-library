@@ -174,6 +174,11 @@ client.setResultType('organic');
 client.addFacetField('category');
 client.addFacetField('custom_fields.genre');
 ```
+By default, 10 facets with most hits are returned per field. 
+Use the following function to get more or less facets.
+```js
+client.setNumberOfFacets(20);
+```
 
 ## Supported web browsers and node.js versions
 The client is tested on

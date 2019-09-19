@@ -55,7 +55,8 @@ var executeApiFetch = function(sitekey, type, settings, cb) {
         settingToQueryParam(settings.paging.sortOrder, 'order') +
         settingToQueryParam(settings.jwt, 'jwt') +
         settingToQueryParam(settings.resultType, 'resultType') +
-        settingToQueryParam(settings.userToken, 'userToken');
+        settingToQueryParam(settings.userToken, 'userToken') +
+        settingToQueryParam(settings.numFacets, 'numFacets');
 
       // Add custom field filters
       if (settings.customFieldFilters) {
@@ -78,6 +79,11 @@ var executeApiFetch = function(sitekey, type, settings, cb) {
           var key = Object.keys(obj);
           qs = qs + '&personalizationEvent=' + encodeURIComponent(key + '=' + obj[key]);
         }
+      }
+
+      // Filter object
+      if (settings.filterObject) {
+        qs = qs + '&filter=' + JSON.stringify(settings.filterObject);
       }
 
     }

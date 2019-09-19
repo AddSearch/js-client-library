@@ -52,6 +52,10 @@ var settings = function() {
     this.settings.categories = categories;
   }
 
+  this.setFilterObject = function(filter) {
+    this.settings.filterObject= filter;
+  }
+
   this.setPriceRangeFilter = function(minCents, maxCents) {
     this.settings.priceFromCents = minCents;
     this.settings.priceToCents = maxCents;
@@ -111,6 +115,10 @@ var settings = function() {
 
   this.addFacetField = function(field) {
     this.settings.facetFields.push(field);
+  }
+
+  this.setNumberOfFacets = function(numFacets) {
+    this.settings.numFacets = numFacets;
   }
 
   this.setPaging = function(page, pageSize, sortBy, sortOrder) {
