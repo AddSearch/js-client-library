@@ -126,8 +126,8 @@ var settings = function() {
     if (page < 1) {
       throw "page must be 1 or bigger";
     }
-    if (pageSize < 1 || pageSize > 50) {
-      throw "pageSize must be 1-50";
+    if (pageSize < 1 || pageSize > 300) {
+      throw "pageSize must be 1-300";
     }
     if (sortOrder !== 'asc' && sortOrder !== 'desc') {
       throw "sortOrder must be asc or desc";
