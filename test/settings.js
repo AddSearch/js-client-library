@@ -57,6 +57,13 @@ describe('settings', function() {
       assert.equal(JSON.stringify(s.getSettings().customFieldFilters), expect);
     });
 
+    it('adding custom fields filter should be idempotent', function() {
+      s.addCustomFieldFilter('city', 'helsinki');
+      s.addCustomFieldFilter('city', 'helsinki');
+      var expect = '["city%3Dhelsinki"]';
+      assert.equal(JSON.stringify(s.getSettings().customFieldFilters), expect);
+    });
+
 
   });
 });

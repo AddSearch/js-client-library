@@ -63,7 +63,9 @@ var settings = function() {
 
   this.addCustomFieldFilter = function(fieldName, value) {
     var filter = encodeURIComponent(fieldName + '=' + value);
-    this.settings.customFieldFilters.push(filter);
+    if (this.settings.customFieldFilters.indexOf(filter) === -1) {
+      this.settings.customFieldFilters.push(filter);
+    }
   }
 
   this.removeCustomFieldFilter = function(fieldName, value) {
@@ -114,7 +116,9 @@ var settings = function() {
   }
 
   this.addFacetField = function(field) {
-    this.settings.facetFields.push(field);
+    if (this.settings.facetFields.indexOf(field) === -1) {
+      this.settings.facetFields.push(field);
+    }
   }
 
   this.setNumberOfFacets = function(numFacets) {
