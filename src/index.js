@@ -83,6 +83,7 @@ var client = function(sitekey) {
   this.setResultType = function(type) { this.settings.setResultType(type); }
   this.setPersonalizationEvents = function(events) { this.settings.setPersonalizationEvents(events); }
   this.setFilterObject = function(filter) { this.settings.setFilterObject(filter); }
+  this.setShuffleAndLimitTo = function(shuffleAndLimitTo) { this.settings.setShuffleAndLimitTo(shuffleAndLimitTo); }
   //this.hitClicked = function(docid, position) { sendClickHit(this.sitekey, this.settings.getSettings().keyword, docid, position); }
 }
 

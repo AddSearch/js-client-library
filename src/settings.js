@@ -143,6 +143,10 @@ var settings = function() {
     this.settings.paging.sortOrder = sortOrder;
   }
 
+  this.setShuffleAndLimitTo = function(shuffleAndLimitTo) {
+    this.settings.shuffleAndLimitTo = shuffleAndLimitTo;
+  }
+
   this.nextPage = function() {
     this.settings.paging.page = this.settings.paging.page + 1;
   }
