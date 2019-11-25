@@ -4,7 +4,7 @@ var settings = function() {
   this.settings = {
     keyword: '*',
     callback: null,
-    fuzzy: true,
+    fuzzy: 'auto',
     paging: {
       page: 1,
       pageSize: 10,
@@ -44,7 +44,10 @@ var settings = function() {
     this.settings.lang = language;
   }
 
-  this.useFuzzyMatch = function(fuzzy) {
+  this.setFuzzyMatch = function(fuzzy) {
+    if (fuzzy !== true && fuzzy !== false && fuzzy !== 'auto') {
+      throw "fuzzy matching can be true, false, or 'auto'";
+    }
     this.settings.fuzzy = fuzzy;
   }
 

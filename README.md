@@ -71,8 +71,8 @@ client.setSuggestionsSize(20);
 
 #### Search with fuzzy matching
 ```js
-// Enable/disable fuzzy matching for typo tolerance (default "true")
-client.useFuzzyMatch(false);
+// Enable/disable fuzzy matching. Possible values true/false/"auto" (default: "auto")
+client.setFuzzyMatch(false);
 ```
 
 #### Set JSON Web Token (for authentication)
@@ -149,10 +149,18 @@ client.removeCustomFieldFilter('city');
 ```
 
 #### Manage paging
+Set page number, page size and sorting parameters. It's possible to order results by:
+- relevance (descending)
+- date (ascending or descending)
+- custom field value (ascending or descending. E.g. *custom_fields.price*)
 ```js
 // Defaults: page "1", pageSize "10", sortBy "relevance", sortOrder "desc"
 client.setPaging(page, pageSize, sortBy, sortOrder);
+```
 
+Other functions.
+
+```js
 // Next page (call search function to fetch results)
 client.nextPage();
 

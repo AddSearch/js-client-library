@@ -66,7 +66,6 @@ var client = function(sitekey) {
    */
   this.getSettings = function() { return this.settings.getSettings(); }
   this.setLanguage = function(lang) { this.settings.setLanguage(lang); }
-  this.useFuzzyMatch = function(use) { this.settings.useFuzzyMatch(use); }
   this.setCategoryFilters = function(categories) { this.settings.setCategoryFilters(categories); }
   this.addCustomFieldFilter = function(fieldName, value) { this.settings.addCustomFieldFilter(fieldName, value); }
   this.removeCustomFieldFilter = function(fieldName, value) { this.settings.removeCustomFieldFilter(fieldName, value); }
@@ -84,7 +83,11 @@ var client = function(sitekey) {
   this.setPersonalizationEvents = function(events) { this.settings.setPersonalizationEvents(events); }
   this.setFilterObject = function(filter) { this.settings.setFilterObject(filter); }
   this.setShuffleAndLimitTo = function(shuffleAndLimitTo) { this.settings.setShuffleAndLimitTo(shuffleAndLimitTo); }
+  this.setFuzzyMatch = function(fuzzy) { this.settings.setFuzzyMatch(fuzzy); }
   //this.hitClicked = function(docid, position) { sendClickHit(this.sitekey, this.settings.getSettings().keyword, docid, position); }
+
+  // Deprecated
+  this.useFuzzyMatch = function(use) { this.settings.setFuzzyMatch(use); }
 }
 
 module.exports = client;
