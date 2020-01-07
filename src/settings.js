@@ -51,6 +51,10 @@ var settings = function() {
     this.settings.fuzzy = fuzzy;
   }
 
+  this.setCollectAnalytics = function(collectAnalytics) {
+    this.settings.collectAnalytics = collectAnalytics;
+  }
+
   this.setCategoryFilters = function(categories) {
     this.settings.categories = categories;
   }

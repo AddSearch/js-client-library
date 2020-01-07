@@ -75,6 +75,12 @@ client.setSuggestionsSize(20);
 client.setFuzzyMatch(false);
 ```
 
+#### Collect analytics
+```js
+// Control whether search queries are sent to your AddSearch Analytics Dashboard or not (default: true)
+client.setCollectAnalytics(false);
+```
+
 #### Set JSON Web Token (for authentication)
 ```js
 // Add JWT to the search request (if protected search index)
@@ -218,5 +224,5 @@ npm run build
 Built bundle is saved under the *dist/* folder
 
 ## Support
-
-Feel free to send any questions, ideas and suggestions at [support@addsearch.com](support@addsearch.com).
+Feel free to send any questions, ideas, and suggestions at [support@addsearch.com](mailto:support@addsearch.com) or 
+visit [addsearch.com](https://www.addsearch.com/) for more information.

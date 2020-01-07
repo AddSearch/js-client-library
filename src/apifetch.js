@@ -12,7 +12,7 @@ var executeApiFetch = function(sitekey, type, settings, cb) {
   const RESPONSE_SERVER_ERROR = 500;
 
   var settingToQueryParam = function(setting, key) {
-    if (setting) {
+    if (setting || setting === false) {
       return '&' + key + '=' + setting;
     }
     return '';
@@ -44,6 +44,7 @@ var executeApiFetch = function(sitekey, type, settings, cb) {
     if (type === 'search') {
       qs = settingToQueryParam(settings.lang, 'lang') +
         settingToQueryParam(settings.fuzzy, 'fuzzy') +
+        settingToQueryParam(settings.collectAnalytics, 'collectAnalytics') +
         settingToQueryParam(settings.categories, 'categories') +
         settingToQueryParam(settings.priceFromCents, 'priceFromCents') +
         settingToQueryParam(settings.priceToCents, 'priceToCents') +
