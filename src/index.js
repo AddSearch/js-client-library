@@ -62,6 +62,21 @@ var client = function(sitekey) {
 
 
   /**
+   * Fetch field autocompletes
+   *
+   * @param keyword
+   */
+  this.autocomplete = function(field, prefix, callback) {
+    if (!field || !prefix || !callback || !util.isFunction(callback)) {
+      throw "Illegal autocomplete parameters. Should be (field, prefix, callbackFunction)";
+    }
+    this.settings.setAutocompleteParams(field, prefix);
+    console.log('autocomplete..');
+    executeApiFetch(this.sitekey, 'autocomplete', this.settings.getSettings(), callback);
+  }
+
+
+  /**
    * Public functions
    */
   this.getSettings = function() { return this.settings.getSettings(); }

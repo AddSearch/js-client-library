@@ -37,6 +37,13 @@ var settings = function() {
     this.settings.suggestionsSize = size;
   }
 
+  this.setAutocompleteParams = function(field, prefix) {
+    this.settings.autocomplete = {
+      field: field,
+      prefix: prefix
+    };
+  }
+
   this.setLanguage = function(language) {
     if (language && language.length !== 2) {
       throw "use 2-char language code (e.g. \"en\")";
