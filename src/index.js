@@ -1,13 +1,14 @@
 'use strict';
 
 var executeApiFetch = require('./apifetch');
+var sendStats = require('./stats');
 var Settings = require('./settings');
 var util = require('./util');
-//var sendClickHit = require('./stats');
 
 var client = function(sitekey) {
   this.sitekey = sitekey;
   this.settings = new Settings();
+  this.sessionId = ('a-' + (Math.random() * 100000000)).substring(0, 10);
 
   /**
    * Fetch search results
@@ -85,7 +86,16 @@ var client = function(sitekey) {
   this.setShuffleAndLimitTo = function(shuffleAndLimitTo) { this.settings.setShuffleAndLimitTo(shuffleAndLimitTo); }
   this.setFuzzyMatch = function(fuzzy) { this.settings.setFuzzyMatch(fuzzy); }
   this.setCollectAnalytics = function(collectAnalytics) { this.settings.setCollectAnalytics(collectAnalytics); }
-  //this.hitClicked = function(docid, position) { sendClickHit(this.sitekey, this.settings.getSettings().keyword, docid, position); }
+  this.searchResultClicked = function(documentId, position) {
+    var data = {
+      action: 'click',
+      session: this.sessionId,
+      keyword: this.settings.getSettings().keyword,
+      docid: documentId,
+      position: position
+    };
+    sendStats(this.sitekey, data);
+  }
 
   // Deprecated
   this.useFuzzyMatch = function(use) { this.settings.setFuzzyMatch(use); }
