@@ -40,16 +40,16 @@
     "isomorphic-fetch": "^2.2.1"
   },
   "devDependencies": {
-    "@babel/cli": "^7.7.7",
-    "@babel/core": "^7.7.7",
-    "@babel/preset-env": "^7.7.7",
-    "@babel/register": "^7.7.7",
+    "@babel/cli": "^7.8.3",
+    "@babel/core": "^7.8.3",
+    "@babel/preset-env": "^7.8.3",
+    "@babel/register": "^7.8.3",
     "babel-loader": "^8.0.6",
     "esm": "^3.2.25",
     "fetch-mock": "^8.3.1",
-    "mocha": "^6.2.2",
+    "mocha": "^7.0.0",
     "node-fetch": "^2.6.0",
-    "uglify-js": "^3.7.4",
+    "uglify-js": "^3.7.6",
     "webpack": "^4.41.5",
     "webpack-cli": "^3.3.10"
   }
