@@ -85,7 +85,7 @@ client.setCollectAnalytics(false);
 When a search results is clicked, send the event to your AddSearch Analytics Dashboard. Information on clicks is used
 in your statistics and in the self-learning search algorithm.
 ```js
-// Docid is the 32-character long identifier in each hit returned by the search. 
+// Docid is the 32-character long id that is part of each hit in search results
 // Position is the position of the document that was clicked, the first result being 1
 client.searchResultClicked(docid, position);
 ```
