@@ -57,16 +57,31 @@ client.search();
 ```
 
 #### Fetch search suggestions
+Search suggestions are keywords and search phrases that real users have used in your search. Configure Search 
+suggestions on AddSearch Dashboard before using this function.
 ```js
-// Configure Search suggestions on AddSearch Dashboard first
 // Get suggestions starting with a specific prefix
 client.suggestions('a', callback);
 ```
 
-#### Number of search suggestions
+#### Set the number of search suggestions to fetch
 ```js
 // Number of search suggestions to fetch (default 10)
 client.setSuggestionsSize(20);
+```
+
+#### Fetch custom field autocompletion
+Custom fields autocomplete can be used for predictive search. For example, product names or categories can be
+suggested as the keyword is being typed in.
+```js
+// Fetch custom field values starting with a specific prefix. In this example, results could be "adidas, apple, azure"
+client.autocomplete('custom_fields.brand', 'a', callback);
+```
+
+#### Set the number of custom field autocompletion results to fetch
+```js
+// Number of autocompletion results to fetch (default 10)
+client.setAutocompleteSize(20);
 ```
 
 #### Search with fuzzy matching
@@ -161,6 +176,22 @@ client.removeCustomFieldFilter('city','paris');
 
 // Remove all cities
 client.removeCustomFieldFilter('city');
+```
+
+#### Set filtering object
+Set complex filtering object that can contain nested *and*, *or*, *not*, and *range* filters. 
+
+```js
+// Find results where brand is apple, color is not white, and price is between 200 and 500
+var filter = {
+  'and':[
+     {'custom_fields.brand': 'apple'},
+     {'not': {'custom_fields.color': 'white'}},
+     {'range': {'custom_fields.price': {'gt': 200, 'lt':500}}}
+   ]
+};
+
+client.setFilterObject(filter);
 ```
 
 #### Manage paging

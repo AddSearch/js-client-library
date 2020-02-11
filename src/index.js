@@ -63,6 +63,20 @@ var client = function(sitekey) {
 
 
   /**
+   * Fetch field autocompletes
+   *
+   * @param keyword
+   */
+  this.autocomplete = function(field, prefix, callback) {
+    if (!field || !prefix || !callback || !util.isFunction(callback)) {
+      throw "Illegal autocomplete parameters. Should be (field, prefix, callbackFunction)";
+    }
+    this.settings.setAutocompleteParams(field, prefix);
+    executeApiFetch(this.sitekey, 'autocomplete', this.settings.getSettings(), callback);
+  }
+
+
+  /**
    * Public functions
    */
   this.getSettings = function() { return this.settings.getSettings(); }
@@ -78,6 +92,7 @@ var client = function(sitekey) {
   this.nextPage = function() { this.settings.nextPage(); }
   this.previousPage = function() { this.settings.previousPage(); }
   this.setSuggestionsSize = function(size) { this.settings.setSuggestionsSize(size); }
+  this.setAutocompleteSize = function(size) { this.settings.setAutocompleteSize(size); }
   this.addFacetField = function(fieldName) { this.settings.addFacetField(fieldName); }
   this.setNumberOfFacets = function(numFacets) { this.settings.setNumberOfFacets(numFacets); }
   this.setResultType = function(type) { this.settings.setResultType(type); }

@@ -20,7 +20,7 @@ var executeApiFetch = function(sitekey, type, settings, cb) {
 
 
   // Validate query type
-  if (type !== 'search' && type !== 'suggest') {
+  if (type !== 'search' && type !== 'suggest' && type !== 'autocomplete') {
     cb({error: {response: RESPONSE_BAD_REQUEST, message: 'invalid query type'}});
     return;
   }
@@ -29,8 +29,14 @@ var executeApiFetch = function(sitekey, type, settings, cb) {
   var kw = '';
   var qs = '';
 
+  // API Path (eq. /search, /suggest, /autocomplete/document-field)
+  var apiPath = null;
+
   // Search
   if (type === 'search') {
+    // Path
+    apiPath = type;
+
     // Keyword
     kw = settings.keyword;
 
@@ -93,13 +99,22 @@ var executeApiFetch = function(sitekey, type, settings, cb) {
 
   // Suggest
   else if (type === 'suggest') {
+    apiPath = type;
     qs = settingToQueryParam(settings.suggestionsSize, 'size');
     kw = settings.suggestionsPrefix;
   }
 
+  // Autocomplete
+  else if (type === 'autocomplete') {
+    apiPath = 'autocomplete/document-field';
+    qs = settingToQueryParam(settings.autocomplete.field, 'source') +
+         settingToQueryParam(settings.autocomplete.size, 'size');
+    kw = settings.autocomplete.prefix;
+  }
+
 
   // Execute API call
-  fetch('https://api.addsearch.com/v1/' + type + '/' + sitekey + '?term=' + kw + qs)
+  fetch('https://api.addsearch.com/v1/' + apiPath + '/' + sitekey + '?term=' + kw + qs)
     .then(function(response) {
       return response.json();
     }).then(function(json) {
