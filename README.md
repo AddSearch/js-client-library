@@ -169,6 +169,22 @@ client.removeCustomFieldFilter('city','paris');
 client.removeCustomFieldFilter('city');
 ```
 
+#### Set filtering object
+Set complex filtering object that can contain nested *and*, *or*, *not*, and *range* filters. 
+
+```js
+// Find results where brand is apple, color is not white, and price is between 200 and 500
+var filter = {
+  'and':[
+     {'custom_fields.brand': 'apple'},
+     {'not': {'custom_fields.color': 'white'}},
+     {'range': {'custom_fields.price': {'gt': 200, 'lt':500}}}
+   ]
+};
+
+client.setFilterObject(filter);
+```
+
 #### Manage paging
 Set page number, page size and sorting parameters. It's possible to order results by:
 - relevance (descending)
