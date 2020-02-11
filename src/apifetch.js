@@ -107,7 +107,8 @@ var executeApiFetch = function(sitekey, type, settings, cb) {
   // Autocomplete
   else if (type === 'autocomplete') {
     apiPath = 'autocomplete/document-field';
-    qs = settingToQueryParam(settings.autocomplete.field, 'source');
+    qs = settingToQueryParam(settings.autocomplete.field, 'source') +
+         settingToQueryParam(settings.autocomplete.size, 'size');
     kw = settings.autocomplete.prefix;
   }
 
