@@ -14,7 +14,10 @@ var settings = function() {
     customFieldFilters: [],
     userToken: null,
     suggestionsSize: 10,
-    facetFields: []
+    facetFields: [],
+    autocomplete: {
+      size: 10
+    }
   };
 
   this.getSettings = function() {
@@ -37,11 +40,13 @@ var settings = function() {
     this.settings.suggestionsSize = size;
   }
 
+  this.setAutocompleteSize = function(size) {
+    this.settings.autocomplete.size = size;
+  }
+
   this.setAutocompleteParams = function(field, prefix) {
-    this.settings.autocomplete = {
-      field: field,
-      prefix: prefix
-    };
+    this.settings.autocomplete.field = field;
+    this.settings.autocomplete.prefix = prefix;
   }
 
   this.setLanguage = function(language) {

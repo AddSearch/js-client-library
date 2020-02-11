@@ -71,7 +71,6 @@ var client = function(sitekey) {
       throw "Illegal autocomplete parameters. Should be (field, prefix, callbackFunction)";
     }
     this.settings.setAutocompleteParams(field, prefix);
-    console.log('autocomplete..');
     executeApiFetch(this.sitekey, 'autocomplete', this.settings.getSettings(), callback);
   }
 
@@ -92,6 +91,7 @@ var client = function(sitekey) {
   this.nextPage = function() { this.settings.nextPage(); }
   this.previousPage = function() { this.settings.previousPage(); }
   this.setSuggestionsSize = function(size) { this.settings.setSuggestionsSize(size); }
+  this.setAutocompleteSize = function(size) { this.settings.setAutocompleteSize(size); }
   this.addFacetField = function(fieldName) { this.settings.addFacetField(fieldName); }
   this.setNumberOfFacets = function(numFacets) { this.settings.setNumberOfFacets(numFacets); }
   this.setResultType = function(type) { this.settings.setResultType(type); }
