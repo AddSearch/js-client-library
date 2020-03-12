@@ -90,49 +90,39 @@ client.setAutocompleteSize(20);
 client.setFuzzyMatch(false);
 ```
 
-#### Collect analytics
+### Search analytics
+#### Send search event to analytics
+When search is executed, send the event to your AddSearch Analytics Dashboard.
 ```js
-// Control whether search queries are sent to your AddSearch Analytics Dashboard or not (default: true)
-client.setCollectAnalytics(false);
+// If the numberOfResults is 0, the search is shown in the list of "queries with no hits"
+client.sendStatsEvent('search', keyword, {numberOfResults: n});
 ```
 
 #### Send click event to analytics
 When a search results is clicked, send the event to your AddSearch Analytics Dashboard. Information on clicks is used
 in your statistics and in the self-learning search algorithm.
 ```js
-// Docid is the 32-character long id that is part of each hit in search results
-// Position is the position of the document that was clicked, the first result being 1
-client.searchResultClicked(docid, position);
+// documentId is the 32-character long id that is part of each hit in search results.
+// position is the position of the document that was clicked, the first result being 1
+client.sendStatsEvent('click', keyword, {documentId: id, position: n});
 ```
 
-#### Set JSON Web Token (for authentication)
+#### Set or get stats session ID
+Control the search session ID manually. Search queries with the same ID are grouped on the Analytics Dashboard.
+For example, in a search-as-you-type implementation the final keyword of a given session is shown.
 ```js
-// Add JWT to the search request (if protected search index)
-client.setJWT(token);
+client.getStatsSessionId();
+client.setStatsSessionId(id);
 ```
 
-#### Set user token (for personalized search results)
+#### Collect search events automatically
+Not recommended. For example, search-as-you-type implementation would fire a statistics event after every keystroke
 ```js
-// Add a user token to the search request (if personalization in use)
-client.setUserToken('uuid');
+// Control whether search queries are sent to your AddSearch Analytics Dashboard automatically or not (default: false)
+client.setCollectAnalytics(true);
 ```
 
-#### Send personalization events with search query
-In personalized search, user events are typically sent to AddSearch via API and a user token
-is passed with the search query (see setUserToken function). 
-An alternative way is to send user events needed for personalization with the search query.
-
-```js
-// Events depend on the personalization strategy
-// Contact AddSearch for more information
-var events = [
-  {favorite_genre: 'rock'},
-  {favorite_band: 'Red Hot Chili Peppers'},
-  {least_favorite_genre: 'country'}
-];
-
-client.setPersonalizationEvents(events);
-```
+### Filters
 
 #### Define language filter
 ```js
@@ -194,7 +184,14 @@ var filter = {
 client.setFilterObject(filter);
 ```
 
-#### Manage paging
+#### Set result type
+```js
+// By default, fetch all search results
+// If "organic", Pinned results and Promotions are left out
+client.setResultType('organic');
+```
+
+### Pagination
 Set page number, page size and sorting parameters. It's possible to order results by:
 - relevance (descending)
 - date (ascending or descending)
@@ -214,12 +211,39 @@ client.nextPage();
 client.previousPage();
 ```
 
-#### Set result type
+### Personalization
+
+#### Set user token (for personalized search results)
 ```js
-// By default, fetch all search results
-// If "organic", Pinned results and Promotions are left out
-client.setResultType('organic');
+// Add a user token to the search request (if personalization in use)
+client.setUserToken('uuid');
 ```
+
+#### Send personalization events with search query
+In personalized search, user events are typically sent to AddSearch via API and a user token
+is passed with the search query (see setUserToken function). 
+An alternative way is to send user events needed for personalization with the search query.
+
+```js
+// Events depend on the personalization strategy
+// Contact AddSearch for more information
+var events = [
+  {favorite_genre: 'rock'},
+  {favorite_band: 'Red Hot Chili Peppers'},
+  {least_favorite_genre: 'country'}
+];
+
+client.setPersonalizationEvents(events);
+```
+
+### Other
+
+#### Set JSON Web Token (for authentication)
+```js
+// Add JWT to the search request (if protected search index)
+client.setJWT(token);
+```
+
 
 #### Facets
 ```js
@@ -249,6 +273,12 @@ To modify this client library, clone this repository to your computer and execut
 #### Install dependencies
 ```sh
 npm install
+```
+
+#### Code
+Re-compile automatically when source files are changed
+```sh
+npm run watch
 ```
 
 #### Run tests
