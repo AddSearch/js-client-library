@@ -101,19 +101,41 @@ var client = function(sitekey) {
   this.setShuffleAndLimitTo = function(shuffleAndLimitTo) { this.settings.setShuffleAndLimitTo(shuffleAndLimitTo); }
   this.setFuzzyMatch = function(fuzzy) { this.settings.setFuzzyMatch(fuzzy); }
   this.setCollectAnalytics = function(collectAnalytics) { this.settings.setCollectAnalytics(collectAnalytics); }
-  this.searchResultClicked = function(documentId, position) {
-    var data = {
-      action: 'click',
-      session: this.sessionId,
-      keyword: this.settings.getSettings().keyword,
-      docid: documentId,
-      position: position
-    };
-    sendStats(this.sitekey, data);
+  this.setStatsSessionId = function(id) { this.sessionId = id; }
+  this.getStatsSessionId = function() { return this.sessionId; }
+
+  this.sendStatsEvent = function(type, keyword, data) {
+    if (type === 'search') {
+      var data = {
+        action: 'search',
+        session: this.sessionId,
+        keyword: keyword,
+        numberOfResults: data.numberOfResults
+      };
+      sendStats(this.sitekey, data);
+    }
+
+    else if (type === 'click') {
+      var data = {
+        action: 'click',
+        session: this.sessionId,
+        keyword: keyword,
+        docid: data.documentId,
+        position: data.position
+      };
+      sendStats(this.sitekey, data);
+    }
+
+    else {
+      throw "Illegal sendStatsEvent type parameters. Should be search or click)";
+    }
   }
 
+
   // Deprecated
-  this.useFuzzyMatch = function(use) { this.settings.setFuzzyMatch(use); }
+  this.searchResultClicked = function(documentId, position) {
+    this.sendStatsEvent('click', this.settings.getSettings().keyword, {documentId: documentId, position: position});
+  }
 }
 
 module.exports = client;
