@@ -70,11 +70,12 @@ client.suggestions('a', callback);
 client.setSuggestionsSize(20);
 ```
 
-#### Fetch custom field autocompletion
+#### Custom field autocompletion
 Custom fields autocomplete can be used for predictive search. For example, product names or categories can be
 suggested as the keyword is being typed in.
 ```js
-// Fetch custom field values starting with a specific prefix. In this example, results could be "adidas, apple, azure"
+// Fetch custom field values starting with a specific prefix In this example, fetch records 
+// starting with *a* from the *custom_fields.brand* field. Results could be "adidas, apple, azure"
 client.autocomplete('custom_fields.brand', 'a', callback);
 ```
 
@@ -86,8 +87,29 @@ client.setAutocompleteSize(20);
 
 #### Search with fuzzy matching
 ```js
-// Enable/disable fuzzy matching. Possible values true/false/"auto" (default: "auto")
-client.setFuzzyMatch(false);
+// Control fuzzy matching used for typo-tolerance
+// Possible values true/false/"auto" (default: "auto")
+client.setFuzzyMatch(false);  
+```
+
+### Pagination
+Set page number, page size and sorting parameters. It's possible to order results by:
+- relevance (descending)
+- date (ascending or descending)
+- custom field value (ascending or descending. E.g. *custom_fields.price*)
+```js
+// Defaults: page "1", pageSize "10", sortBy "relevance", sortOrder "desc"
+client.setPaging(page, pageSize, sortBy, sortOrder);
+```
+
+Other functions.
+
+```js
+// Next page (call search function to fetch results)
+client.nextPage();
+
+// Previous page
+client.previousPage();
 ```
 
 ### Search analytics
@@ -99,8 +121,8 @@ client.sendStatsEvent('search', keyword, {numberOfResults: n});
 ```
 
 #### Send click event to analytics
-When a search results is clicked, send the event to your AddSearch Analytics Dashboard. Information on clicks is used
-in your statistics and in the self-learning search algorithm.
+When a search results is clicked, send the event to your AddSearch Analytics Dashboard. Click information is shown
+in your statistics and used by the self-learning search algorithm.
 ```js
 // documentId is the 32-character long id that is part of each hit in search results.
 // position is the position of the document that was clicked, the first result being 1
@@ -116,7 +138,8 @@ client.setStatsSessionId(id);
 ```
 
 #### Collect search events automatically
-Not recommended. For example, search-as-you-type implementation would fire a statistics event after every keystroke
+Send search events automatically. Not recommended in search-as-you-type implementations, as every keystroke
+would fire a statistics event
 ```js
 // Control whether search queries are sent to your AddSearch Analytics Dashboard automatically or not (default: false)
 client.setCollectAnalytics(true);
@@ -126,7 +149,7 @@ client.setCollectAnalytics(true);
 
 #### Define language filter
 ```js
-// Documents in specific language (e.g. "en" or "de")
+// Fetch documents in specific language (e.g. "en" or "de")
 client.setLanguage('en');
 ```
 
@@ -191,24 +214,17 @@ client.setFilterObject(filter);
 client.setResultType('organic');
 ```
 
-### Pagination
-Set page number, page size and sorting parameters. It's possible to order results by:
-- relevance (descending)
-- date (ascending or descending)
-- custom field value (ascending or descending. E.g. *custom_fields.price*)
+### Facets
 ```js
-// Defaults: page "1", pageSize "10", sortBy "relevance", sortOrder "desc"
-client.setPaging(page, pageSize, sortBy, sortOrder);
+// Declare fields for faceting. Number of hits found from
+// these fields will be returned
+client.addFacetField('category');
+client.addFacetField('custom_fields.genre');
 ```
-
-Other functions.
-
+By default, 10 facets with most hits are returned per field. 
+Use the following function to get more or less facets.
 ```js
-// Next page (call search function to fetch results)
-client.nextPage();
-
-// Previous page
-client.previousPage();
+client.setNumberOfFacets(20);
 ```
 
 ### Personalization
@@ -242,20 +258,6 @@ client.setPersonalizationEvents(events);
 ```js
 // Add JWT to the search request (if protected search index)
 client.setJWT(token);
-```
-
-
-#### Facets
-```js
-// Declare fields for faceting. Number of hits found from
-// these fields will be returned
-client.addFacetField('category');
-client.addFacetField('custom_fields.genre');
-```
-By default, 10 facets with most hits are returned per field. 
-Use the following function to get more or less facets.
-```js
-client.setNumberOfFacets(20);
 ```
 
 ## Supported web browsers and node.js versions
