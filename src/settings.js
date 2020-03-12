@@ -17,7 +17,8 @@ var settings = function() {
     facetFields: [],
     autocomplete: {
       size: 10
-    }
+    },
+    collectAnalytics: false
   };
 
   this.getSettings = function() {
