@@ -112,39 +112,6 @@ client.nextPage();
 client.previousPage();
 ```
 
-### Search analytics
-#### Send search event to analytics
-When search is executed, send the event to your AddSearch Analytics Dashboard.
-```js
-// If the numberOfResults is 0, the search is shown in the list of "queries with no hits"
-client.sendStatsEvent('search', keyword, {numberOfResults: n});
-```
-
-#### Send click event to analytics
-When a search results is clicked, send the event to your AddSearch Analytics Dashboard. Click information is shown
-in your statistics and used by the self-learning search algorithm.
-```js
-// documentId is the 32-character long id that is part of each hit in search results.
-// position is the position of the document that was clicked, the first result being 1
-client.sendStatsEvent('click', keyword, {documentId: id, position: n});
-```
-
-#### Set or get stats session ID
-Control the search session ID manually. Search queries with the same ID are grouped on the Analytics Dashboard.
-For example, in a search-as-you-type implementation the final keyword of a given session is shown.
-```js
-client.getStatsSessionId();
-client.setStatsSessionId(id);
-```
-
-#### Collect search events automatically
-Send search events automatically. Not recommended in search-as-you-type implementations, as every keystroke
-would fire a statistics event
-```js
-// Control whether search queries are sent to your AddSearch Analytics Dashboard automatically or not (default: false)
-client.setCollectAnalytics(true);
-```
-
 ### Filters
 
 #### Define language filter
@@ -225,6 +192,39 @@ By default, 10 facets with most hits are returned per field.
 Use the following function to get more or less facets.
 ```js
 client.setNumberOfFacets(20);
+```
+
+### Search analytics
+#### Send search event to analytics
+When search is executed, send the event to your AddSearch Analytics Dashboard.
+```js
+// If the numberOfResults is 0, the search is shown in the list of "queries with no hits"
+client.sendStatsEvent('search', keyword, {numberOfResults: n});
+```
+
+#### Send click event to analytics
+When a search results is clicked, send the event to your AddSearch Analytics Dashboard. Click information is shown
+in your statistics and used by the self-learning search algorithm.
+```js
+// documentId is the 32-character long id that is part of each hit in search results.
+// position is the position of the document that was clicked, the first result being 1
+client.sendStatsEvent('click', keyword, {documentId: id, position: n});
+```
+
+#### Set or get stats session ID
+Control the search session ID manually. Search queries with the same ID are grouped on the Analytics Dashboard.
+For example, in a search-as-you-type implementation the final keyword of a given session is shown.
+```js
+client.getStatsSessionId();
+client.setStatsSessionId(id);
+```
+
+#### Collect search events automatically
+Send search events automatically. Not recommended in search-as-you-type implementations, as every keystroke
+would fire a statistics event
+```js
+// Control whether search queries are sent to your AddSearch Analytics Dashboard automatically or not (default: false)
+client.setCollectAnalytics(true);
 ```
 
 ### Personalization
