@@ -220,11 +220,11 @@ client.setStatsSessionId(id);
 ```
 
 #### Collect search events automatically
-Send search events automatically. Not recommended in search-as-you-type implementations, as every keystroke
-would fire a statistics event
+Send search events automatically to the Analytics Dashboard. Not recommended in search-as-you-type implementations, 
+as every keystroke would fire a statistics event
 ```js
-// Control whether search queries are sent to your AddSearch Analytics Dashboard automatically or not (default: false)
-client.setCollectAnalytics(true);
+// Control whether search queries are sent to your AddSearch Analytics Dashboard automatically or not (default: true)
+client.setCollectAnalytics(false);
 ```
 
 ### Personalization
