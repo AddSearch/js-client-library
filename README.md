@@ -260,6 +260,12 @@ client.setPersonalizationEvents(events);
 client.setJWT(token);
 ```
 
+#### Set API throttling
+```js
+// Set API call throttle time in milliseconds. Default is 200.
+client.setThrottleTime(500);
+```
+
 ## Supported web browsers and node.js versions
 The client is tested on
 - Chrome
