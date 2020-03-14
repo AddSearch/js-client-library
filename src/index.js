@@ -6,7 +6,7 @@ var Settings = require('./settings');
 var util = require('./util');
 var throttle = require('./throttle');
 
-var API_THROTTLE = 200;
+var API_THROTTLE_TIME_MS = 200;
 
 var client = function(sitekey) {
   this.sitekey = sitekey;
@@ -49,7 +49,7 @@ var client = function(sitekey) {
     this.settings.setKeyword(keyword);
 
     if (!this.throttledSearchFetch) {
-      this.throttledSearchFetch = throttle(API_THROTTLE, executeApiFetch);
+      this.throttledSearchFetch = throttle(API_THROTTLE_TIME_MS, executeApiFetch);
     }
     this.throttledSearchFetch(this.sitekey, 'search', this.settings.getSettings(), callback);
   }
@@ -67,7 +67,7 @@ var client = function(sitekey) {
     this.settings.setSuggestionsPrefix(prefix);
 
     if (!this.throttledSuggestionsFetch) {
-      this.throttledSuggestionsFetch = throttle(API_THROTTLE, executeApiFetch);
+      this.throttledSuggestionsFetch = throttle(API_THROTTLE_TIME_MS, executeApiFetch);
     }
     this.throttledSuggestionsFetch(this.sitekey, 'suggest', this.settings.getSettings(), callback);
   }
@@ -85,7 +85,7 @@ var client = function(sitekey) {
     this.settings.setAutocompleteParams(field, prefix);
 
     if (!this.throttledAutocompleteFetch) {
-      this.throttledAutocompleteFetch = throttle(API_THROTTLE, executeApiFetch);
+      this.throttledAutocompleteFetch = throttle(API_THROTTLE_TIME_MS, executeApiFetch);
     }
     this.throttledAutocompleteFetch(this.sitekey, 'autocomplete', this.settings.getSettings(), callback);
   }
@@ -116,7 +116,7 @@ var client = function(sitekey) {
   this.setShuffleAndLimitTo = function(shuffleAndLimitTo) { this.settings.setShuffleAndLimitTo(shuffleAndLimitTo); }
   this.setFuzzyMatch = function(fuzzy) { this.settings.setFuzzyMatch(fuzzy); }
   this.setCollectAnalytics = function(collectAnalytics) { this.settings.setCollectAnalytics(collectAnalytics); }
-  this.setThrottleDelay = function(delay) { API_THROTTLE = delay; }
+  this.setThrottleTime = function(delay) { API_THROTTLE_TIME_MS = delay; }
   this.setStatsSessionId = function(id) { this.sessionId = id; }
   this.getStatsSessionId = function() { return this.sessionId; }
 
