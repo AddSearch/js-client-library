@@ -4,6 +4,9 @@ var executeApiFetch = require('./apifetch');
 var sendStats = require('./stats');
 var Settings = require('./settings');
 var util = require('./util');
+var throttle = require('./throttle');
+
+var API_THROTTLE_TIME_MS = 200;
 
 var client = function(sitekey) {
   this.sitekey = sitekey;
@@ -44,7 +47,11 @@ var client = function(sitekey) {
 
     this.settings.setCallback(callback);
     this.settings.setKeyword(keyword);
-    executeApiFetch(this.sitekey, 'search', this.settings.getSettings(), callback);
+
+    if (!this.throttledSearchFetch) {
+      this.throttledSearchFetch = throttle(API_THROTTLE_TIME_MS, executeApiFetch);
+    }
+    this.throttledSearchFetch(this.sitekey, 'search', this.settings.getSettings(), callback);
   }
 
 
@@ -58,7 +65,11 @@ var client = function(sitekey) {
       throw "Illegal suggestions parameters. Should be (prefix, callbackFunction)";
     }
     this.settings.setSuggestionsPrefix(prefix);
-    executeApiFetch(this.sitekey, 'suggest', this.settings.getSettings(), callback);
+
+    if (!this.throttledSuggestionsFetch) {
+      this.throttledSuggestionsFetch = throttle(API_THROTTLE_TIME_MS, executeApiFetch);
+    }
+    this.throttledSuggestionsFetch(this.sitekey, 'suggest', this.settings.getSettings(), callback);
   }
 
 
@@ -72,7 +83,11 @@ var client = function(sitekey) {
       throw "Illegal autocomplete parameters. Should be (field, prefix, callbackFunction)";
     }
     this.settings.setAutocompleteParams(field, prefix);
-    executeApiFetch(this.sitekey, 'autocomplete', this.settings.getSettings(), callback);
+
+    if (!this.throttledAutocompleteFetch) {
+      this.throttledAutocompleteFetch = throttle(API_THROTTLE_TIME_MS, executeApiFetch);
+    }
+    this.throttledAutocompleteFetch(this.sitekey, 'autocomplete', this.settings.getSettings(), callback);
   }
 
 
@@ -101,6 +116,7 @@ var client = function(sitekey) {
   this.setShuffleAndLimitTo = function(shuffleAndLimitTo) { this.settings.setShuffleAndLimitTo(shuffleAndLimitTo); }
   this.setFuzzyMatch = function(fuzzy) { this.settings.setFuzzyMatch(fuzzy); }
   this.setCollectAnalytics = function(collectAnalytics) { this.settings.setCollectAnalytics(collectAnalytics); }
+  this.setThrottleTime = function(delay) { API_THROTTLE_TIME_MS = delay; }
   this.setStatsSessionId = function(id) { this.sessionId = id; }
   this.getStatsSessionId = function() { return this.sessionId; }
 
