@@ -57,8 +57,8 @@ var settings = function() {
   }
 
   this.setFuzzyMatch = function(fuzzy) {
-    if (fuzzy !== true && fuzzy !== false && fuzzy !== 'auto') {
-      throw "fuzzy matching can be true, false, or 'auto'";
+    if (fuzzy !== true && fuzzy !== false && fuzzy !== 'auto' && fuzzy !== 'retry') {
+      throw "fuzzy matching can be true, false, 'auto', or 'retry'";
     }
     this.settings.fuzzy = fuzzy;
   }
