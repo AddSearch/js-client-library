@@ -7,7 +7,7 @@ from your JavaScript code on web browsers or with Node.js.
 ## Quick Start
 The library is available on the global CDN [jsDelivr:](https://www.jsdelivr.com/)
 ```html
-<script src="https://cdn.jsdelivr.net/npm/addsearch-js-client@0.3/dist/addsearch-js-client.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/addsearch-js-client@0.4/dist/addsearch-js-client.min.js"></script>
 ```
 To install the library locally or to use it with Node.js:
 ```sh
@@ -86,9 +86,15 @@ client.setAutocompleteSize(20);
 ```
 
 #### Search with fuzzy matching
+Fuzzy matching is used for typo tolerance. There are four options:
+- **false**: No typo tolerance
+- **true**: Exact matches and fuzzy matches are equal
+- **"auto"**: Exact matches first, followed by fuzzy matches
+- **"retry"**: Show exact matches only. If none were found, show fuzzy matches
+
 ```js
 // Control fuzzy matching used for typo-tolerance
-// Possible values true/false/"auto" (default: "auto")
+// Possible values true/false/"auto"/"retry" (default: "auto")
 client.setFuzzyMatch(false);  
 ```
 
