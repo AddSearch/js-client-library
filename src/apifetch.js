@@ -6,7 +6,7 @@ require('isomorphic-fetch');
 /**
  * Fetch search results of search suggestions from the Addsearch API
  */
-var executeApiFetch = function(sitekey, type, settings, cb) {
+var executeApiFetch = function(sitekey, type, settings, cb, fuzzyRetry) {
 
   const RESPONSE_BAD_REQUEST = 400;
   const RESPONSE_SERVER_ERROR = 500;
@@ -46,10 +46,23 @@ var executeApiFetch = function(sitekey, type, settings, cb) {
     // Escape
     kw = encodeURIComponent(kw);
 
+    // Fuzzy
+    var fuzzy = settings.fuzzy;
+    if (fuzzy === 'retry') {
+      // First call, non fuzzy
+      if (fuzzyRetry !== true) {
+        fuzzy = false;
+      }
+      // Second call, fuzzy
+      else {
+        fuzzy = true;
+      }
+    }
+
     // Construct query string from settings
     if (type === 'search') {
       qs = settingToQueryParam(settings.lang, 'lang') +
-        settingToQueryParam(settings.fuzzy, 'fuzzy') +
+        settingToQueryParam(fuzzy, 'fuzzy') +
         settingToQueryParam(settings.collectAnalytics, 'collectAnalytics') +
         settingToQueryParam(settings.categories, 'categories') +
         settingToQueryParam(settings.priceFromCents, 'priceFromCents') +
@@ -118,7 +131,27 @@ var executeApiFetch = function(sitekey, type, settings, cb) {
     .then(function(response) {
       return response.json();
     }).then(function(json) {
-    cb(json);
+
+    // Search again with fuzzy=true if no hits
+    if (type === 'search' && settings.fuzzy === 'retry' && json.total_hits === 0 && fuzzyRetry !== true) {
+      executeApiFetch(sitekey, type, settings, cb, true);
+    }
+
+    // Fuzzy not "retry" OR fuzzyRetry already returning
+    else {
+
+      // Cap fuzzy results to one page as quality decreases quickly
+      if (fuzzyRetry === true) {
+        var pageSize = settings.paging.pageSize;
+        if (json.total_hits >= pageSize) {
+          json.total_hits = pageSize;
+        }
+      }
+
+      // Callback
+      cb(json);
+    }
+
   }).catch(function(ex) {
     console.log(ex);
     cb({error: {response: RESPONSE_SERVER_ERROR, message: 'invalid server response'}});
