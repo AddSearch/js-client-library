@@ -63,6 +63,10 @@ var settings = function() {
     this.settings.fuzzy = fuzzy;
   }
 
+  this.setPostfixWildcard = function(wildcard) {
+    this.settings.postfixWildcard = wildcard;
+  }
+
   this.setCollectAnalytics = function(collectAnalytics) {
     this.settings.collectAnalytics = collectAnalytics;
   }

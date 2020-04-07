@@ -1,3 +1,7 @@
+var webpack = require('webpack');
+var PACKAGE = require('./package.json');
+var banner = PACKAGE.name + ' ' + PACKAGE.version;
+
 module.exports = {
   entry: './src/index.js',
   output: {
@@ -5,6 +9,11 @@ module.exports = {
     library: 'AddSearchClient',
     libraryTarget: 'global'
   },
+  plugins: [
+    new webpack.BannerPlugin({
+      banner: banner
+    })
+  ],
   mode: 'production',
   module: {
     rules: [

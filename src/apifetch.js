@@ -64,6 +64,7 @@ var executeApiFetch = function(sitekey, type, settings, cb, fuzzyRetry) {
       qs = settingToQueryParam(settings.lang, 'lang') +
         settingToQueryParam(fuzzy, 'fuzzy') +
         settingToQueryParam(settings.collectAnalytics, 'collectAnalytics') +
+        settingToQueryParam(settings.postfixWildcard, 'postfixWildcard') +
         settingToQueryParam(settings.categories, 'categories') +
         settingToQueryParam(settings.priceFromCents, 'priceFromCents') +
         settingToQueryParam(settings.priceToCents, 'priceToCents') +
