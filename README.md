@@ -98,6 +98,15 @@ Fuzzy matching is used for typo tolerance. There are four options:
 client.setFuzzyMatch(false);  
 ```
 
+#### Postfix wildcard
+Enable or disable postfix wildcard. I.e. should keyword "add" match to "addsearch" or should it just match to the 
+term **add**
+
+```js
+// Possible values true/false (default: true)
+client.setPostfixWildcard(false);  
+```
+
 ### Pagination
 Set page number, page size and sorting parameters. It's possible to order results by:
 - relevance (descending)
