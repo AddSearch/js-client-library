@@ -209,6 +209,20 @@ Use the following function to get more or less facets.
 client.setNumberOfFacets(20);
 ```
 
+#### Numeric range facets
+Group numerical custom fields into range buckets.
+```js
+// Define ranges. E.g. products with price $0-$100, $100-$200, and over $200 (from value is inclusive, to value is exclusive)
+var ranges = [
+  {'to': 100},
+  {'from': 100, 'to': 200},
+  {'from': 200}
+];
+
+// Parameters: field name, range array
+client.addRangeFacet('custom_fields.price', ranges);
+```
+
 ### Search analytics
 #### Send search event to analytics
 When search is executed, send the event to your AddSearch Analytics Dashboard.
