@@ -94,6 +94,13 @@ var executeApiFetch = function(sitekey, type, settings, cb, fuzzyRetry) {
         }
       }
 
+
+      // Range facets
+      if (settings.rangeFacets) {
+        qs = qs + '&rangeFacets=' + JSON.stringify(settings.rangeFacets);
+      }
+
+
       // Personalization events
       if (settings.personalizationEvents && Array.isArray(settings.personalizationEvents)) {
         for (var i = 0; i<settings.personalizationEvents.length; i++) {

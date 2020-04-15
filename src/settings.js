@@ -144,6 +144,16 @@ var settings = function() {
     }
   }
 
+  this.addRangeFacet = function(field, ranges) {
+    if (!this.settings.rangeFacets) {
+      this.settings.rangeFacets = [];
+    }
+    this.settings.rangeFacets.push({
+      field: field,
+      ranges: ranges
+    });
+  }
+
   this.setNumberOfFacets = function(numFacets) {
     this.settings.numFacets = numFacets;
   }
