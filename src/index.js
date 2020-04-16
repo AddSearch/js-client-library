@@ -110,6 +110,7 @@ var client = function(sitekey) {
   this.setAutocompleteSize = function(size) { this.settings.setAutocompleteSize(size); }
   this.addFacetField = function(fieldName) { this.settings.addFacetField(fieldName); }
   this.addRangeFacet = function(field, ranges) { this.settings.addRangeFacet(field, ranges); }
+  this.addStatsField = function(field) { this.settings.addStatsField(field); }
   this.setNumberOfFacets = function(numFacets) { this.settings.setNumberOfFacets(numFacets); }
   this.setResultType = function(type) { this.settings.setResultType(type); }
   this.setPersonalizationEvents = function(events) { this.settings.setPersonalizationEvents(events); }

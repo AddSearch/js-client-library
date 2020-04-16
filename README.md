@@ -1,15 +1,15 @@
 # AddSearch Search API Client for JavaScript
 
-[AddSearch](https://www.addsearch.com) is a hosted search platform for all your web content. This API 
-Client lets you easily use the [AddSearch Search API](https://www.addsearch.com/support/api-reference/) 
-from your JavaScript code on web browsers or with Node.js.
+[AddSearch](https://www.addsearch.com) is a Search-as-a-Service for all your search needs. This API 
+Client lets you easily use the [AddSearch Search API](https://www.addsearch.com/docs/api/) 
+with JavaScript on web browsers or from Node.js.
 
 ## Quick Start
-The library is available on the global CDN [jsDelivr:](https://www.jsdelivr.com/)
+The library is available on the global CDN [jsDelivr:](https://www.jsdelivr.com/package/npm/addsearch-js-client)
 ```html
 <script src="https://cdn.jsdelivr.net/npm/addsearch-js-client@0.4/dist/addsearch-js-client.min.js"></script>
 ```
-To install the library locally or to use it with Node.js:
+Or install the library locally to use it with Node.js:
 ```sh
 npm install addsearch-js-client --save
 ```
@@ -209,10 +209,11 @@ Use the following function to get more or less facets.
 client.setNumberOfFacets(20);
 ```
 
-#### Numeric range facets
+#### Numerical range facets
 Group numerical custom fields into range buckets.
 ```js
-// Define ranges. E.g. products with price $0-$100, $100-$200, and over $200 (from value is inclusive, to value is exclusive)
+// Define ranges. E.g. products with price $0-$100, $100-$200, and over $200.
+// From value is inclusive, to value is exclusive
 var ranges = [
   {'to': 100},
   {'from': 100, 'to': 200},
@@ -221,6 +222,15 @@ var ranges = [
 
 // Parameters: field name, range array
 client.addRangeFacet('custom_fields.price', ranges);
+```
+
+### Field statistics
+Get minimum, maximum, and average values of a numerical or date-based custom field. The information
+is handy for applications like range filtering.
+```js
+// Search response will have a fieldStats element with information like 
+// custom_fields.price: {min: 1230, max: 1590, avg: 1382}
+client.addStatsField('custom_fields.price');
 ```
 
 ### Search analytics

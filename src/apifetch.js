@@ -101,6 +101,14 @@ var executeApiFetch = function(sitekey, type, settings, cb, fuzzyRetry) {
       }
 
 
+      // Stats fields
+      if (settings.statsFields) {
+        for (var i = 0; i<settings.statsFields.length; i++) {
+          qs = qs + '&fieldStat=' + settings.statsFields[i];
+        }
+      }
+
+
       // Personalization events
       if (settings.personalizationEvents && Array.isArray(settings.personalizationEvents)) {
         for (var i = 0; i<settings.personalizationEvents.length; i++) {
