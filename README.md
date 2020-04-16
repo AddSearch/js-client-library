@@ -209,7 +209,7 @@ Use the following function to get more or less facets.
 client.setNumberOfFacets(20);
 ```
 
-#### Numeric range facets
+#### Numerical range facets
 Group numerical custom fields into range buckets.
 ```js
 // Define ranges. E.g. products with price $0-$100, $100-$200, and over $200 (from value is inclusive, to value is exclusive)
@@ -221,6 +221,14 @@ var ranges = [
 
 // Parameters: field name, range array
 client.addRangeFacet('custom_fields.price', ranges);
+```
+
+### Field statistics
+Get the minimum, maximum, and average values of a numerical or date-based custom field. The information
+is handy for applications like range filtering.
+```js
+// Search response will have fieldStats element with information like {min: 1230, max: 1590, avg: 1382}
+client.addStatsField('custom_fields.price');
 ```
 
 ### Search analytics

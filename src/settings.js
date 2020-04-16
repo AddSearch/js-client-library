@@ -154,6 +154,15 @@ var settings = function() {
     });
   }
 
+  this.addStatsField = function(field) {
+    if (!this.settings.statsFields) {
+      this.settings.statsFields = [];
+    }
+    if (this.settings.statsFields.indexOf(field) === -1) {
+      this.settings.statsFields.push(field);
+    }
+  }
+
   this.setNumberOfFacets = function(numFacets) {
     this.settings.numFacets = numFacets;
   }
