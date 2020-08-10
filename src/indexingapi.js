@@ -2,13 +2,13 @@
 
 require('isomorphic-fetch');
 const Promise = require('es6-promise').Promise;
-
+const { Base64 } = require('js-base64');
 
 const BASE_URL = 'https://api.addsearch.com/v2/indices/';
 
 const getHeaders = function(sitekey, privatekey) {
   return {
-    'Authorization': 'Basic ' + Buffer.from(sitekey + ':' + privatekey).toString('base64'),
+    'Authorization': 'Basic ' + Base64.encode(sitekey + ':' + privatekey),
     'Content-Type': 'application/json'
   };
 }
