@@ -37,7 +37,8 @@
   "license": "MIT",
   "dependencies": {
     "es6-promise": "^4.2.8",
-    "isomorphic-fetch": "^2.2.1"
+    "isomorphic-fetch": "^2.2.1",
+    "js-base64": "^3.4.5"
   },
   "devDependencies": {
     "@babel/cli": "^7.10.5",
