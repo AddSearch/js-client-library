@@ -1,6 +1,6 @@
-var webpack = require('webpack');
-var PACKAGE = require('./package.json');
-var banner = PACKAGE.name + ' ' + PACKAGE.version;
+const webpack = require('webpack');
+const PACKAGE = require('./package.json');
+const banner = PACKAGE.name + ' ' + PACKAGE.version;
 
 module.exports = {
   entry: './src/index.js',
@@ -14,6 +14,9 @@ module.exports = {
       banner: banner
     })
   ],
+  node: {
+    Buffer: false
+  },
   mode: 'production',
   module: {
     rules: [
