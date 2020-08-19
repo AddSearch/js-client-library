@@ -328,7 +328,7 @@ Documents can contain a set of pre-defined fields, as well as any number of cust
 defined under the **custom_fields** key.
 
 Using pre-defined fields is optional, but default [Search UI](https://github.com/AddSearch/search-ui) components 
-display them by default, so they give you visible results faster.
+display them by default, so pre-defined field give you visible results a bit faster.
 
 Pre-defined fields are: url, title, and main_content.
 
