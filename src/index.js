@@ -1,6 +1,7 @@
 'use strict';
 
 var executeApiFetch = require('./apifetch');
+var indexingapi = require('./indexingapi');
 var sendStats = require('./stats');
 var Settings = require('./settings');
 var util = require('./util');
@@ -8,8 +9,9 @@ var throttle = require('./throttle');
 
 var API_THROTTLE_TIME_MS = 200;
 
-var client = function(sitekey) {
+var client = function(sitekey, privatekey) {
   this.sitekey = sitekey;
+  this.privatekey = privatekey;
   this.settings = new Settings();
   this.sessionId = ('a-' + (Math.random() * 100000000)).substring(0, 10);
 
@@ -89,6 +91,38 @@ var client = function(sitekey) {
     }
     this.throttledAutocompleteFetch(this.sitekey, 'autocomplete', this.settings.getSettings(), callback);
   }
+
+
+  /**
+   * Indexing API functions
+   */
+  this.getDocument = function(id) {
+    return indexingapi.getDocument(this.sitekey, this.privatekey, id);
+  }
+
+  this.saveDocument = function(document) {
+    return indexingapi.saveDocument(this.sitekey, this.privatekey, document);
+  }
+
+  this.saveDocumentsBatch = function(batch) {
+    if (!batch || !batch.documents || !Array.isArray(batch.documents)) {
+      throw "Please provide an array of documents: {documents: []}";
+    }
+    return indexingapi.saveDocumentsBatch(this.sitekey, this.privatekey, batch);
+  }
+
+  this.deleteDocument = function(id) {
+    return indexingapi.deleteDocument(this.sitekey, this.privatekey, id);
+  }
+
+  this.deleteDocumentsBatch = function(batch) {
+    if (!batch || !batch.documents || !Array.isArray(batch.documents)) {
+      throw "Please provide an array of document ids: {documents: []}";
+    }
+    return indexingapi.deleteDocumentsBatch(this.sitekey, this.privatekey, batch);
+  }
+
+
 
 
   /**
