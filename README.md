@@ -330,7 +330,7 @@ defined under the custom_fields key.
 Using pre-defined fields is optional, but default [Search UI](https://github.com/AddSearch/search-ui) components 
 display them by default, so they give you visible results faster.
 
-Pre-defined fields are: url, title, h1, h2, language, title, main_content, and meta_description.
+Pre-defined fields are: url, title, and main_content.
 
 Example document:
 ```js
@@ -338,7 +338,7 @@ const doc = {
   id: '1234',
   url: 'https://www.example-store.com/product-x',
   title: 'Example product',
-  language: 'en',
+  main_content: 'Lorem ipsum',
   custom_fields: {
     'name': 'Example product',
     'description': 'Description for the example product',
