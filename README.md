@@ -325,7 +325,7 @@ All Indexing API functions are Promise-based.
 
 ### Document structure
 Documents can contain a set of pre-defined fields, as well as any number of custom fields
-defined under the custom_fields key.
+defined under the **custom_fields** key.
 
 Using pre-defined fields is optional, but default [Search UI](https://github.com/AddSearch/search-ui) components 
 display them by default, so they give you visible results faster.
@@ -359,8 +359,8 @@ Dates should be defined as UNIX timestamps with integer values.
 
 ### Document ID
 
-If the id field is not defined in the document, it is generated automatically either randomly
-or from the URL field, when the document is added to the index.
+If the **id** is not defined in the document at indexing time, it is generated automatically either randomly
+or from the **url** field.
 
 ```js
 // ID defined by the user
@@ -370,9 +370,9 @@ const docWithDefinedId = {
 }
 ```
 ```js
-// ID created from the URL field (md5 sum)
+// ID created from the URL field (md5 of the url)
 const docWithURL= {
-  url: 'https://..', // id will be md5('https://..')
+  url: 'https://..',
   custom_fields: {}
 }
 ```
