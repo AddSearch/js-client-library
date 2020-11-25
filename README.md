@@ -1,8 +1,8 @@
 # AddSearch Search API Client for JavaScript
 
 [AddSearch](https://www.addsearch.com) is a Search-as-a-Service for all your search needs. This API 
-Client lets you easily use the [AddSearch Search API](https://www.addsearch.com/docs/api/) 
-with JavaScript on web browsers or from Node.js.
+Client lets you easily use the [Search API](https://www.addsearch.com/docs/api/) 
+and [Indexing API](https://www.addsearch.com/docs/api/indexing-overview/) with JavaScript.
 
 ## Quick Start
 The library is available on the global CDN [jsDelivr:](https://www.jsdelivr.com/package/npm/addsearch-js-client)
