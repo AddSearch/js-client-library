@@ -4,8 +4,6 @@ require('isomorphic-fetch');
 const util = require('./util');
 const Promise = require('es6-promise').Promise;
 
-const BASE_URL = 'https://api.addsearch.com/v2/indices/';
-
 const getHeaders = function(sitekey, privatekey) {
   return {
     'Authorization': 'Basic ' + util.base64(sitekey + ':' + privatekey),
@@ -17,9 +15,10 @@ const getHeaders = function(sitekey, privatekey) {
 /**
  * Fetch document
  */
-var getDocument = function(sitekey, privatekey, id) {
+var getDocument = function(apiHostname, sitekey, privatekey, id) {
   const promise = new Promise((resolve, reject) => {
-    fetch(BASE_URL + sitekey + '/documents/' + id,
+
+    fetch('https://' + apiHostname + '/v2/indices/' + sitekey + '/documents/' + id,
       {
         method: 'GET',
         headers: getHeaders(sitekey, privatekey)
@@ -42,13 +41,13 @@ var getDocument = function(sitekey, privatekey, id) {
 /**
  * Add document
  */
-var saveDocument = function(sitekey, privatekey, document) {
+var saveDocument = function(apiHostname, sitekey, privatekey, document) {
 
   // If the doc has id or url field, PUT instead of POST
   const isPut = document.id || document.url;
 
   const promise = new Promise((resolve, reject) => {
-    fetch(BASE_URL + sitekey + '/documents/',
+    fetch('https://' + apiHostname + '/v2/indices/' + sitekey + '/documents/',
       {
         method: isPut ? 'PUT' : 'POST',
         headers: getHeaders(sitekey, privatekey),
@@ -73,10 +72,10 @@ var saveDocument = function(sitekey, privatekey, document) {
 /**
  * Batch add documents
  */
-var saveDocumentsBatch = function(sitekey, privatekey, documents) {
+var saveDocumentsBatch = function(apiHostname, sitekey, privatekey, documents) {
 
   const promise = new Promise((resolve, reject) => {
-    fetch(BASE_URL + sitekey + '/documents:batch',
+    fetch('https://' + apiHostname + '/v2/indices/' + sitekey + '/documents:batch',
       {
         method: 'PUT',
         headers: getHeaders(sitekey, privatekey),
@@ -101,9 +100,9 @@ var saveDocumentsBatch = function(sitekey, privatekey, documents) {
 /**
  * Delete documents
  */
-var deleteDocument = function(sitekey, privatekey, id) {
+var deleteDocument = function(apiHostname, sitekey, privatekey, id) {
   const promise = new Promise((resolve, reject) => {
-    fetch(BASE_URL + sitekey + '/documents/' + id,
+    fetch('https://' + apiHostname + '/v2/indices/' + sitekey + '/documents/' + id,
       {
         method: 'DELETE',
         headers: getHeaders(sitekey, privatekey)
@@ -127,9 +126,9 @@ var deleteDocument = function(sitekey, privatekey, id) {
 /**
  * Batch delete documents
  */
-var deleteDocumentsBatch = function(sitekey, privatekey, batch) {
+var deleteDocumentsBatch = function(apiHostname, sitekey, privatekey, batch) {
   const promise = new Promise((resolve, reject) => {
-    fetch(BASE_URL + sitekey + '/documents:batch',
+    fetch('https://' + apiHostname + '/v2/indices/' + sitekey + '/documents:batch',
       {
         method: 'DELETE',
         headers: getHeaders(sitekey, privatekey),
