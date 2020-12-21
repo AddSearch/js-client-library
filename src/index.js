@@ -7,11 +7,13 @@ var Settings = require('./settings');
 var util = require('./util');
 var throttle = require('./throttle');
 
+var API_HOSTNAME = 'api.addsearch.com';
 var API_THROTTLE_TIME_MS = 200;
 
 var client = function(sitekey, privatekey) {
   this.sitekey = sitekey;
   this.privatekey = privatekey;
+  this.apiHostname = API_HOSTNAME;
   this.settings = new Settings();
   this.sessionId = ('a-' + (Math.random() * 100000000)).substring(0, 10);
 
@@ -128,6 +130,7 @@ var client = function(sitekey, privatekey) {
   /**
    * Public functions
    */
+  this.setApiHostname = function(hostname) { this.apiHostname = hostname; }
   this.getSettings = function() { return this.settings.getSettings(); }
   this.setLanguage = function(lang) { this.settings.setLanguage(lang); }
   this.setCategoryFilters = function(categories) { this.settings.setCategoryFilters(categories); }
@@ -165,7 +168,7 @@ var client = function(sitekey, privatekey) {
         keyword: keyword,
         numberOfResults: data.numberOfResults
       };
-      sendStats(this.sitekey, data);
+      sendStats(this.apiHostname, this.sitekey, data);
     }
 
     else if (type === 'click') {
@@ -176,7 +179,7 @@ var client = function(sitekey, privatekey) {
         docid: data.documentId,
         position: data.position
       };
-      sendStats(this.sitekey, data);
+      sendStats(this.apiHostname, this.sitekey, data);
     }
 
     else {
