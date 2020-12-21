@@ -99,29 +99,29 @@ var client = function(sitekey, privatekey) {
    * Indexing API functions
    */
   this.getDocument = function(id) {
-    return indexingapi.getDocument(this.sitekey, this.privatekey, id);
+    return indexingapi.getDocument(this.apiHostname, this.sitekey, this.privatekey, id);
   }
 
   this.saveDocument = function(document) {
-    return indexingapi.saveDocument(this.sitekey, this.privatekey, document);
+    return indexingapi.saveDocument(this.apiHostname, this.sitekey, this.privatekey, document);
   }
 
   this.saveDocumentsBatch = function(batch) {
     if (!batch || !batch.documents || !Array.isArray(batch.documents)) {
       throw "Please provide an array of documents: {documents: []}";
     }
-    return indexingapi.saveDocumentsBatch(this.sitekey, this.privatekey, batch);
+    return indexingapi.saveDocumentsBatch(this.apiHostname, this.sitekey, this.privatekey, batch);
   }
 
   this.deleteDocument = function(id) {
-    return indexingapi.deleteDocument(this.sitekey, this.privatekey, id);
+    return indexingapi.deleteDocument(this.apiHostname, this.sitekey, this.privatekey, id);
   }
 
   this.deleteDocumentsBatch = function(batch) {
     if (!batch || !batch.documents || !Array.isArray(batch.documents)) {
       throw "Please provide an array of document ids: {documents: []}";
     }
-    return indexingapi.deleteDocumentsBatch(this.sitekey, this.privatekey, batch);
+    return indexingapi.deleteDocumentsBatch(this.apiHostname, this.sitekey, this.privatekey, batch);
   }
 
 
