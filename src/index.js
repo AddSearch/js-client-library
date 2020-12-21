@@ -55,7 +55,7 @@ var client = function(sitekey, privatekey) {
     if (!this.throttledSearchFetch) {
       this.throttledSearchFetch = throttle(API_THROTTLE_TIME_MS, executeApiFetch);
     }
-    this.throttledSearchFetch(this.sitekey, 'search', this.settings.getSettings(), callback);
+    this.throttledSearchFetch(this.apiHostname, this.sitekey, 'search', this.settings.getSettings(), callback);
   }
 
 
@@ -73,7 +73,7 @@ var client = function(sitekey, privatekey) {
     if (!this.throttledSuggestionsFetch) {
       this.throttledSuggestionsFetch = throttle(API_THROTTLE_TIME_MS, executeApiFetch);
     }
-    this.throttledSuggestionsFetch(this.sitekey, 'suggest', this.settings.getSettings(), callback);
+    this.throttledSuggestionsFetch(this.apiHostname, this.sitekey, 'suggest', this.settings.getSettings(), callback);
   }
 
 
@@ -91,7 +91,7 @@ var client = function(sitekey, privatekey) {
     if (!this.throttledAutocompleteFetch) {
       this.throttledAutocompleteFetch = throttle(API_THROTTLE_TIME_MS, executeApiFetch);
     }
-    this.throttledAutocompleteFetch(this.sitekey, 'autocomplete', this.settings.getSettings(), callback);
+    this.throttledAutocompleteFetch(this.apiHostname, this.sitekey, 'autocomplete', this.settings.getSettings(), callback);
   }
 
 
