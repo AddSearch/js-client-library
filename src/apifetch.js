@@ -6,7 +6,7 @@ require('isomorphic-fetch');
 /**
  * Fetch search results of search suggestions from the Addsearch API
  */
-var executeApiFetch = function(sitekey, type, settings, cb, fuzzyRetry) {
+var executeApiFetch = function(apiHostname, sitekey, type, settings, cb, fuzzyRetry) {
 
   const RESPONSE_BAD_REQUEST = 400;
   const RESPONSE_SERVER_ERROR = 500;
@@ -143,7 +143,7 @@ var executeApiFetch = function(sitekey, type, settings, cb, fuzzyRetry) {
 
 
   // Execute API call
-  fetch('https://api.addsearch.com/v1/' + apiPath + '/' + sitekey + '?term=' + kw + qs)
+  fetch('https://' + apiHostname + '/v1/' + apiPath + '/' + sitekey + '?term=' + kw + qs)
     .then(function(response) {
       return response.json();
     }).then(function(json) {

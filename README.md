@@ -306,6 +306,12 @@ client.setJWT(token);
 client.setThrottleTime(500);
 ```
 
+#### Set API hostname
+```js
+// Set API hostname (e.g. for dedicated environments)
+client.setApiHostname('api.addsearch.com');
+```
+
 ## Indexing API
 With the Indexing API, you can fetch, create, update, and delete single documents or
 batches of documents.

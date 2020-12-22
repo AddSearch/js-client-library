@@ -7,11 +7,13 @@ var Settings = require('./settings');
 var util = require('./util');
 var throttle = require('./throttle');
 
+var API_HOSTNAME = 'api.addsearch.com';
 var API_THROTTLE_TIME_MS = 200;
 
 var client = function(sitekey, privatekey) {
   this.sitekey = sitekey;
   this.privatekey = privatekey;
+  this.apiHostname = API_HOSTNAME;
   this.settings = new Settings();
   this.sessionId = ('a-' + (Math.random() * 100000000)).substring(0, 10);
 
@@ -53,7 +55,7 @@ var client = function(sitekey, privatekey) {
     if (!this.throttledSearchFetch) {
       this.throttledSearchFetch = throttle(API_THROTTLE_TIME_MS, executeApiFetch);
     }
-    this.throttledSearchFetch(this.sitekey, 'search', this.settings.getSettings(), callback);
+    this.throttledSearchFetch(this.apiHostname, this.sitekey, 'search', this.settings.getSettings(), callback);
   }
 
 
@@ -71,7 +73,7 @@ var client = function(sitekey, privatekey) {
     if (!this.throttledSuggestionsFetch) {
       this.throttledSuggestionsFetch = throttle(API_THROTTLE_TIME_MS, executeApiFetch);
     }
-    this.throttledSuggestionsFetch(this.sitekey, 'suggest', this.settings.getSettings(), callback);
+    this.throttledSuggestionsFetch(this.apiHostname, this.sitekey, 'suggest', this.settings.getSettings(), callback);
   }
 
 
@@ -89,7 +91,7 @@ var client = function(sitekey, privatekey) {
     if (!this.throttledAutocompleteFetch) {
       this.throttledAutocompleteFetch = throttle(API_THROTTLE_TIME_MS, executeApiFetch);
     }
-    this.throttledAutocompleteFetch(this.sitekey, 'autocomplete', this.settings.getSettings(), callback);
+    this.throttledAutocompleteFetch(this.apiHostname, this.sitekey, 'autocomplete', this.settings.getSettings(), callback);
   }
 
 
@@ -97,29 +99,29 @@ var client = function(sitekey, privatekey) {
    * Indexing API functions
    */
   this.getDocument = function(id) {
-    return indexingapi.getDocument(this.sitekey, this.privatekey, id);
+    return indexingapi.getDocument(this.apiHostname, this.sitekey, this.privatekey, id);
   }
 
   this.saveDocument = function(document) {
-    return indexingapi.saveDocument(this.sitekey, this.privatekey, document);
+    return indexingapi.saveDocument(this.apiHostname, this.sitekey, this.privatekey, document);
   }
 
   this.saveDocumentsBatch = function(batch) {
     if (!batch || !batch.documents || !Array.isArray(batch.documents)) {
       throw "Please provide an array of documents: {documents: []}";
     }
-    return indexingapi.saveDocumentsBatch(this.sitekey, this.privatekey, batch);
+    return indexingapi.saveDocumentsBatch(this.apiHostname, this.sitekey, this.privatekey, batch);
   }
 
   this.deleteDocument = function(id) {
-    return indexingapi.deleteDocument(this.sitekey, this.privatekey, id);
+    return indexingapi.deleteDocument(this.apiHostname, this.sitekey, this.privatekey, id);
   }
 
   this.deleteDocumentsBatch = function(batch) {
     if (!batch || !batch.documents || !Array.isArray(batch.documents)) {
       throw "Please provide an array of document ids: {documents: []}";
     }
-    return indexingapi.deleteDocumentsBatch(this.sitekey, this.privatekey, batch);
+    return indexingapi.deleteDocumentsBatch(this.apiHostname, this.sitekey, this.privatekey, batch);
   }
 
 
@@ -128,6 +130,7 @@ var client = function(sitekey, privatekey) {
   /**
    * Public functions
    */
+  this.setApiHostname = function(hostname) { this.apiHostname = hostname; }
   this.getSettings = function() { return this.settings.getSettings(); }
   this.setLanguage = function(lang) { this.settings.setLanguage(lang); }
   this.setCategoryFilters = function(categories) { this.settings.setCategoryFilters(categories); }
@@ -165,7 +168,7 @@ var client = function(sitekey, privatekey) {
         keyword: keyword,
         numberOfResults: data.numberOfResults
       };
-      sendStats(this.sitekey, data);
+      sendStats(this.apiHostname, this.sitekey, data);
     }
 
     else if (type === 'click') {
@@ -176,7 +179,7 @@ var client = function(sitekey, privatekey) {
         docid: data.documentId,
         position: data.position
       };
-      sendStats(this.sitekey, data);
+      sendStats(this.apiHostname, this.sitekey, data);
     }
 
     else {
