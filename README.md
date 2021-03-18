@@ -197,6 +197,13 @@ client.setFilterObject(filter);
 client.setResultType('organic');
 ```
 
+#### Set ignoreLogicalOperatorCase
+```js
+// (default: false)
+// If "true", we uppercase the logical operator AND/OR/NOT in the search query
+client.setIgnoreLogicalOperatorCase(true);
+```
+
 ### Facets
 ```js
 // Declare fields for faceting. Number of hits found from
