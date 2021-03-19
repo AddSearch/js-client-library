@@ -18,7 +18,7 @@ var settings = function() {
     autocomplete: {
       size: 10
     },
-    ignoreLogicalOperatorCase: false
+    enableLogicalOperators: false
   };
 
   this.getSettings = function() {
@@ -64,8 +64,8 @@ var settings = function() {
     this.settings.fuzzy = fuzzy;
   }
 
-  this.setIgnoreLogicalOperatorCase = function(ignoreLogicalOperatorCase) {
-    this.settings.ignoreLogicalOperatorCase = ignoreLogicalOperatorCase;
+  this.enableLogicalOperators = function(enableLogicalOperators) {
+    this.settings.enableLogicalOperators = enableLogicalOperators;
   }
 
   this.setPostfixWildcard = function(wildcard) {

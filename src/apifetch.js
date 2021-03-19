@@ -41,9 +41,9 @@ var executeApiFetch = function(apiHostname, sitekey, type, settings, cb, fuzzyRe
     kw = settings.keyword;
 
     // Boolean operators (AND, OR, NOT) uppercase
-    kw = settings.ignoreLogicalOperatorCase ?
+    kw = settings.enableLogicalOperators ?
       kw.replace(/ and /g, ' AND ').replace(/ or /g, ' OR ').replace(/ not /g, ' NOT ') :
-      kw;
+      kw.replace(/ AND /g, ' and ').replace(/ OR /g, ' or ').replace(/ NOT /g, ' not ');
 
     // Escape
     kw = encodeURIComponent(kw);

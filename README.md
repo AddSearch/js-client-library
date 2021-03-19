@@ -197,11 +197,12 @@ client.setFilterObject(filter);
 client.setResultType('organic');
 ```
 
-#### Set ignoreLogicalOperatorCase
+#### Set enableLogicalOperators
 ```js
 // (default: false)
-// If "true", we uppercase the logical operator AND/OR/NOT in the search query
-client.setIgnoreLogicalOperatorCase(true);
+// enableLogicalOperators(true) = Support user specified logical operators (and/or/not) in the search query like "cat and dog"
+// enableLogicalOperators(false) = Treat logical operators in the search query as literal strings
+client.enableLogicalOperators(true);
 ```
 
 ### Facets
