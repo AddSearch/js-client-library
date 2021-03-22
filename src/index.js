@@ -159,6 +159,7 @@ var client = function(sitekey, privatekey) {
   this.setThrottleTime = function(delay) { API_THROTTLE_TIME_MS = delay; }
   this.setStatsSessionId = function(id) { this.sessionId = id; }
   this.getStatsSessionId = function() { return this.sessionId; }
+  this.enableLogicalOperators = function(enableLogicalOperators) { this.settings.enableLogicalOperators(enableLogicalOperators) }
 
   this.sendStatsEvent = function(type, keyword, data) {
     if (type === 'search') {

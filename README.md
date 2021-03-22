@@ -197,6 +197,14 @@ client.setFilterObject(filter);
 client.setResultType('organic');
 ```
 
+#### Set enableLogicalOperators
+```js
+// (default: false)
+// enableLogicalOperators(true) = Support user specified logical operators (and/or/not) in the search query like "cat and dog"
+// enableLogicalOperators(false) = Treat logical operators in the search query as literal strings
+client.enableLogicalOperators(true);
+```
+
 ### Facets
 ```js
 // Declare fields for faceting. Number of hits found from

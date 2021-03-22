@@ -17,7 +17,8 @@ var settings = function() {
     facetFields: [],
     autocomplete: {
       size: 10
-    }
+    },
+    enableLogicalOperators: false
   };
 
   this.getSettings = function() {
@@ -61,6 +62,10 @@ var settings = function() {
       throw "fuzzy matching can be true, false, 'auto', or 'retry'";
     }
     this.settings.fuzzy = fuzzy;
+  }
+
+  this.enableLogicalOperators = function(enableLogicalOperators) {
+    this.settings.enableLogicalOperators = enableLogicalOperators;
   }
 
   this.setPostfixWildcard = function(wildcard) {
