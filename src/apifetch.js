@@ -152,7 +152,7 @@ var executeApiFetch = function(apiHostname, sitekey, type, settings, cb, fuzzyRe
 
     // Search again with fuzzy=true if no hits
     if (type === 'search' && settings.fuzzy === 'retry' && json.total_hits === 0 && fuzzyRetry !== true) {
-      executeApiFetch(sitekey, type, settings, cb, true);
+      executeApiFetch(apiHostname, sitekey, type, settings, cb, true);
     }
 
     // Fuzzy not "retry" OR fuzzyRetry already returning
