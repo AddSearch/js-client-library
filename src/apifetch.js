@@ -80,7 +80,8 @@ var executeApiFetch = function(apiHostname, sitekey, type, settings, cb, fuzzyRe
         settingToQueryParam(settings.jwt, 'jwt') +
         settingToQueryParam(settings.resultType, 'resultType') +
         settingToQueryParam(settings.userToken, 'userToken') +
-        settingToQueryParam(settings.numFacets, 'numFacets');
+        settingToQueryParam(settings.numFacets, 'numFacets') +
+        settingToQueryParam(settings.cacheResponseTime, 'cacheResponseWithTtlSeconds');
 
       // Add custom field filters
       if (settings.customFieldFilters) {

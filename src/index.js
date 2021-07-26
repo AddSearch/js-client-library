@@ -155,6 +155,7 @@ var client = function(sitekey, privatekey) {
   this.setShuffleAndLimitTo = function(shuffleAndLimitTo) { this.settings.setShuffleAndLimitTo(shuffleAndLimitTo); }
   this.setFuzzyMatch = function(fuzzy) { this.settings.setFuzzyMatch(fuzzy); }
   this.setPostfixWildcard = function(wildcard) { this.settings.setPostfixWildcard(wildcard); }
+  this.setCacheResponseTime = function(cacheResponseTime) { this.settings.setCacheResponseTime(cacheResponseTime) }
   this.setCollectAnalytics = function(collectAnalytics) { this.settings.setCollectAnalytics(collectAnalytics); }
   this.setThrottleTime = function(delay) { API_THROTTLE_TIME_MS = delay; }
   this.setStatsSessionId = function(id) { this.sessionId = id; }

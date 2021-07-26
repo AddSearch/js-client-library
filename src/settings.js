@@ -18,7 +18,8 @@ var settings = function() {
     autocomplete: {
       size: 10
     },
-    enableLogicalOperators: false
+    enableLogicalOperators: false,
+    cacheResponseTime: null
   };
 
   this.getSettings = function() {
@@ -66,6 +67,10 @@ var settings = function() {
 
   this.enableLogicalOperators = function(enableLogicalOperators) {
     this.settings.enableLogicalOperators = enableLogicalOperators;
+  }
+
+  this.setCacheResponseTime = function(cacheResponseTime) {
+    this.settings.cacheResponseTime = cacheResponseTime;
   }
 
   this.setPostfixWildcard = function(wildcard) {
