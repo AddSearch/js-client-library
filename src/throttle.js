@@ -1,4 +1,4 @@
-var throttle = function(delay, callback) {
+var throttle = function(delay, callback, isSearch) {
 
   // last time callback was executed.
   var lastExec = 0;
@@ -25,6 +25,9 @@ var throttle = function(delay, callback) {
     // Execute callback function
     function exec() {
       lastExec = Date.now();
+      if (self.settings && self.settings.getSettings().stopSuggestionFetch && isSearch === false) {
+        return;
+      }
       callback.apply(self, args);
     }
 

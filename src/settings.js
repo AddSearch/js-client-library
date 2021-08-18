@@ -19,7 +19,8 @@ var settings = function() {
     autocomplete: {
       size: 10
     },
-    enableLogicalOperators: false
+    enableLogicalOperators: false,
+    stopSuggestionFetch: false,
   };
 
   this.getSettings = function() {
@@ -207,6 +208,10 @@ var settings = function() {
     if (this.settings.paging.page > 0) {
       this.settings.paging.page = this.settings.paging.page - 1;
     }
+  }
+
+  this.setStopSuggestionFetch = function(paused) {
+    this.settings.stopSuggestionFetch = paused;
   }
 }
 

@@ -52,7 +52,7 @@ var client = function(sitekey, privatekey) {
     this.settings.setKeyword(keyword);
 
     if (!this.throttledSearchFetch) {
-      this.throttledSearchFetch = throttle(this.settings.getSettings().throttleTimeMs, executeApiFetch);
+      this.throttledSearchFetch = throttle(this.settings.getSettings().throttleTimeMs, executeApiFetch, true);
     }
     this.throttledSearchFetch(this.apiHostname, this.sitekey, 'search', this.settings.getSettings(), callback);
   }
@@ -64,15 +64,20 @@ var client = function(sitekey, privatekey) {
    * @param keyword
    */
   this.suggestions = function(prefix, callback) {
+    this.settings.setStopSuggestionFetch(false);
     if (!prefix || !callback || !util.isFunction(callback)) {
       throw "Illegal suggestions parameters. Should be (prefix, callbackFunction)";
     }
     this.settings.setSuggestionsPrefix(prefix);
 
     if (!this.throttledSuggestionsFetch) {
-      this.throttledSuggestionsFetch = throttle(this.settings.getSettings().throttleTimeMs, executeApiFetch);
+      this.throttledSuggestionsFetch = throttle(this.settings.getSettings().throttleTimeMs, executeApiFetch, false);
     }
     this.throttledSuggestionsFetch(this.apiHostname, this.sitekey, 'suggest', this.settings.getSettings(), callback);
+  }
+
+  this.suggestionStopFetch = function() {
+    this.settings.setStopSuggestionFetch(true);
   }
 
 
@@ -88,7 +93,7 @@ var client = function(sitekey, privatekey) {
     this.settings.setAutocompleteParams(field, prefix);
 
     if (!this.throttledAutocompleteFetch) {
-      this.throttledAutocompleteFetch = throttle(this.settings.getSettings().throttleTimeMs, executeApiFetch);
+      this.throttledAutocompleteFetch = throttle(this.settings.getSettings().throttleTimeMs, executeApiFetch, false);
     }
     this.throttledAutocompleteFetch(this.apiHostname, this.sitekey, 'autocomplete', this.settings.getSettings(), callback);
   }
