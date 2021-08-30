@@ -121,7 +121,7 @@ client.enableLogicalOperators(true);
 Caching the response, define the time-to-live of the cache.
 
 ```js
-// Specify time-to-live value in milliseconds
+// Specify time-to-live value in seconds
 client.setCacheResponseTime(3600);  
 ```
 
