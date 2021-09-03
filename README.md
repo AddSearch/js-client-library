@@ -108,6 +108,24 @@ term **add**
 client.setPostfixWildcard(false);  
 ```
 
+
+#### Set enableLogicalOperators
+```js
+// (default: false)
+// enableLogicalOperators(true) = Support user specified logical operators (and/or/not) in the search query like "cat and dog"
+// enableLogicalOperators(false) = Treat logical operators in the search query as literal strings
+client.enableLogicalOperators(true);
+```
+
+#### Set cacheResponseTime
+Caching the response, define the time-to-live of the cache.
+
+```js
+// Specify time-to-live value in seconds
+client.setCacheResponseTime(3600);  
+```
+
+
 ### Pagination
 Set page number, page size and sorting parameters. It's possible to order results by:
 - relevance (descending)
@@ -197,13 +215,6 @@ client.setFilterObject(filter);
 client.setResultType('organic');
 ```
 
-#### Set enableLogicalOperators
-```js
-// (default: false)
-// enableLogicalOperators(true) = Support user specified logical operators (and/or/not) in the search query like "cat and dog"
-// enableLogicalOperators(false) = Treat logical operators in the search query as literal strings
-client.enableLogicalOperators(true);
-```
 
 ### Facets
 ```js
