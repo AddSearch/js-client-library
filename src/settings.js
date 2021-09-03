@@ -4,6 +4,7 @@ var settings = function() {
   this.settings = {
     keyword: '*',
     callback: null,
+    throttleTimeMs: 200,
     fuzzy: 'auto',
     paging: {
       page: 1,
@@ -32,6 +33,10 @@ var settings = function() {
 
   this.setCallback = function(cb) {
     this.settings.callback = cb;
+  }
+
+  this.setThrottleTime = function(delay) {
+    this.settings.throttleTimeMs = delay;
   }
 
   this.setSuggestionsPrefix = function(prefix) {

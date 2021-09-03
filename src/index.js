@@ -8,7 +8,6 @@ var util = require('./util');
 var throttle = require('./throttle');
 
 var API_HOSTNAME = 'api.addsearch.com';
-var API_THROTTLE_TIME_MS = 200;
 
 var client = function(sitekey, privatekey) {
   this.sitekey = sitekey;
@@ -53,7 +52,7 @@ var client = function(sitekey, privatekey) {
     this.settings.setKeyword(keyword);
 
     if (!this.throttledSearchFetch) {
-      this.throttledSearchFetch = throttle(API_THROTTLE_TIME_MS, executeApiFetch);
+      this.throttledSearchFetch = throttle(this.settings.getSettings().throttleTimeMs, executeApiFetch);
     }
     this.throttledSearchFetch(this.apiHostname, this.sitekey, 'search', this.settings.getSettings(), callback);
   }
@@ -71,7 +70,7 @@ var client = function(sitekey, privatekey) {
     this.settings.setSuggestionsPrefix(prefix);
 
     if (!this.throttledSuggestionsFetch) {
-      this.throttledSuggestionsFetch = throttle(API_THROTTLE_TIME_MS, executeApiFetch);
+      this.throttledSuggestionsFetch = throttle(this.settings.getSettings().throttleTimeMs, executeApiFetch);
     }
     this.throttledSuggestionsFetch(this.apiHostname, this.sitekey, 'suggest', this.settings.getSettings(), callback);
   }
@@ -89,7 +88,7 @@ var client = function(sitekey, privatekey) {
     this.settings.setAutocompleteParams(field, prefix);
 
     if (!this.throttledAutocompleteFetch) {
-      this.throttledAutocompleteFetch = throttle(API_THROTTLE_TIME_MS, executeApiFetch);
+      this.throttledAutocompleteFetch = throttle(this.settings.getSettings().throttleTimeMs, executeApiFetch);
     }
     this.throttledAutocompleteFetch(this.apiHostname, this.sitekey, 'autocomplete', this.settings.getSettings(), callback);
   }
@@ -157,7 +156,7 @@ var client = function(sitekey, privatekey) {
   this.setPostfixWildcard = function(wildcard) { this.settings.setPostfixWildcard(wildcard); }
   this.setCacheResponseTime = function(cacheResponseTime) { this.settings.setCacheResponseTime(cacheResponseTime) }
   this.setCollectAnalytics = function(collectAnalytics) { this.settings.setCollectAnalytics(collectAnalytics); }
-  this.setThrottleTime = function(delay) { API_THROTTLE_TIME_MS = delay; }
+  this.setThrottleTime = function(delay) { this.settings.setThrottleTime(delay); }
   this.setStatsSessionId = function(id) { this.sessionId = id; }
   this.getStatsSessionId = function() { return this.sessionId; }
   this.enableLogicalOperators = function(enableLogicalOperators) { this.settings.enableLogicalOperators(enableLogicalOperators) }
