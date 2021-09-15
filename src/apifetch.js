@@ -6,7 +6,7 @@ require('isomorphic-fetch');
 /**
  * Fetch search results of search suggestions from the Addsearch API
  */
-var executeApiFetch = function(apiHostname, sitekey, type, settings, cb, fuzzyRetry) {
+var executeApiFetch = function(apiHostname, sitekey, type, settings, cb, fuzzyRetry, customFilterObject) {
 
   const RESPONSE_BAD_REQUEST = 400;
   const RESPONSE_SERVER_ERROR = 500;
@@ -121,7 +121,9 @@ var executeApiFetch = function(apiHostname, sitekey, type, settings, cb, fuzzyRe
       }
 
       // Filter object
-      if (settings.filterObject) {
+      if (customFilterObject) {
+        qs = qs + '&filter=' + JSON.stringify(customFilterObject);
+      } else if (settings.filterObject) {
         qs = qs + '&filter=' + JSON.stringify(settings.filterObject);
       }
 
