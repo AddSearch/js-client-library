@@ -86,6 +86,10 @@ var settings = function() {
     this.settings.collectAnalytics = collectAnalytics;
   }
 
+  this.setAnalyticsTag = function(tagName) {
+    this.settings.analyticsTag = tagName;
+  }
+
   this.setCategoryFilters = function(categories) {
     this.settings.categories = categories;
   }
