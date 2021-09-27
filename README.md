@@ -86,6 +86,17 @@ client.autocomplete('custom_fields.brand', 'a', callback);
 client.setAutocompleteSize(20);
 ```
 
+#### Search operator
+Description for search operator. There are three options:
+- **"and"**:
+- **"or"**:
+- **no parameter**: Remove the query parameter from the search api
+
+```js
+// Possible values "and"/"or"/null/ (default: null)
+client.setSearchOperator('and');  
+```
+
 #### Search with fuzzy matching
 Fuzzy matching is used for typo tolerance. There are four options:
 - **false**: No typo tolerance
