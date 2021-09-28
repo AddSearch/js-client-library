@@ -162,14 +162,14 @@ var client = function(sitekey, privatekey) {
   this.getStatsSessionId = function() { return this.sessionId; }
   this.enableLogicalOperators = function(enableLogicalOperators) { this.settings.enableLogicalOperators(enableLogicalOperators) }
 
-  this.sendStatsEvent = function(type, keyword, data, analyticsTag) {
+  this.sendStatsEvent = function(type, keyword, data) {
     if (type === 'search') {
       var data = {
         action: 'search',
         session: this.sessionId,
         keyword: keyword,
         numberOfResults: data.numberOfResults,
-        analyticsTag: analyticsTag
+        analyticsTag: this.getSettings().analyticsTag
       };
       sendStats(this.apiHostname, this.sitekey, data);
     }
@@ -181,7 +181,7 @@ var client = function(sitekey, privatekey) {
         keyword: keyword,
         docid: data.documentId,
         position: data.position,
-        analyticsTag: analyticsTag
+        analyticsTag: this.getSettings().analyticsTag
       };
       sendStats(this.apiHostname, this.sitekey, data);
     }
