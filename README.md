@@ -99,6 +99,18 @@ Fuzzy matching is used for typo tolerance. There are four options:
 client.setFuzzyMatch(false);  
 ```
 
+#### Search operator
+When a user searches with multiple keywords, we return only documents that contain all the terms which means
+applying the logical operator AND for the query. It is possible to choose which logical operator to use for
+fuzzy results when the fuzzy parameter is set to auto. There are two options:
+- **"or"**: makes fuzzy results broader and includes partial matches of a few search terms
+- **"and"**: makes fuzzy results stricter and includes only mistyped search terms
+
+```js
+// Possible values "and"/"or" (default: "or")
+client.setSearchOperator('and');  
+```
+
 #### Postfix wildcard
 Enable or disable postfix wildcard. I.e. should keyword "add" match to "addsearch" or should it just match to the 
 term **add**
