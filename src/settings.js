@@ -216,10 +216,6 @@ var settings = function() {
   }
 
   this.setSearchOperator = function(operator) {
-    if (!operator) {
-      this.settings.searchOperator = null;
-      return;
-    }
     if (operator !== 'and' && operator !== 'or') {
       throw "operator must be 'and' || 'or'"
     }

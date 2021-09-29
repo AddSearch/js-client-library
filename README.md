@@ -86,17 +86,6 @@ client.autocomplete('custom_fields.brand', 'a', callback);
 client.setAutocompleteSize(20);
 ```
 
-#### Search operator
-Description for search operator. There are three options:
-- **"and"**:
-- **"or"**:
-- **no parameter**: Remove the query parameter from the search api
-
-```js
-// Possible values "and"/"or"/null/ (default: null)
-client.setSearchOperator('and');  
-```
-
 #### Search with fuzzy matching
 Fuzzy matching is used for typo tolerance. There are four options:
 - **false**: No typo tolerance
@@ -108,6 +97,18 @@ Fuzzy matching is used for typo tolerance. There are four options:
 // Control fuzzy matching used for typo-tolerance
 // Possible values true/false/"auto"/"retry" (default: "auto")
 client.setFuzzyMatch(false);  
+```
+
+#### Search operator
+When a user searches with multiple keywords, we return only documents that contain all the terms which means
+applying the logical operator AND for the query. It is possible to choose which logical operator to use for
+fuzzy results when the fuzzy parameter is set to auto. There are two options:
+- **"or"**: makes fuzzy results broader and includes partial matches of a few search terms
+- **"and"**: makes fuzzy results stricter and includes only mistyped search terms
+
+```js
+// Possible values "and"/"or" (default: "or")
+client.setSearchOperator('and');  
 ```
 
 #### Postfix wildcard
