@@ -19,6 +19,7 @@ var settings = function() {
     autocomplete: {
       size: 10
     },
+    searchOperator: null,
     enableLogicalOperators: false,
     cacheResponseTime: null
   };
@@ -216,6 +217,13 @@ var settings = function() {
     if (this.settings.paging.page > 0) {
       this.settings.paging.page = this.settings.paging.page - 1;
     }
+  }
+
+  this.setSearchOperator = function(operator) {
+    if (operator !== 'and' && operator !== 'or') {
+      throw "operator must be 'and' || 'or'"
+    }
+    this.settings.searchOperator = operator;
   }
 }
 

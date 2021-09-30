@@ -161,6 +161,7 @@ var client = function(sitekey, privatekey) {
   this.setStatsSessionId = function(id) { this.sessionId = id; }
   this.getStatsSessionId = function() { return this.sessionId; }
   this.enableLogicalOperators = function(enableLogicalOperators) { this.settings.enableLogicalOperators(enableLogicalOperators) }
+  this.setSearchOperator = function(operator) { this.settings.setSearchOperator(operator) }
 
   this.sendStatsEvent = function(type, keyword, data) {
     if (type === 'search') {
