@@ -156,6 +156,7 @@ var client = function(sitekey, privatekey) {
   this.setPostfixWildcard = function(wildcard) { this.settings.setPostfixWildcard(wildcard); }
   this.setCacheResponseTime = function(cacheResponseTime) { this.settings.setCacheResponseTime(cacheResponseTime) }
   this.setCollectAnalytics = function(collectAnalytics) { this.settings.setCollectAnalytics(collectAnalytics); }
+  this.setAnalyticsTag = function(tagName) { this.settings.setAnalyticsTag(tagName) }
   this.setThrottleTime = function(delay) { this.settings.setThrottleTime(delay); }
   this.setStatsSessionId = function(id) { this.sessionId = id; }
   this.getStatsSessionId = function() { return this.sessionId; }
@@ -168,7 +169,8 @@ var client = function(sitekey, privatekey) {
         action: 'search',
         session: this.sessionId,
         keyword: keyword,
-        numberOfResults: data.numberOfResults
+        numberOfResults: data.numberOfResults,
+        analyticsTag: this.getSettings().analyticsTag
       };
       sendStats(this.apiHostname, this.sitekey, data);
     }
@@ -179,7 +181,8 @@ var client = function(sitekey, privatekey) {
         session: this.sessionId,
         keyword: keyword,
         docid: data.documentId,
-        position: data.position
+        position: data.position,
+        analyticsTag: this.getSettings().analyticsTag
       };
       sendStats(this.apiHostname, this.sitekey, data);
     }
