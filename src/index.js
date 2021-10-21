@@ -93,6 +93,15 @@ var client = function(sitekey, privatekey) {
     this.throttledAutocompleteFetch(this.apiHostname, this.sitekey, 'autocomplete', this.settings.getSettings(), callback);
   }
 
+  /**
+   * Fetch API with a custom filter object
+   */
+  this.fetchCustomApi = function(field, customFilterObject, callback) {
+    var settingsCloned = Object.assign({}, this.settings.getSettings());
+
+    settingsCloned.facetFields = settingsCloned.facetFields.filter(facetField => field === facetField);
+    executeApiFetch(this.apiHostname, this.sitekey, 'search', settingsCloned, callback, null, customFilterObject);
+  }
 
   /**
    * Indexing API functions
