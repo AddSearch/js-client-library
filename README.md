@@ -7,7 +7,7 @@ and [Indexing API](https://www.addsearch.com/docs/api/indexing-overview/) with J
 ## Quick Start
 The library is available on the global CDN [jsDelivr:](https://www.jsdelivr.com/package/npm/addsearch-js-client)
 ```html
-<script src="https://cdn.jsdelivr.net/npm/addsearch-js-client@0.5/dist/addsearch-js-client.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/addsearch-js-client@0.6/dist/addsearch-js-client.min.js"></script>
 ```
 Or install the library locally to use it with Node.js:
 ```sh
