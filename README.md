@@ -99,6 +99,18 @@ Fuzzy matching is used for typo tolerance. There are four options:
 client.setFuzzyMatch(false);  
 ```
 
+#### Search operator
+When a user searches with multiple keywords, we return only documents that contain all the terms which means
+applying the logical operator AND for the query. It is possible to choose which logical operator to use for
+fuzzy results when the fuzzy parameter is set to auto. There are two options:
+- **"or"**: makes fuzzy results broader and includes partial matches of a few search terms
+- **"and"**: makes fuzzy results stricter and includes only mistyped search terms
+
+```js
+// Possible values "and"/"or" (default: "or")
+client.setSearchOperator('and');  
+```
+
 #### Postfix wildcard
 Enable or disable postfix wildcard. I.e. should keyword "add" match to "addsearch" or should it just match to the 
 term **add**
@@ -107,6 +119,24 @@ term **add**
 // Possible values true/false (default: true)
 client.setPostfixWildcard(false);  
 ```
+
+
+#### Set enableLogicalOperators
+```js
+// (default: false)
+// enableLogicalOperators(true) = Support user specified logical operators (and/or/not) in the search query like "cat and dog"
+// enableLogicalOperators(false) = Treat logical operators in the search query as literal strings
+client.enableLogicalOperators(true);
+```
+
+#### Set cacheResponseTime
+Caching the response, define the time-to-live of the cache.
+
+```js
+// Specify time-to-live value in seconds
+client.setCacheResponseTime(3600);  
+```
+
 
 ### Pagination
 Set page number, page size and sorting parameters. It's possible to order results by:
@@ -197,13 +227,6 @@ client.setFilterObject(filter);
 client.setResultType('organic');
 ```
 
-#### Set enableLogicalOperators
-```js
-// (default: false)
-// enableLogicalOperators(true) = Support user specified logical operators (and/or/not) in the search query like "cat and dog"
-// enableLogicalOperators(false) = Treat logical operators in the search query as literal strings
-client.enableLogicalOperators(true);
-```
 
 ### Facets
 ```js

@@ -19,7 +19,9 @@ var settings = function() {
     autocomplete: {
       size: 10
     },
-    enableLogicalOperators: false
+    searchOperator: null,
+    enableLogicalOperators: false,
+    cacheResponseTime: null
   };
 
   this.getSettings = function() {
@@ -73,12 +75,20 @@ var settings = function() {
     this.settings.enableLogicalOperators = enableLogicalOperators;
   }
 
+  this.setCacheResponseTime = function(cacheResponseTime) {
+    this.settings.cacheResponseTime = cacheResponseTime;
+  }
+
   this.setPostfixWildcard = function(wildcard) {
     this.settings.postfixWildcard = wildcard;
   }
 
   this.setCollectAnalytics = function(collectAnalytics) {
     this.settings.collectAnalytics = collectAnalytics;
+  }
+
+  this.setAnalyticsTag = function(tagName) {
+    this.settings.analyticsTag = tagName;
   }
 
   this.setCategoryFilters = function(categories) {
@@ -207,6 +217,13 @@ var settings = function() {
     if (this.settings.paging.page > 0) {
       this.settings.paging.page = this.settings.paging.page - 1;
     }
+  }
+
+  this.setSearchOperator = function(operator) {
+    if (operator !== 'and' && operator !== 'or') {
+      throw "operator must be 'and' || 'or'"
+    }
+    this.settings.searchOperator = operator;
   }
 }
 
