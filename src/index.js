@@ -8,6 +8,7 @@ var util = require('./util');
 var throttle = require('./throttle');
 
 var API_HOSTNAME = 'api.addsearch.com';
+// var API_HOSTNAME = 'localhost:3000';
 
 var client = function(sitekey, privatekey) {
   this.sitekey = sitekey;
@@ -154,6 +155,7 @@ var client = function(sitekey, privatekey) {
   this.setSuggestionsSize = function(size) { this.settings.setSuggestionsSize(size); }
   this.setAutocompleteSize = function(size) { this.settings.setAutocompleteSize(size); }
   this.addFacetField = function(fieldName) { this.settings.addFacetField(fieldName); }
+  this.addHierarchicalFacetSetting = function(setting) { this.settings.addHierarchicalFacetSetting(setting); }
   this.addRangeFacet = function(field, ranges) { this.settings.addRangeFacet(field, ranges); }
   this.addStatsField = function(field) { this.settings.addStatsField(field); }
   this.setNumberOfFacets = function(numFacets) { this.settings.setNumberOfFacets(numFacets); }

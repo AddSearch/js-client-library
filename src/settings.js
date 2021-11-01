@@ -164,6 +164,10 @@ var settings = function() {
     }
   }
 
+  this.addHierarchicalFacetSetting = function(setting) {
+    this.settings.hierarchicalFacetSetting = setting;
+  }
+
   this.addRangeFacet = function(field, ranges) {
     if (!this.settings.rangeFacets) {
       this.settings.rangeFacets = [];
