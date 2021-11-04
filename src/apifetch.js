@@ -125,9 +125,9 @@ var executeApiFetch = function(apiHostname, sitekey, type, settings, cb, fuzzyRe
 
       // Filter object
       if (customFilterObject) {
-        qs = qs + '&filter=' + JSON.stringify(customFilterObject);
+        qs = qs + '&filter=' + encodeURIComponent(JSON.stringify(customFilterObject));
       } else if (settings.filterObject) {
-        qs = qs + '&filter=' + JSON.stringify(settings.filterObject);
+        qs = qs + '&filter=' + encodeURIComponent(JSON.stringify(settings.filterObject));
       }
 
     }
