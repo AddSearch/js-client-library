@@ -165,7 +165,7 @@ var settings = function() {
   }
 
   this.addHierarchicalFacetSetting = function(setting) {
-    this.settings.hierarchicalFacetSetting = setting;
+    this.settings.hierarchicalFacetSetting = JSON.stringify(setting);
   }
 
   this.addRangeFacet = function(field, ranges) {
