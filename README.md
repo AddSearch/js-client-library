@@ -299,9 +299,12 @@ client.setCollectAnalytics(false);
 ```
 
 #### Set a tag for analytics events
-Defines a tag associated with all analytics events reported by the client. You can use tags, for instance, in A/B testing to compare which search UIs are most effective. Splitting the analytics with tags may also provide insights to the behavior of audiences in different geo-locations or websites.
+Defines a tag associated with all analytics events reported by the client. 
+These tags will be available as filters in the AddSearch Analytics Dashboard. 
+You can use tags, for instance, in A/B testing to compare which search UIs are most effective. 
+Splitting the analytics with tags may also provide insights to the behaviour of audiences on different websites.
 ```js
-// Specify a tag by which search event can be filtered in the AddSearch Analytics Dashboard (the maximum length is 50 characters)
+// Specify a tag for analytics events (the maximum length is 50 characters)
 client.setAnalyticsTag('Navigation search');
 ```
 
