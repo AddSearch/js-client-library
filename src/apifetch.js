@@ -83,7 +83,8 @@ var executeApiFetch = function(apiHostname, sitekey, type, settings, cb, fuzzyRe
         settingToQueryParam(settings.numFacets, 'numFacets') +
         settingToQueryParam(settings.cacheResponseTime, 'cacheResponseWithTtlSeconds') +
         settingToQueryParam(settings.searchOperator, 'defaultOperator') +
-        settingToQueryParam(settings.analyticsTag, 'analyticsTag');
+        settingToQueryParam(settings.analyticsTag, 'analyticsTag') +
+        settingToQueryParam(settings.hierarchicalFacetSetting, 'hierarchicalFacets');
 
       // Add custom field filters
       if (settings.customFieldFilters) {

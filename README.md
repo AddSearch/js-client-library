@@ -298,6 +298,16 @@ as every keystroke would fire a statistics event
 client.setCollectAnalytics(false);
 ```
 
+#### Set a tag for analytics events
+Defines a tag associated with all analytics events reported by the client. 
+These tags will be available as filters in the AddSearch Analytics Dashboard. 
+You can use tags, for instance, in A/B testing to compare which search UIs are most effective. 
+Splitting the analytics with tags may also provide insights to the behaviour of audiences on different websites.
+```js
+// Specify a tag for analytics events (the maximum length is 50 characters)
+client.setAnalyticsTag('Navigation search');
+```
+
 ### Personalization
 
 #### Set user token (for personalized search results)
