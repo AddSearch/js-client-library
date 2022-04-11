@@ -2,6 +2,7 @@ const webpack = require('webpack');
 const PACKAGE = require('./package.json');
 const banner = PACKAGE.name + ' ' + PACKAGE.version;
 const ESLintPlugin = require('eslint-webpack-plugin');
+const TerserJSPlugin = require('terser-webpack-plugin');
 
 module.exports = {
   entry: './src/index.js',
@@ -17,6 +18,11 @@ module.exports = {
     })
   ],
   mode: 'production',
+  optimization: {
+    minimizer: [new TerserJSPlugin({
+      extractComments: false,
+    })]
+  },
   module: {
     rules: [
       {
