@@ -1,0 +1,15 @@
+{
+  "env": {
+    "browser": true,
+    "commonjs": true,
+    "es2021": true
+  },
+  "parserOptions": {
+    "ecmaVersion": "latest"
+  },
+  "extends": "eslint:recommended",
+  "rules": {
+    "no-eval": ["error"],
+    "no-trailing-spaces": "error"
+  }
+}

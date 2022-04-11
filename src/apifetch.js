@@ -88,14 +88,14 @@ var executeApiFetch = function(apiHostname, sitekey, type, settings, cb, fuzzyRe
 
       // Add custom field filters
       if (settings.customFieldFilters) {
-        for (var i = 0; i < settings.customFieldFilters.length; i++) {
+        for (let i = 0; i < settings.customFieldFilters.length; i++) {
           qs = qs + '&customField=' + settings.customFieldFilters[i];
         }
       }
 
       // Add facet fields
       if (settings.facetFields) {
-        for (var i = 0; i<settings.facetFields.length; i++) {
+        for (let i = 0; i<settings.facetFields.length; i++) {
           qs = qs + '&facet=' + settings.facetFields[i];
         }
       }
@@ -117,7 +117,7 @@ var executeApiFetch = function(apiHostname, sitekey, type, settings, cb, fuzzyRe
 
       // Personalization events
       if (settings.personalizationEvents && Array.isArray(settings.personalizationEvents)) {
-        for (var i = 0; i<settings.personalizationEvents.length; i++) {
+        for (let i = 0; i<settings.personalizationEvents.length; i++) {
           var obj = settings.personalizationEvents[i];
           var key = Object.keys(obj);
           qs = qs + '&personalizationEvent=' + encodeURIComponent(key + '=' + obj[key]);

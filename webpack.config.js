@@ -1,6 +1,7 @@
 const webpack = require('webpack');
 const PACKAGE = require('./package.json');
 const banner = PACKAGE.name + ' ' + PACKAGE.version;
+const ESLintPlugin = require('eslint-webpack-plugin');
 
 module.exports = {
   entry: './src/index.js',
@@ -10,13 +11,11 @@ module.exports = {
     libraryTarget: 'global'
   },
   plugins: [
+    new ESLintPlugin(),
     new webpack.BannerPlugin({
       banner: banner
     })
   ],
-  node: {
-    Buffer: false
-  },
   mode: 'production',
   module: {
     rules: [
