@@ -10,6 +10,7 @@
   "extends": "eslint:recommended",
   "rules": {
     "no-eval": ["error"],
-    "no-trailing-spaces": "error"
+    "no-trailing-spaces": "error",
+    "no-irregular-whitespace": "off"
   }
 }
