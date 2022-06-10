@@ -6,7 +6,7 @@ require('isomorphic-fetch');
 /**
  * Fetch search results of search suggestions from the Addsearch API
  */
-var executeApiFetch = function(apiHostname, sitekey, type, settings, cb, fuzzyRetry, customFilterObject) {
+var executeApiFetch = function(apiHostname, sitekey, type, settings, cb, fuzzyRetry, customFilterObject, recommendOptions) {
 
   const RESPONSE_BAD_REQUEST = 400;
   const RESPONSE_SERVER_ERROR = 500;
@@ -20,7 +20,7 @@ var executeApiFetch = function(apiHostname, sitekey, type, settings, cb, fuzzyRe
 
 
   // Validate query type
-  if (type !== 'search' && type !== 'suggest' && type !== 'autocomplete') {
+  if (type !== 'search' && type !== 'suggest' && type !== 'autocomplete' && type !== 'recommend') {
     cb({error: {response: RESPONSE_BAD_REQUEST, message: 'invalid query type'}});
     return;
   }
@@ -30,6 +30,7 @@ var executeApiFetch = function(apiHostname, sitekey, type, settings, cb, fuzzyRe
   var qs = '';
 
   // API Path (eq. /search, /suggest, /autocomplete/document-field)
+  var api = null;
   var apiPath = null;
 
   // Search
@@ -149,9 +150,18 @@ var executeApiFetch = function(apiHostname, sitekey, type, settings, cb, fuzzyRe
     kw = settings.autocomplete.prefix;
   }
 
+  else if (type === 'recommend') {
+    var _p;
+    _p = 'https://apitest.addsearch.com/v1/recommendations/' + sitekey + '/' +
+      '?configurationKey=' + recommendOptions.configurationKey +
+      '&itemId=' + recommendOptions.itemId;
+  }
 
   // Execute API call
-  fetch('https://' + apiHostname + '/v1/' + apiPath + '/' + sitekey + '?term=' + kw + qs)
+  api = type === 'recommend' ?
+    _p :
+    'https://' + apiHostname + '/v1/' + apiPath + '/' + sitekey + '?term=' + kw + qs;
+  fetch(api)
     .then(function(response) {
       return response.json();
     }).then(function(json) {

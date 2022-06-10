@@ -265,6 +265,14 @@ is handy for applications like range filtering.
 client.addStatsField('custom_fields.price');
 ```
 
+### Recommendations
+#### Frequently bought together items
+Get frequently bought together items
+```js
+// fetch frequently bought together items
+client.recommendations('2f0825af3b25a2842db639a9c67b0e5f');
+```
+
 ### Search analytics
 #### Send search event to analytics
 When search is executed, send the event to your AddSearch Analytics Dashboard.

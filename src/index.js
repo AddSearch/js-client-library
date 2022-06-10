@@ -104,6 +104,37 @@ var client = function(sitekey, privatekey) {
   }
 
   /**
+   * Fetch recommendations
+   *
+   * @param item
+   */
+  this.recommendations = function(options, callback) {
+    if (!options || !callback || !util.isFunction(callback)) {
+      throw "Illegal recommendations parameters. Should be (options, callbackFunction)";
+    }
+    // this.settings.setSuggestionsPrefix(prefix);
+    this.settings.setPaging(1, 5, 'relevance', 'desc');
+
+    if (!this.throttledSuggestionsFetch) {
+      this.throttledSuggestionsFetch = throttle(this.settings.getSettings().throttleTimeMs, executeApiFetch);
+    }
+    this.throttledSuggestionsFetch(null, this.sitekey, 'recommend', null, callback, false, null, options);
+  }
+
+  this.testReco = function() {
+    var requestOptions = {
+      method: 'GET',
+      redirect: 'follow',
+      mode: 'no-cors'
+    };
+
+    fetch("https://api.addsearch.com/v1/search/3ae487bda4e2de3b198a68a22d5c09bd?term=*&fuzzy=auto&collectAnalytics=false&page=1&limit=10&sort=relevance&order=desc", requestOptions)
+      .then(response => response.text())
+      .then(result => console.log(result))
+      .catch(error => console.log('error', error));
+  };
+
+  /**
    * Indexing API functions
    */
   this.getDocument = function(id) {
