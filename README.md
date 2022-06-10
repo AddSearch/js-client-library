@@ -271,7 +271,7 @@ Get frequently bought together items, given "configurationKey" and "itemId"
 ```js
 // fetch frequently bought together items
 client.recommendations({
-  configurationKey: "config1"
+  configurationKey: "config1",
   itemId: "1065921"
 });
 ```

@@ -135,6 +135,23 @@ var client = function(sitekey, privatekey) {
   }
 
   /**
+   * Fetch recommendations
+   *
+   * @param item
+   */
+  this.recommendations = function(options, callback) {
+    if (!options || !callback || !util.isFunction(callback)) {
+      throw "Illegal recommendations parameters. Should be (options, callbackFunction)";
+    }
+    this.settings.setPaging(1, 5, 'relevance', 'desc');
+
+    if (!this.throttledSuggestionsFetch) {
+      this.throttledSuggestionsFetch = throttle(this.settings.getSettings().throttleTimeMs, executeApiFetch);
+    }
+    this.throttledSuggestionsFetch(this.apiHostname, this.sitekey, 'recommend', null, callback, false, null, options);
+  }
+
+  /**
    * Indexing API functions
    */
   this.getDocument = function(id) {
