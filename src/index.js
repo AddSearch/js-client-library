@@ -104,6 +104,22 @@ var client = function(sitekey, privatekey) {
   }
 
   /**
+   * Fetch Range Facets
+   */
+  this.fetchRangeFacets = function(options, customFilterObject, callback) {
+    var settingsCloned = Object.assign({}, this.settings.getSettings());
+
+    if (!settingsCloned.rangeFacets) {
+      settingsCloned.rangeFacets = [];
+    }
+    settingsCloned.rangeFacets.push({
+      field: options.field,
+      ranges: options.ranges
+    });
+    executeApiFetch(this.apiHostname, this.sitekey, 'search', settingsCloned, callback, null, customFilterObject);
+  }
+
+  /**
    * Indexing API functions
    */
   this.getDocument = function(id) {
