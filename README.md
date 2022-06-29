@@ -267,10 +267,13 @@ client.addStatsField('custom_fields.price');
 
 ### Recommendations
 #### Frequently bought together items
-Get frequently bought together items
+Get frequently bought together items, given "configurationKey" and "itemId"
 ```js
 // fetch frequently bought together items
-client.recommendations('2f0825af3b25a2842db639a9c67b0e5f');
+client.recommendations({
+  configurationKey: "config1"
+  itemId: "1065921"
+});
 ```
 
 ### Search analytics
