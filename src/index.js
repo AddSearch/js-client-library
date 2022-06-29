@@ -118,6 +118,22 @@ var client = function(sitekey, privatekey) {
     }
     this.throttledSuggestionsFetch(this.apiHostname, this.sitekey, 'recommend', null, callback, false, null, options);
   }
+  
+  /**
+   * Fetch Range Facets
+   */
+  this.fetchRangeFacets = function(options, customFilterObject, callback) {
+    var settingsCloned = Object.assign({}, this.settings.getSettings());
+
+    if (!settingsCloned.rangeFacets) {
+      settingsCloned.rangeFacets = [];
+    }
+    settingsCloned.rangeFacets.push({
+      field: options.field,
+      ranges: options.ranges
+    });
+    executeApiFetch(this.apiHostname, this.sitekey, 'search', settingsCloned, callback, null, customFilterObject);
+  }
 
   /**
    * Indexing API functions
