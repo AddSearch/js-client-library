@@ -151,16 +151,15 @@ var executeApiFetch = function(apiHostname, sitekey, type, settings, cb, fuzzyRe
   }
 
   else if (type === 'recommend') {
-    var _p;
-    _p = 'https://apitest.addsearch.com/v1/recommendations/' + sitekey + '/' +
-      '?configurationKey=' + recommendOptions.configurationKey +
-      '&itemId=' + recommendOptions.itemId;
+    apiPath = 'recommendations';
+    qs = settingToQueryParam(recommendOptions.configurationKey, 'configurationKey') + 
+      settingToQueryParam(recommendOptions.itemId, 'itemId');
   }
 
   // Execute API call
   api = type === 'recommend' ?
-    _p :
-    'https://' + apiHostname + '/v1/' + apiPath + '/' + sitekey + '?term=' + kw + qs;
+    'https://' + apiHostname + '/v1/' + apiPath + '/' + sitekey + qs : 
+    'https://' + apiHostname + '/v1/' + apiPath + '/' + sitekey + '?term=' + kw + qs
   fetch(api)
     .then(function(response) {
       return response.json();

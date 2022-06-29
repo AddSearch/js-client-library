@@ -118,7 +118,7 @@ var client = function(sitekey, privatekey) {
     if (!this.throttledSuggestionsFetch) {
       this.throttledSuggestionsFetch = throttle(this.settings.getSettings().throttleTimeMs, executeApiFetch);
     }
-    this.throttledSuggestionsFetch(null, this.sitekey, 'recommend', null, callback, false, null, options);
+    this.throttledSuggestionsFetch(this.apiHostname, this.sitekey, 'recommend', null, callback, false, null, options);
   }
 
   this.testReco = function() {
