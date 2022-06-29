@@ -143,7 +143,6 @@ var client = function(sitekey, privatekey) {
     if (!options || !callback || !util.isFunction(callback)) {
       throw "Illegal recommendations parameters. Should be (options, callbackFunction)";
     }
-    this.settings.setPaging(1, 5, 'relevance', 'desc');
 
     if (!this.throttledSuggestionsFetch) {
       this.throttledSuggestionsFetch = throttle(this.settings.getSettings().throttleTimeMs, executeApiFetch);
