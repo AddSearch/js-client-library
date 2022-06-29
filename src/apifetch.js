@@ -152,13 +152,12 @@ var executeApiFetch = function(apiHostname, sitekey, type, settings, cb, fuzzyRe
 
   else if (type === 'recommend') {
     apiPath = 'recommendations';
-    qs = settingToQueryParam(recommendOptions.configurationKey, 'configurationKey') + 
-      settingToQueryParam(recommendOptions.itemId, 'itemId');
+    qs = settingToQueryParam(recommendOptions.itemId, 'itemId');
   }
 
   // Execute API call
   api = type === 'recommend' ?
-    'https://' + apiHostname + '/v1/' + apiPath + '/' + sitekey + qs : 
+    'https://' + apiHostname + '/v1/' + apiPath + '/' + sitekey + '?configurationKey=' + recommendOptions.configurationKey + qs : 
     'https://' + apiHostname + '/v1/' + apiPath + '/' + sitekey + '?term=' + kw + qs
   fetch(api)
     .then(function(response) {
