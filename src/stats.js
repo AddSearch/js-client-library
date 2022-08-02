@@ -1,23 +1,21 @@
 'use strict';
 
 require('es6-promise').polyfill();
-require('isomorphic-fetch');
+const axios = require('axios').default;
 
-var sendStats = function(apiHostname, sitekey, data) {
+var sendStats = function(apiHostname, sitekey, payload) {
 
   // Beacon in browsers
   if (typeof window !== 'undefined' && window.navigator && window.navigator.sendBeacon) {
-    navigator.sendBeacon('https://' + apiHostname + '/v1/stats/' + sitekey + '/', JSON.stringify(data));
+    navigator.sendBeacon('https://' + apiHostname + '/v1/stats/' + sitekey + '/', JSON.stringify(payload));
   }
 
   // POST in node
   else {
-    fetch('https://' + apiHostname + '/v1/stats/' + sitekey + '/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'text/plain',
-        },
-        body: JSON.stringify(data)
+    axios.post('https://' + apiHostname + '/v1/stats/' + sitekey + '/', payload, {
+      headers: {
+        'Content-Type': 'text/plain',
+      }
     });
   }
 };

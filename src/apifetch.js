@@ -1,7 +1,7 @@
 'use strict';
 
 require('es6-promise').polyfill();
-require('isomorphic-fetch');
+const axios = require('axios').default;
 
 /**
  * Fetch search results of search suggestions from the Addsearch API
@@ -137,7 +137,7 @@ var executeApiFetch = function(apiHostname, sitekey, type, settings, cb, fuzzyRe
   // Suggest
   else if (type === 'suggest') {
     apiPath = type;
-    qs = settingToQueryParam(settings.suggestionsSize, 'size') + 
+    qs = settingToQueryParam(settings.suggestionsSize, 'size') +
       settingToQueryParam(settings.lang, 'lang');
     kw = settings.suggestionsPrefix;
   }
@@ -152,34 +152,32 @@ var executeApiFetch = function(apiHostname, sitekey, type, settings, cb, fuzzyRe
 
 
   // Execute API call
-  fetch('https://' + apiHostname + '/v1/' + apiPath + '/' + sitekey + '?term=' + kw + qs)
+  axios.get('https://' + apiHostname + '/v1/' + apiPath + '/' + sitekey + '?term=' + kw + qs)
     .then(function(response) {
-      return response.json();
-    }).then(function(json) {
-
-    // Search again with fuzzy=true if no hits
-    if (type === 'search' && settings.fuzzy === 'retry' && json.total_hits === 0 && fuzzyRetry !== true) {
-      executeApiFetch(apiHostname, sitekey, type, settings, cb, true);
-    }
-
-    // Fuzzy not "retry" OR fuzzyRetry already returning
-    else {
-
-      // Cap fuzzy results to one page as quality decreases quickly
-      if (fuzzyRetry === true) {
-        var pageSize = settings.paging.pageSize;
-        if (json.total_hits >= pageSize) {
-          json.total_hits = pageSize;
-        }
+      var json = response.data;
+      // Search again with fuzzy=true if no hits
+      if (type === 'search' && settings.fuzzy === 'retry' && json.total_hits === 0 && fuzzyRetry !== true) {
+        executeApiFetch(apiHostname, sitekey, type, settings, cb, true);
       }
 
-      // Callback
-      cb(json);
-    }
+      // Fuzzy not "retry" OR fuzzyRetry already returning
+      else {
 
-  }).catch(function(ex) {
-    console.log(ex);
-    cb({error: {response: RESPONSE_SERVER_ERROR, message: 'invalid server response'}});
-  });
+        // Cap fuzzy results to one page as quality decreases quickly
+        if (fuzzyRetry === true) {
+          var pageSize = settings.paging.pageSize;
+          if (json.total_hits >= pageSize) {
+            json.total_hits = pageSize;
+          }
+        }
+
+        // Callback
+        cb(json);
+      }
+    })
+    .catch(function(ex) {
+      console.log(ex);
+      cb({error: {response: RESPONSE_SERVER_ERROR, message: 'invalid server response'}});
+    });
 };
 module.exports = executeApiFetch;

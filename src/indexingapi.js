@@ -1,8 +1,8 @@
 'use strict';
 
-require('isomorphic-fetch');
 const util = require('./util');
 const Promise = require('es6-promise').Promise;
+const axios = require('axios').default;
 
 const getHeaders = function(sitekey, privatekey) {
   return {
@@ -18,14 +18,13 @@ const getHeaders = function(sitekey, privatekey) {
 var getDocument = function(apiHostname, sitekey, privatekey, id) {
   const promise = new Promise((resolve, reject) => {
 
-    fetch('https://' + apiHostname + '/v2/indices/' + sitekey + '/documents/' + id,
+    axios.get('https://' + apiHostname + '/v2/indices/' + sitekey + '/documents/' + id,
       {
-        method: 'GET',
         headers: getHeaders(sitekey, privatekey)
       })
       .then((response) => {
         if (response.status == 200) {
-          resolve(response.json());
+          resolve(response.data);
         }
         else {
           reject({status: response.status, text: response.statusText});
@@ -44,14 +43,16 @@ var getDocument = function(apiHostname, sitekey, privatekey, id) {
 var saveDocument = function(apiHostname, sitekey, privatekey, document) {
 
   // If the doc has id or url field, PUT instead of POST
+
   const isPut = document.id || document.url;
 
   const promise = new Promise((resolve, reject) => {
-    fetch('https://' + apiHostname + '/v2/indices/' + sitekey + '/documents/',
+    axios(
       {
-        method: isPut ? 'PUT' : 'POST',
+        url: 'https://' + apiHostname + '/v2/indices/' + sitekey + '/documents/',
+        method: isPut ? 'put' : 'post',
         headers: getHeaders(sitekey, privatekey),
-        body: JSON.stringify(document)
+        data: document
       })
       .then((response) => {
         if (response.status == 202) {
@@ -61,8 +62,8 @@ var saveDocument = function(apiHostname, sitekey, privatekey, document) {
           reject({status: response.status, text: response.statusText});
         }
       }).catch((ex) => {
-      reject({status: 400, text: ex});
-    });
+        reject({status: 400, text: ex});
+      });
   });
 
   return promise;
@@ -75,11 +76,12 @@ var saveDocument = function(apiHostname, sitekey, privatekey, document) {
 var saveDocumentsBatch = function(apiHostname, sitekey, privatekey, documents) {
 
   const promise = new Promise((resolve, reject) => {
-    fetch('https://' + apiHostname + '/v2/indices/' + sitekey + '/documents:batch',
+    axios(
       {
-        method: 'PUT',
+        method: 'put',
+        url: 'https://' + apiHostname + '/v2/indices/' + sitekey + '/documents:batch',
         headers: getHeaders(sitekey, privatekey),
-        body: JSON.stringify(documents)
+        data: documents
       })
       .then((response) => {
         if (response.status == 202) {
@@ -102,9 +104,8 @@ var saveDocumentsBatch = function(apiHostname, sitekey, privatekey, documents) {
  */
 var deleteDocument = function(apiHostname, sitekey, privatekey, id) {
   const promise = new Promise((resolve, reject) => {
-    fetch('https://' + apiHostname + '/v2/indices/' + sitekey + '/documents/' + id,
+    axios.delete('https://' + apiHostname + '/v2/indices/' + sitekey + '/documents/' + id,
       {
-        method: 'DELETE',
         headers: getHeaders(sitekey, privatekey)
       })
       .then((response) => {
@@ -128,11 +129,10 @@ var deleteDocument = function(apiHostname, sitekey, privatekey, id) {
  */
 var deleteDocumentsBatch = function(apiHostname, sitekey, privatekey, batch) {
   const promise = new Promise((resolve, reject) => {
-    fetch('https://' + apiHostname + '/v2/indices/' + sitekey + '/documents:batch',
+    axios.delete('https://' + apiHostname + '/v2/indices/' + sitekey + '/documents:batch',
       {
-        method: 'DELETE',
         headers: getHeaders(sitekey, privatekey),
-        body: JSON.stringify(batch)
+        data: batch
       })
       .then((response) => {
         if (response.status == 202) {
