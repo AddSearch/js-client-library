@@ -204,20 +204,20 @@ var client = function(sitekey, privatekey) {
   this.enableLogicalOperators = function(enableLogicalOperators) { this.settings.enableLogicalOperators(enableLogicalOperators) }
   this.setSearchOperator = function(operator) { this.settings.setSearchOperator(operator) }
 
-  this.sendStatsEvent = function(type, keyword, data) {
+  this.sendStatsEvent = function(type, keyword,data) {
     if (type === 'search') {
-      var data = {
+      var payload = {
         action: 'search',
         session: this.sessionId,
         keyword: keyword,
         numberOfResults: data.numberOfResults,
         analyticsTag: this.getSettings().analyticsTag
       };
-      sendStats(this.apiHostname, this.sitekey, data);
+      sendStats(this.apiHostname, this.sitekey, payload);
     }
 
     else if (type === 'click') {
-      var data = {
+      var payload = {
         action: 'click',
         session: this.sessionId,
         keyword: keyword,
@@ -225,7 +225,7 @@ var client = function(sitekey, privatekey) {
         position: data.position,
         analyticsTag: this.getSettings().analyticsTag
       };
-      sendStats(this.apiHostname, this.sitekey, data);
+      sendStats(this.apiHostname, this.sitekey, payload);
     }
 
     else {
