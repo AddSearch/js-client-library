@@ -117,6 +117,7 @@ var client = function(sitekey, privatekey) {
       this.throttledSuggestionsFetch = throttle(this.settings.getSettings().throttleTimeMs, executeApiFetch);
     }
     this.throttledSuggestionsFetch(this.apiHostname, this.sitekey, 'recommend', null, callback, false, null, options);
+  }
 
   /**
    * Fetch Range Facets
