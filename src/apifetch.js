@@ -6,7 +6,7 @@ const axios = require('axios').default;
 /**
  * Fetch search results of search suggestions from the Addsearch API
  */
-var executeApiFetch = function(apiHostname, sitekey, type, settings, cb, fuzzyRetry, customFilterObject) {
+var executeApiFetch = function(apiHostname, sitekey, type, settings, cb, fuzzyRetry, customFilterObject, recommendOptions) {
 
   const RESPONSE_BAD_REQUEST = 400;
   const RESPONSE_SERVER_ERROR = 500;
@@ -20,7 +20,7 @@ var executeApiFetch = function(apiHostname, sitekey, type, settings, cb, fuzzyRe
 
 
   // Validate query type
-  if (type !== 'search' && type !== 'suggest' && type !== 'autocomplete') {
+  if (type !== 'search' && type !== 'suggest' && type !== 'autocomplete' && type !== 'recommend') {
     cb({error: {response: RESPONSE_BAD_REQUEST, message: 'invalid query type'}});
     return;
   }
@@ -30,6 +30,7 @@ var executeApiFetch = function(apiHostname, sitekey, type, settings, cb, fuzzyRe
   var qs = '';
 
   // API Path (eq. /search, /suggest, /autocomplete/document-field)
+  var api = null;
   var apiPath = null;
 
   // Search
@@ -150,9 +151,16 @@ var executeApiFetch = function(apiHostname, sitekey, type, settings, cb, fuzzyRe
     kw = settings.autocomplete.prefix;
   }
 
+  else if (type === 'recommend') {
+    apiPath = 'recommendations';
+    qs = settingToQueryParam(recommendOptions.itemId, 'itemId');
+  }
 
   // Execute API call
-  axios.get('https://' + apiHostname + '/v1/' + apiPath + '/' + sitekey + '?term=' + kw + qs)
+  api = type === 'recommend' ?
+    'https://' + apiHostname + '/v1/' + apiPath + '/' + sitekey + '?configurationKey=' + recommendOptions.configurationKey + qs :
+    'https://' + apiHostname + '/v1/' + apiPath + '/' + sitekey + '?term=' + kw + qs
+  axios.get(api)
     .then(function(response) {
       var json = response.data;
       // Search again with fuzzy=true if no hits
