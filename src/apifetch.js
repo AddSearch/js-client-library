@@ -159,7 +159,8 @@ var executeApiFetch = function(apiHostname, sitekey, type, settings, cb, fuzzyRe
   // Execute API call
   api = type === 'recommend' ?
     'https://' + apiHostname + '/v1/' + apiPath + '/' + sitekey + '?configurationKey=' + recommendOptions.configurationKey + qs :
-    'https://' + apiHostname + '/v1/' + apiPath + '/' + sitekey + '?term=' + kw + qs
+    'https://' + apiHostname + '/v1/' + apiPath + '/' + sitekey + '?term=' + kw + qs;
+
   axios.get(api)
     .then(function(response) {
       var json = response.data;
