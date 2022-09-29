@@ -1,12 +1,12 @@
 'use strict';
 
 require('es6-promise').polyfill();
-require('isomorphic-fetch');
+const axios = require('axios').default;
 
 /**
  * Fetch search results of search suggestions from the Addsearch API
  */
-var executeApiFetch = function(apiHostname, sitekey, type, settings, cb, fuzzyRetry, customFilterObject) {
+var executeApiFetch = function(apiHostname, sitekey, type, settings, cb, fuzzyRetry, customFilterObject, recommendOptions) {
 
   const RESPONSE_BAD_REQUEST = 400;
   const RESPONSE_SERVER_ERROR = 500;
@@ -20,7 +20,7 @@ var executeApiFetch = function(apiHostname, sitekey, type, settings, cb, fuzzyRe
 
 
   // Validate query type
-  if (type !== 'search' && type !== 'suggest' && type !== 'autocomplete') {
+  if (type !== 'search' && type !== 'suggest' && type !== 'autocomplete' && type !== 'recommend') {
     cb({error: {response: RESPONSE_BAD_REQUEST, message: 'invalid query type'}});
     return;
   }
@@ -30,6 +30,7 @@ var executeApiFetch = function(apiHostname, sitekey, type, settings, cb, fuzzyRe
   var qs = '';
 
   // API Path (eq. /search, /suggest, /autocomplete/document-field)
+  var api = null;
   var apiPath = null;
 
   // Search
@@ -137,7 +138,8 @@ var executeApiFetch = function(apiHostname, sitekey, type, settings, cb, fuzzyRe
   // Suggest
   else if (type === 'suggest') {
     apiPath = type;
-    qs = settingToQueryParam(settings.suggestionsSize, 'size');
+    qs = settingToQueryParam(settings.suggestionsSize, 'size') +
+      settingToQueryParam(settings.lang, 'lang');
     kw = settings.suggestionsPrefix;
   }
 
@@ -149,36 +151,42 @@ var executeApiFetch = function(apiHostname, sitekey, type, settings, cb, fuzzyRe
     kw = settings.autocomplete.prefix;
   }
 
+  else if (type === 'recommend') {
+    apiPath = 'recommendations';
+    qs = settingToQueryParam(recommendOptions.itemId, 'itemId');
+  }
 
   // Execute API call
-  fetch('https://' + apiHostname + '/v1/' + apiPath + '/' + sitekey + '?term=' + kw + qs)
+  api = type === 'recommend' ?
+    'https://' + apiHostname + '/v1/' + apiPath + '/' + sitekey + '?configurationKey=' + recommendOptions.configurationKey + qs :
+    'https://' + apiHostname + '/v1/' + apiPath + '/' + sitekey + '?term=' + kw + qs;
+
+  axios.get(api)
     .then(function(response) {
-      return response.json();
-    }).then(function(json) {
-
-    // Search again with fuzzy=true if no hits
-    if (type === 'search' && settings.fuzzy === 'retry' && json.total_hits === 0 && fuzzyRetry !== true) {
-      executeApiFetch(apiHostname, sitekey, type, settings, cb, true);
-    }
-
-    // Fuzzy not "retry" OR fuzzyRetry already returning
-    else {
-
-      // Cap fuzzy results to one page as quality decreases quickly
-      if (fuzzyRetry === true) {
-        var pageSize = settings.paging.pageSize;
-        if (json.total_hits >= pageSize) {
-          json.total_hits = pageSize;
-        }
+      var json = response.data;
+      // Search again with fuzzy=true if no hits
+      if (type === 'search' && settings.fuzzy === 'retry' && json.total_hits === 0 && fuzzyRetry !== true) {
+        executeApiFetch(apiHostname, sitekey, type, settings, cb, true);
       }
 
-      // Callback
-      cb(json);
-    }
+      // Fuzzy not "retry" OR fuzzyRetry already returning
+      else {
 
-  }).catch(function(ex) {
-    console.log(ex);
-    cb({error: {response: RESPONSE_SERVER_ERROR, message: 'invalid server response'}});
-  });
+        // Cap fuzzy results to one page as quality decreases quickly
+        if (fuzzyRetry === true) {
+          var pageSize = settings.paging.pageSize;
+          if (json.total_hits >= pageSize) {
+            json.total_hits = pageSize;
+          }
+        }
+
+        // Callback
+        cb(json);
+      }
+    })
+    .catch(function(ex) {
+      console.log(ex);
+      cb({error: {response: RESPONSE_SERVER_ERROR, message: 'invalid server response'}});
+    });
 };
 module.exports = executeApiFetch;

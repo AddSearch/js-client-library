@@ -104,6 +104,38 @@ var client = function(sitekey, privatekey) {
   }
 
   /**
+   * Fetch Range Facets
+   */
+  this.fetchRangeFacets = function(options, customFilterObject, callback) {
+    var settingsCloned = Object.assign({}, this.settings.getSettings());
+
+    if (!settingsCloned.rangeFacets) {
+      settingsCloned.rangeFacets = [];
+    }
+    settingsCloned.rangeFacets.push({
+      field: options.field,
+      ranges: options.ranges
+    });
+    executeApiFetch(this.apiHostname, this.sitekey, 'search', settingsCloned, callback, null, customFilterObject);
+  }
+
+  /**
+   * Fetch recommendations
+   *
+   * @param item
+   */
+  this.recommendations = function(options, callback) {
+    if (!options || !callback || !util.isFunction(callback)) {
+      throw "Illegal recommendations parameters. Should be (options, callbackFunction)";
+    }
+
+    if (!this.throttledSuggestionsFetch) {
+      this.throttledSuggestionsFetch = throttle(this.settings.getSettings().throttleTimeMs, executeApiFetch);
+    }
+    this.throttledSuggestionsFetch(this.apiHostname, this.sitekey, 'recommend', null, callback, false, null, options);
+  }
+
+  /**
    * Indexing API functions
    */
   this.getDocument = function(id) {
@@ -182,11 +214,11 @@ var client = function(sitekey, privatekey) {
         numberOfResults: res.numberOfResults,
         analyticsTag: this.getSettings().analyticsTag
       };
-      sendStats(this.apiHostname, this.sitekey, data);
+      sendStats(this.apiHostname, this.sitekey, payload);
     }
 
     else if (type === 'click') {
-      let data = {
+      var payload = {
         action: 'click',
         session: this.sessionId,
         keyword: keyword,
@@ -194,7 +226,7 @@ var client = function(sitekey, privatekey) {
         position: res.position,
         analyticsTag: this.getSettings().analyticsTag
       };
-      sendStats(this.apiHostname, this.sitekey, data);
+      sendStats(this.apiHostname, this.sitekey, payload);
     }
 
     else {
