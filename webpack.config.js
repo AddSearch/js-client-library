@@ -23,6 +23,11 @@ module.exports = {
       extractComments: false,
     })]
   },
+  resolve: {
+    fallback: {
+      buffer: require.resolve('buffer/'),
+    },
+  },
   module: {
     rules: [
       {

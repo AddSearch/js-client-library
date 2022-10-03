@@ -1,4 +1,4 @@
-/* global Buffer */
+const Buffer = require('buffer/').Buffer;
 
 const isFunction = function(fn) {
   return fn && {}.toString.call(fn) === '[object Function]';
