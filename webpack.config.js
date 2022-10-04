@@ -1,6 +1,8 @@
 const webpack = require('webpack');
 const PACKAGE = require('./package.json');
 const banner = PACKAGE.name + ' ' + PACKAGE.version;
+const ESLintPlugin = require('eslint-webpack-plugin');
+const TerserJSPlugin = require('terser-webpack-plugin');
 
 module.exports = {
   entry: './src/index.js',
@@ -10,14 +12,27 @@ module.exports = {
     libraryTarget: 'global'
   },
   plugins: [
+    new ESLintPlugin(),
     new webpack.BannerPlugin({
       banner: banner
     })
   ],
-  node: {
-    Buffer: false
-  },
   mode: 'production',
+  optimization: {
+    minimizer: [new TerserJSPlugin({
+      extractComments: false,
+      terserOptions: {
+        format: {
+          comments: /addsearch-js-client/i,
+        }
+      },
+    })]
+  },
+  resolve: {
+    fallback: {
+      buffer: require.resolve('buffer/'),
+    },
+  },
   module: {
     rules: [
       {

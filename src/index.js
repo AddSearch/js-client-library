@@ -170,44 +170,44 @@ var client = function(sitekey, privatekey) {
   /**
    * Public functions
    */
-  this.setApiHostname = function(hostname) { this.apiHostname = hostname; }
-  this.getSettings = function() { return this.settings.getSettings(); }
-  this.setLanguage = function(lang) { this.settings.setLanguage(lang); }
-  this.setCategoryFilters = function(categories) { this.settings.setCategoryFilters(categories); }
-  this.addCustomFieldFilter = function(fieldName, value) { this.settings.addCustomFieldFilter(fieldName, value); }
-  this.removeCustomFieldFilter = function(fieldName, value) { this.settings.removeCustomFieldFilter(fieldName, value); }
-  this.setPriceRangeFilter = function(minCents, maxCents) { this.settings.setPriceRangeFilter(minCents, maxCents); }
-  this.setDateFilter = function(dateFrom, dateTo) { this.settings.setDateFilter(dateFrom, dateTo); }
-  this.setJWT = function(jwt) { this.settings.setJWT(jwt); }
-  this.setUserToken = function(token) { this.settings.setUserToken(token); }
-  this.setPaging = function(page, pageSize, sortBy, sortOder) { this.settings.setPaging(page, pageSize, sortBy, sortOder); }
-  this.nextPage = function() { this.settings.nextPage(); }
-  this.previousPage = function() { this.settings.previousPage(); }
-  this.setSuggestionsSize = function(size) { this.settings.setSuggestionsSize(size); }
-  this.setAutocompleteSize = function(size) { this.settings.setAutocompleteSize(size); }
-  this.addFacetField = function(fieldName) { this.settings.addFacetField(fieldName); }
-  this.addHierarchicalFacetSetting = function(setting) { this.settings.addHierarchicalFacetSetting(setting); }
-  this.addRangeFacet = function(field, ranges) { this.settings.addRangeFacet(field, ranges); }
-  this.addStatsField = function(field) { this.settings.addStatsField(field); }
-  this.setNumberOfFacets = function(numFacets) { this.settings.setNumberOfFacets(numFacets); }
-  this.setResultType = function(type) { this.settings.setResultType(type); }
-  this.setPersonalizationEvents = function(events) { this.settings.setPersonalizationEvents(events); }
-  this.setFilterObject = function(filter) { this.settings.setFilterObject(filter); }
-  this.setShuffleAndLimitTo = function(shuffleAndLimitTo) { this.settings.setShuffleAndLimitTo(shuffleAndLimitTo); }
-  this.setFuzzyMatch = function(fuzzy) { this.settings.setFuzzyMatch(fuzzy); }
-  this.setPostfixWildcard = function(wildcard) { this.settings.setPostfixWildcard(wildcard); }
-  this.setCacheResponseTime = function(cacheResponseTime) { this.settings.setCacheResponseTime(cacheResponseTime) }
-  this.setCollectAnalytics = function(collectAnalytics) { this.settings.setCollectAnalytics(collectAnalytics); }
-  this.setAnalyticsTag = function(tagName) { this.settings.setAnalyticsTag(tagName) }
-  this.setThrottleTime = function(delay) { this.settings.setThrottleTime(delay); }
-  this.setStatsSessionId = function(id) { this.sessionId = id; }
-  this.getStatsSessionId = function() { return this.sessionId; }
-  this.enableLogicalOperators = function(enableLogicalOperators) { this.settings.enableLogicalOperators(enableLogicalOperators) }
-  this.setSearchOperator = function(operator) { this.settings.setSearchOperator(operator) }
+  this.setApiHostname = function(hostname) {this.apiHostname = hostname;}
+  this.getSettings = function() {return this.settings.getSettings();}
+  this.setLanguage = function(lang) {this.settings.setLanguage(lang);}
+  this.setCategoryFilters = function(categories) {this.settings.setCategoryFilters(categories);}
+  this.addCustomFieldFilter = function(fieldName, value) {this.settings.addCustomFieldFilter(fieldName, value);}
+  this.removeCustomFieldFilter = function(fieldName, value) {this.settings.removeCustomFieldFilter(fieldName, value);}
+  this.setPriceRangeFilter = function(minCents, maxCents) {this.settings.setPriceRangeFilter(minCents, maxCents);}
+  this.setDateFilter = function(dateFrom, dateTo) {this.settings.setDateFilter(dateFrom, dateTo);}
+  this.setJWT = function(jwt) {this.settings.setJWT(jwt);}
+  this.setUserToken = function(token) {this.settings.setUserToken(token);}
+  this.setPaging = function(page, pageSize, sortBy, sortOder) {this.settings.setPaging(page, pageSize, sortBy, sortOder);}
+  this.nextPage = function() {this.settings.nextPage();}
+  this.previousPage = function() {this.settings.previousPage();}
+  this.setSuggestionsSize = function(size) {this.settings.setSuggestionsSize(size);}
+  this.setAutocompleteSize = function(size) {this.settings.setAutocompleteSize(size);}
+  this.addFacetField = function(fieldName) {this.settings.addFacetField(fieldName);}
+  this.addHierarchicalFacetSetting = function(setting) {this.settings.addHierarchicalFacetSetting(setting);}
+  this.addRangeFacet = function(field, ranges) {this.settings.addRangeFacet(field, ranges);}
+  this.addStatsField = function(field) {this.settings.addStatsField(field);}
+  this.setNumberOfFacets = function(numFacets) {this.settings.setNumberOfFacets(numFacets);}
+  this.setResultType = function(type) {this.settings.setResultType(type);}
+  this.setPersonalizationEvents = function(events) {this.settings.setPersonalizationEvents(events);}
+  this.setFilterObject = function(filter) {this.settings.setFilterObject(filter);}
+  this.setShuffleAndLimitTo = function(shuffleAndLimitTo) {this.settings.setShuffleAndLimitTo(shuffleAndLimitTo);}
+  this.setFuzzyMatch = function(fuzzy) {this.settings.setFuzzyMatch(fuzzy);}
+  this.setPostfixWildcard = function(wildcard) {this.settings.setPostfixWildcard(wildcard);}
+  this.setCacheResponseTime = function(cacheResponseTime) {this.settings.setCacheResponseTime(cacheResponseTime)}
+  this.setCollectAnalytics = function(collectAnalytics) {this.settings.setCollectAnalytics(collectAnalytics);}
+  this.setAnalyticsTag = function(tagName) {this.settings.setAnalyticsTag(tagName)}
+  this.setThrottleTime = function(delay) {this.settings.setThrottleTime(delay);}
+  this.setStatsSessionId = function(id) {this.sessionId = id;}
+  this.getStatsSessionId = function() {return this.sessionId;}
+  this.enableLogicalOperators = function(enableLogicalOperators) {this.settings.enableLogicalOperators(enableLogicalOperators)}
+  this.setSearchOperator = function(operator) {this.settings.setSearchOperator(operator)}
 
-  this.sendStatsEvent = function(type, keyword,data) {
+  this.sendStatsEvent = function(type, keyword, data) {
     if (type === 'search') {
-      var payload = {
+      let payload = {
         action: 'search',
         session: this.sessionId,
         keyword: keyword,
@@ -218,7 +218,7 @@ var client = function(sitekey, privatekey) {
     }
 
     else if (type === 'click') {
-      var payload = {
+      let payload = {
         action: 'click',
         session: this.sessionId,
         keyword: keyword,
