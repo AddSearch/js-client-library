@@ -21,6 +21,11 @@ module.exports = {
   optimization: {
     minimizer: [new TerserJSPlugin({
       extractComments: false,
+      terserOptions: {
+        format: {
+          comments: /addsearch-js-client/i,
+        }
+      },
     })]
   },
   resolve: {
