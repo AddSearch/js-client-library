@@ -58,10 +58,16 @@ var settings = function() {
   }
 
   this.setLanguage = function(language) {
-    if (language && language.length !== 2) {
-      throw "use 2-char language code (e.g. \"en\")";
+    var languageIntlLocale;
+    try {
+      languageIntlLocale = new Intl.Locale(language).language;
+    } catch (e) {
+      throw "use accepted language code provided by ECMAScript Internationalization API (e.g. \"en\", \"en-GB\")";
     }
-    this.settings.lang = language;
+    if (languageIntlLocale && languageIntlLocale.length !== 2) {
+      throw "use 2-char/4-char language code (e.g. \"en\", \"en-GB\")";
+    }
+    this.settings.lang = languageIntlLocale;
   }
 
   this.setFuzzyMatch = function(fuzzy) {

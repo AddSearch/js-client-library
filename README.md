@@ -162,7 +162,7 @@ client.previousPage();
 
 #### Define language filter
 ```js
-// Fetch documents in specific language (e.g. "en" or "de")
+// Fetch documents in specific language (e.g. "en" or "de" or "en-GB")
 client.setLanguage('en');
 ```
 
