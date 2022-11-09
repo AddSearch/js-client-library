@@ -59,10 +59,14 @@ var settings = function() {
 
   this.setLanguage = function(language) {
     var languageIntlLocale;
-    try {
-      languageIntlLocale = new Intl.Locale(language).language;
-    } catch (e) {
-      throw "use accepted language code provided by ECMAScript Internationalization API (e.g. \"en\", \"en-GB\")";
+    if (Intl && Intl.Locale) {
+      try {
+        languageIntlLocale = new Intl.Locale(language).language;
+      } catch (e) {
+        throw "use accepted language code provided by ECMAScript Internationalization API (e.g. \"en\", \"en-GB\")";
+      }
+    } else {
+      languageIntlLocale = language;
     }
     if (languageIntlLocale && languageIntlLocale.length !== 2) {
       throw "use 2-char/4-char language code (e.g. \"en\", \"en-GB\")";
