@@ -75,8 +75,6 @@ var executeApiFetch = function(apiHostname, sitekey, type, settings, cb, fuzzyRe
         settingToQueryParam(settings.dateTo, 'dateTo') +
         settingToQueryParam(settings.paging.page, 'page') +
         settingToQueryParam(settings.paging.pageSize, 'limit') +
-        settingToQueryParam(settings.paging.sortBy, 'sort') +
-        settingToQueryParam(settings.paging.sortOrder, 'order') +
         settingToQueryParam(settings.shuffleAndLimitTo, 'shuffleAndLimitTo') +
         settingToQueryParam(settings.jwt, 'jwt') +
         settingToQueryParam(settings.resultType, 'resultType') +
@@ -86,6 +84,17 @@ var executeApiFetch = function(apiHostname, sitekey, type, settings, cb, fuzzyRe
         settingToQueryParam(settings.searchOperator, 'defaultOperator') +
         settingToQueryParam(settings.analyticsTag, 'analyticsTag') +
         settingToQueryParam(settings.hierarchicalFacetSetting, 'hierarchicalFacets');
+
+      // Add sortBy and sortOrder
+      if (Array.isArray(settings.paging.sortBy)) {
+        settings.paging.sortBy.forEach(function(value, index) {
+          qs = qs + settingToQueryParam(value, 'sort') +
+            settingToQueryParam(settings.paging.sortOrder[index], 'order');
+        });
+      } else {
+        qs = qs + settingToQueryParam(settings.paging.sortBy, 'sort') +
+          settingToQueryParam(settings.paging.sortOrder, 'order');
+      }
 
       // Add custom field filters
       if (settings.customFieldFilters) {

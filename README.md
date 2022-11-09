@@ -143,6 +143,20 @@ Set page number, page size and sorting parameters. It's possible to order result
 - relevance (descending)
 - date (ascending or descending)
 - custom field value (ascending or descending. E.g. *custom_fields.price*)
+
+Type of sortBy and sortOrder: `string` or `array`. They must have the same type, in case type is array, sortBy and sortOrder must have the same size.
+For example:
+```js
+sortBy = 'date';
+sortOrder = 'desc';
+
+or
+
+sortBy = ['date', 'custom_fields.price'];
+sortOrder = ['desc', 'asc'];
+```
+
+
 ```js
 // Defaults: page "1", pageSize "10", sortBy "relevance", sortOrder "desc"
 client.setPaging(page, pageSize, sortBy, sortOrder);

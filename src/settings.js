@@ -1,5 +1,6 @@
 'use strict';
 
+var util = require('./util');
 var settings = function() {
   this.settings = {
     keyword: '*',
@@ -203,15 +204,7 @@ var settings = function() {
 
   this.setPaging = function(page, pageSize, sortBy, sortOrder) {
     // Validate
-    if (page < 1) {
-      throw "page must be 1 or bigger";
-    }
-    if (pageSize < 1 || pageSize > 300) {
-      throw "pageSize must be 1-300";
-    }
-    if (sortOrder !== 'asc' && sortOrder !== 'desc') {
-      throw "sortOrder must be asc or desc";
-    }
+    util.validateSetPagingParams(page, pageSize, sortBy, sortOrder);
 
     this.settings.paging.page = page;
     this.settings.paging.pageSize = pageSize;
