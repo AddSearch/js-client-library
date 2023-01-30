@@ -358,6 +358,16 @@ var events = [
 client.setPersonalizationEvents(events);
 ```
 
+
+### Advanced Personalization
+
+#### Set personalization token
+```js
+// Add a personalization token to the stat events
+client.enablePersonalization(options);
+```
+
+
 ### Other
 
 #### Set JSON Web Token (for authentication)

@@ -39,8 +39,13 @@ const validateSetPagingParams = function(page, pageSize, sortBy, sortOrder) {
   }
 }
 
+const generateRandomString = function(prefix) {
+  return (prefix + '-' + (Math.random() * 100000000)).substring(0, 10);
+};
+
 module.exports = {
   isFunction,
   base64,
-  validateSetPagingParams: validateSetPagingParams
+  validateSetPagingParams: validateSetPagingParams,
+  generateRandomString
 }

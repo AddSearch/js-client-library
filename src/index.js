@@ -6,8 +6,10 @@ var sendStats = require('./stats');
 var Settings = require('./settings');
 var util = require('./util');
 var throttle = require('./throttle');
+var cookie = require('./cookie');
 
 var API_HOSTNAME = 'api.addsearch.com';
+var PERSONALIZATION_TOKEN_COOKIE_NAME = 'addsearchPersonalizationToken';
 
 var client = function(sitekey, privatekey) {
   this.sitekey = sitekey;
@@ -15,6 +17,7 @@ var client = function(sitekey, privatekey) {
   this.apiHostname = API_HOSTNAME;
   this.settings = new Settings();
   this.sessionId = ('a-' + (Math.random() * 100000000)).substring(0, 10);
+  this.personalizationToken = null;
 
   /**
    * Fetch search results
@@ -209,7 +212,7 @@ var client = function(sitekey, privatekey) {
     if (type === 'search') {
       let payload = {
         action: 'search',
-        session: this.sessionId,
+        session: this.personalizationToken || this.sessionId,
         keyword: keyword,
         numberOfResults: data.numberOfResults,
         analyticsTag: this.getSettings().analyticsTag
@@ -220,7 +223,7 @@ var client = function(sitekey, privatekey) {
     else if (type === 'click') {
       let payload = {
         action: 'click',
-        session: this.sessionId,
+        session: this.personalizationToken || this.sessionId,
         keyword: keyword,
         docid: data.documentId,
         position: data.position,
@@ -233,6 +236,25 @@ var client = function(sitekey, privatekey) {
       throw "Illegal sendStatsEvent type parameters. Should be search or click)";
     }
   }
+
+  this.enablePersonalization = function(options) {
+    if (options && options.personalizationToken) {
+      this.personalizationToken = options.personalizationToken;
+      return;
+    }
+
+    if (!cookie.checkCookie()) {
+      return;
+    }
+
+    // TODO: set cookie expires days
+    let personalizationTokenInCookies = cookie.getCookie(PERSONALIZATION_TOKEN_COOKIE_NAME);
+    if (!personalizationTokenInCookies) {
+      personalizationTokenInCookies = util.generateRandomString('ps');
+      cookie.setCookie(PERSONALIZATION_TOKEN_COOKIE_NAME, personalizationTokenInCookies);
+    }
+    this.personalizationToken = personalizationTokenInCookies;
+  };
 
 
   // Deprecated
