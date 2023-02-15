@@ -243,7 +243,11 @@ var client = function(sitekey, privatekey) {
       return;
     }
 
-    if (!cookie.checkCookie()) {
+    if (!cookie.checkCookie() || !options || !options.checkCookieConsentFunction) {
+      return;
+    }
+
+    if (typeof options.checkCookieConsentFunction != 'function' || !options.checkCookieConsentFunction.call()) {
       return;
     }
 
