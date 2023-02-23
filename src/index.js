@@ -18,6 +18,7 @@ var client = function(sitekey, privatekey) {
   this.settings = new Settings();
   this.sessionId = ('a-' + (Math.random() * 100000000)).substring(0, 10);
   this.personalizationToken = null;
+  var personalizationToken = undefined;
 
   /**
    * Fetch search results
@@ -205,14 +206,26 @@ var client = function(sitekey, privatekey) {
   this.setThrottleTime = function(delay) {this.settings.setThrottleTime(delay);}
   this.setStatsSessionId = function(id) {this.sessionId = id;}
   this.getStatsSessionId = function() {return this.sessionId;}
-  this.enableLogicalOperators = function(enableLogicalOperators) {this.settings.enableLogicalOperators(enableLogicalOperators)}
-  this.setSearchOperator = function(operator) {this.settings.setSearchOperator(operator)}
+  this.enableLogicalOperators = function(enableLogicalOperators) {this.settings.enableLogicalOperators(enableLogicalOperators)};
+  this.setSearchOperator = function(operator) {this.settings.setSearchOperator(operator)};
 
   this.sendStatsEvent = function(type, keyword, data) {
+
+
+    if (!personalizationToken && isAddSearchCookieEnabled) {
+      personalizationToken = cookie.getCookie(PERSONALIZATION_TOKEN_COOKIE_NAME);
+
+      if (!personalizationToken) {
+        personalizationToken = util.generateUUID();
+        cookie.setCookie(PERSONALIZATION_TOKEN_COOKIE_NAME, personalizationToken, personalizationCookieExpireDays);
+      }
+    }
+
     if (type === 'search') {
       let payload = {
         action: 'search',
-        session: this.personalizationToken || this.sessionId,
+        session: this.sessionId,
+        userToken: isPersonalizationTrackingEnabled ? personalizationToken : undefined,
         keyword: keyword,
         numberOfResults: data.numberOfResults,
         analyticsTag: this.getSettings().analyticsTag
@@ -223,7 +236,8 @@ var client = function(sitekey, privatekey) {
     else if (type === 'click') {
       let payload = {
         action: 'click',
-        session: this.personalizationToken || this.sessionId,
+        session: this.sessionId,
+        userToken: isPersonalizationTrackingEnabled ? personalizationToken : undefined,
         keyword: keyword,
         docid: data.documentId,
         position: data.position,
@@ -237,27 +251,28 @@ var client = function(sitekey, privatekey) {
     }
   }
 
-  this.enablePersonalization = function(options) {
-    if (options && options.personalizationToken) {
-      this.personalizationToken = options.personalizationToken;
-      return;
-    }
+  /*
+   * Personalization
+   */
+  var isPersonalizationTrackingEnabled = false;
+  var isAddSearchCookieEnabled = true;
+  var personalizationCookieExpireDays = 180;
 
-    if (!cookie.checkCookie() || !options || !options.checkCookieConsentFunction) {
-      return;
-    }
+  this.setPersonalizationToken = function(userToken) { personalizationToken = userToken };
 
-    if (typeof options.checkCookieConsentFunction != 'function' || !options.checkCookieConsentFunction.call()) {
-      return;
-    }
+  this.getPersonalizationTokenInCookie = function() {
+    return cookie.getCookie(PERSONALIZATION_TOKEN_COOKIE_NAME);
+  };
 
-    // TODO: set cookie expires days
-    let personalizationTokenInCookies = cookie.getCookie(PERSONALIZATION_TOKEN_COOKIE_NAME);
-    if (!personalizationTokenInCookies) {
-      personalizationTokenInCookies = util.generateRandomString('ps');
-      cookie.setCookie(PERSONALIZATION_TOKEN_COOKIE_NAME, personalizationTokenInCookies);
+  this.enablePersonalizationTracking = function(isEnabled, cookieExpireDays) {
+    isPersonalizationTrackingEnabled = !!isEnabled;
+    if (cookieExpireDays) {
+      personalizationCookieExpireDays = cookieExpireDays;
     }
-    this.personalizationToken = personalizationTokenInCookies;
+  };
+
+  this.enableAddSearchCookie = function(isEnabled) {
+    isAddSearchCookieEnabled = !!isEnabled;
   };
 
 

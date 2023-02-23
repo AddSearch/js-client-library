@@ -18,27 +18,15 @@ const getCookie = function(cookieName) {
       return cookie.substring(name.length, cookie.length);
     }
   }
-  return "";
+  return undefined;
 }
 
 const deleteCookie = function(name) {
   document.cookie = name +'=; Path=/; Expires=Thu, 01 Jan 2000 00:00:01 GMT;';
 }
 
-const checkCookie = function(){
-  var cookieEnabled = navigator.cookieEnabled;
-  var testCookieName = 'addstestcookie';
-  if (!cookieEnabled){
-    setCookie(testCookieName);
-    cookieEnabled = !!getCookie(testCookieName);
-    deleteCookie(testCookieName);
-  }
-  return cookieEnabled;
-}
-
 module.exports = {
   setCookie,
   getCookie,
-  deleteCookie,
-  checkCookie
+  deleteCookie
 }
