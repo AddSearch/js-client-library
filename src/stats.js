@@ -1,7 +1,7 @@
 'use strict';
 
-require('es6-promise').polyfill();
-const axios = require('axios').default;
+import 'es6-promise/auto';
+import axios from 'axios';
 
 var sendStats = function(apiHostname, sitekey, payload) {
 
@@ -20,4 +20,4 @@ var sendStats = function(apiHostname, sitekey, payload) {
   }
 };
 
-module.exports = sendStats;
+export default sendStats;

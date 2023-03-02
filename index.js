@@ -1,3 +1,6 @@
 "use strict"
 
-module.exports = require("./src/index.js")
+import AddSearchClient  from "./src/index";
+
+// export { AddSearchClient };
+export default AddSearchClient;

@@ -44,4 +44,4 @@ var throttle = function(delay, callback) {
   return wrapper;
 }
 
-module.exports = throttle;
+export default throttle;

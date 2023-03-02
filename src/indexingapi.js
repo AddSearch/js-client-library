@@ -1,12 +1,11 @@
 'use strict';
 
-const util = require('./util');
-const Promise = require('es6-promise').Promise;
-const axios = require('axios').default;
+import axios from "axios";
+import Util from "./util";
 
 const getHeaders = function(sitekey, privatekey) {
   return {
-    'Authorization': 'Basic ' + util.base64(sitekey + ':' + privatekey),
+    'Authorization': 'Basic ' + Util.base64(sitekey + ':' + privatekey),
     'Content-Type': 'application/json'
   };
 }
@@ -149,11 +148,10 @@ var deleteDocumentsBatch = function(apiHostname, sitekey, privatekey, batch) {
   return promise;
 };
 
-
-module.exports = {
+export default {
   getDocument,
   saveDocument,
   saveDocumentsBatch,
   deleteDocument,
   deleteDocumentsBatch
-};
+}

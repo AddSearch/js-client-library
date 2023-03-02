@@ -1,13 +1,16 @@
-const Buffer = require('buffer/').Buffer;
+import { Buffer } from "buffer";
 
 const isFunction = function(fn) {
   return fn && {}.toString.call(fn) === '[object Function]';
 }
 
 const base64 = function(s) {
-  global.window = {};
-  if (window && window.btoa) {
-    return window.btoa(s);
+  const global = typeof globalThis !== 'undefined' ? globalThis : window;
+  if (!global.window) {
+    global.window = {};
+  }
+  if (global.window && global.window.btoa) {
+    return global.window.btoa(s);
   }
   else if (Buffer) {
     return Buffer.from(s).toString('base64');
@@ -39,8 +42,8 @@ const validateSetPagingParams = function(page, pageSize, sortBy, sortOrder) {
   }
 }
 
-module.exports = {
+export default {
+  validateSetPagingParams,
   isFunction,
-  base64,
-  validateSetPagingParams: validateSetPagingParams
+  base64
 }

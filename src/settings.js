@@ -1,64 +1,67 @@
 'use strict';
 
-var util = require('./util');
-var settings = function() {
-  this.settings = {
-    keyword: '*',
-    callback: null,
-    throttleTimeMs: 200,
-    fuzzy: 'auto',
-    paging: {
-      page: 1,
-      pageSize: 10,
-      sortBy: 'relevance',
-      sortOrder: 'desc'
-    },
-    customFieldFilters: [],
-    userToken: null,
-    suggestionsSize: 10,
-    facetFields: [],
-    autocomplete: {
-      size: 10
-    },
-    searchOperator: null,
-    enableLogicalOperators: false,
-    cacheResponseTime: null
-  };
+import Util from './util';
 
-  this.getSettings = function() {
+export class Settings {
+  constructor() {
+    this.settings = {
+      keyword: '*',
+      callback: null,
+      throttleTimeMs: 200,
+      fuzzy: 'auto',
+      paging: {
+        page: 1,
+        pageSize: 10,
+        sortBy: 'relevance',
+        sortOrder: 'desc'
+      },
+      customFieldFilters: [],
+      userToken: null,
+      suggestionsSize: 10,
+      facetFields: [],
+      autocomplete: {
+        size: 10
+      },
+      searchOperator: null,
+      enableLogicalOperators: false,
+      cacheResponseTime: null
+    };
+  }
+
+  getSettings() {
     return this.settings;
   }
 
-  this.setKeyword = function(keyword) {
+  setKeyword(keyword) {
     this.settings.keyword = keyword || '*';
   }
 
-  this.setCallback = function(cb) {
+  setCallback(cb) {
     this.settings.callback = cb;
   }
 
-  this.setThrottleTime = function(delay) {
+  setThrottleTime(delay) {
     this.settings.throttleTimeMs = delay;
   }
 
-  this.setSuggestionsPrefix = function(prefix) {
+  setSuggestionsPrefix(prefix) {
     this.settings.suggestionsPrefix = prefix;
   }
 
-  this.setSuggestionsSize = function(size) {
+  setSuggestionsSize(size) {
     this.settings.suggestionsSize = size;
   }
 
-  this.setAutocompleteSize = function(size) {
+  setAutocompleteSize(size) {
     this.settings.autocomplete.size = size;
   }
 
-  this.setAutocompleteParams = function(field, prefix) {
+  setAutocompleteParams(field, prefix) {
     this.settings.autocomplete.field = field;
     this.settings.autocomplete.prefix = prefix;
   }
 
-  this.setLanguage = function(language) {
+  setLanguage(language) {
     var languageIntlLocale;
     if (Intl && Intl.Locale) {
       try {
@@ -75,54 +78,54 @@ var settings = function() {
     this.settings.lang = languageIntlLocale;
   }
 
-  this.setFuzzyMatch = function(fuzzy) {
+  setFuzzyMatch(fuzzy) {
     if (fuzzy !== true && fuzzy !== false && fuzzy !== 'auto' && fuzzy !== 'retry') {
       throw "fuzzy matching can be true, false, 'auto', or 'retry'";
     }
     this.settings.fuzzy = fuzzy;
   }
 
-  this.enableLogicalOperators = function(enableLogicalOperators) {
+  enableLogicalOperators(enableLogicalOperators) {
     this.settings.enableLogicalOperators = enableLogicalOperators;
   }
 
-  this.setCacheResponseTime = function(cacheResponseTime) {
+  setCacheResponseTime(cacheResponseTime) {
     this.settings.cacheResponseTime = cacheResponseTime;
   }
 
-  this.setPostfixWildcard = function(wildcard) {
+  setPostfixWildcard(wildcard) {
     this.settings.postfixWildcard = wildcard;
   }
 
-  this.setCollectAnalytics = function(collectAnalytics) {
+  setCollectAnalytics(collectAnalytics) {
     this.settings.collectAnalytics = collectAnalytics;
   }
 
-  this.setAnalyticsTag = function(tagName) {
+  setAnalyticsTag(tagName) {
     this.settings.analyticsTag = tagName;
   }
 
-  this.setCategoryFilters = function(categories) {
+  setCategoryFilters(categories) {
     this.settings.categories = categories;
   }
 
-  this.setFilterObject = function(filter) {
+  setFilterObject(filter) {
     this.settings.filterObject= filter;
   }
 
-  this.setPriceRangeFilter = function(minCents, maxCents) {
+  setPriceRangeFilter(minCents, maxCents) {
     this.settings.priceFromCents = minCents;
     this.settings.priceToCents = maxCents;
   }
 
-  this.addCustomFieldFilter = function(fieldName, value) {
+  addCustomFieldFilter(fieldName, value) {
     var filter = encodeURIComponent(fieldName + '=' + value);
     if (this.settings.customFieldFilters.indexOf(filter) === -1) {
       this.settings.customFieldFilters.push(filter);
     }
   }
 
-  this.removeCustomFieldFilter = function(fieldName, value) {
+  removeCustomFieldFilter(fieldName, value) {
     var removeAll = false;
     var filter = encodeURIComponent(fieldName + '=' + value);
 
@@ -144,42 +147,38 @@ var settings = function() {
     }
   }
 
-  this.setDateFilter = function(dateFrom, dateTo) {
+  setDateFilter(dateFrom, dateTo) {
     this.settings.dateFrom = dateFrom;
     this.settings.dateTo = dateTo;
   }
 
-  this.setKeyword = function(keyword) {
-    this.settings.keyword = keyword || '*';
-  }
-
-  this.setJWT = function(jwt) {
+  setJWT(jwt) {
     this.settings.jwt = jwt;
   }
 
-  this.setUserToken = function(token) {
+  setUserToken(token) {
     this.settings.userToken = token;
   }
 
-  this.setPersonalizationEvents = function(events) {
+  setPersonalizationEvents(events) {
     this.settings.personalizationEvents = events;
   }
 
-  this.setResultType = function(type) {
+  setResultType(type) {
     this.settings.resultType = type;
   }
 
-  this.addFacetField = function(field) {
+  addFacetField(field) {
     if (this.settings.facetFields.indexOf(field) === -1) {
       this.settings.facetFields.push(field);
     }
   }
 
-  this.addHierarchicalFacetSetting = function(setting) {
+  addHierarchicalFacetSetting(setting) {
     this.settings.hierarchicalFacetSetting = JSON.stringify(setting);
   }
 
-  this.addRangeFacet = function(field, ranges) {
+  addRangeFacet(field, ranges) {
     if (!this.settings.rangeFacets) {
       this.settings.rangeFacets = [];
     }
@@ -189,7 +188,7 @@ var settings = function() {
     });
   }
 
-  this.addStatsField = function(field) {
+  addStatsField(field) {
     if (!this.settings.statsFields) {
       this.settings.statsFields = [];
     }
@@ -198,13 +197,13 @@ var settings = function() {
     }
   }
 
-  this.setNumberOfFacets = function(numFacets) {
+  setNumberOfFacets(numFacets) {
     this.settings.numFacets = numFacets;
   }
 
-  this.setPaging = function(page, pageSize, sortBy, sortOrder) {
+  setPaging(page, pageSize, sortBy, sortOrder) {
     // Validate
-    util.validateSetPagingParams(page, pageSize, sortBy, sortOrder);
+    Util.validateSetPagingParams(page, pageSize, sortBy, sortOrder);
 
     this.settings.paging.page = page;
     this.settings.paging.pageSize = pageSize;
@@ -212,26 +211,24 @@ var settings = function() {
     this.settings.paging.sortOrder = sortOrder;
   }
 
-  this.setShuffleAndLimitTo = function(shuffleAndLimitTo) {
+  setShuffleAndLimitTo(shuffleAndLimitTo) {
     this.settings.shuffleAndLimitTo = shuffleAndLimitTo;
   }
 
-  this.nextPage = function() {
+  nextPage() {
     this.settings.paging.page = this.settings.paging.page + 1;
   }
 
-  this.previousPage = function() {
+  previousPage() {
     if (this.settings.paging.page > 0) {
       this.settings.paging.page = this.settings.paging.page - 1;
     }
   }
 
-  this.setSearchOperator = function(operator) {
+  setSearchOperator(operator) {
     if (operator !== 'and' && operator !== 'or') {
       throw "operator must be 'and' || 'or'"
     }
     this.settings.searchOperator = operator;
   }
 }
-
-module.exports = settings;
