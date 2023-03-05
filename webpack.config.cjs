@@ -1,7 +1,7 @@
 const webpack = require('webpack');
 const PACKAGE = require('./package.json');
 const banner = PACKAGE.name + ' ' + PACKAGE.version;
-// const ESLintPlugin = require('eslint-webpack-plugin');
+const ESLintPlugin = require('eslint-webpack-plugin');
 const TerserJSPlugin = require('terser-webpack-plugin');
 const path = require('path');
 
@@ -13,7 +13,7 @@ module.exports = [
       // library: 'AddSearchClient',
       libraryExport: 'default',
       libraryTarget: 'umd',
-      // globalObject: 'this',
+      globalObject: 'this',
       library: {
         name: 'AddSearchClient',
         type: 'module'
@@ -23,7 +23,7 @@ module.exports = [
     },
     target: 'web',
     plugins: [
-      // new ESLintPlugin(),
+      new ESLintPlugin(),
       new webpack.BannerPlugin({
         banner: banner
       })
@@ -73,12 +73,13 @@ module.exports = [
       libraryTarget: 'commonjs2',
       globalObject: 'this',
       libraryExport: 'default',
+
       // libraryTarget: 'global',
       // globalObject: 'this'
     },
     target: 'node',
     plugins: [
-      // new ESLintPlugin(),
+      new ESLintPlugin(),
       new webpack.BannerPlugin({
         banner: banner
       })
