@@ -1,4 +1,4 @@
-var throttle = function(delay, callback) {
+var throttle = (delay, callback) => {
 
   // last time callback was executed.
   var lastExec = 0;

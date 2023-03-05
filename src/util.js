@@ -1,10 +1,10 @@
 import { Buffer } from "buffer";
 
-const isFunction = function(fn) {
+const isFunction = (fn) => {
   return fn && {}.toString.call(fn) === '[object Function]';
 }
 
-const base64 = function(s) {
+const base64 = (s) => {
   const global = typeof globalThis !== 'undefined' ? globalThis : window;
   if (!global.window) {
     global.window = {};
@@ -17,7 +17,7 @@ const base64 = function(s) {
   }
 }
 
-const validateSetPagingParams = function(page, pageSize, sortBy, sortOrder) {
+const validateSetPagingParams = (page, pageSize, sortBy, sortOrder) => {
   if (page < 1) {
     throw "page must be 1 or bigger";
   }

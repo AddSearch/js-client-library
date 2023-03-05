@@ -1,11 +1,11 @@
 'use strict';
 
-import { Settings } from "./settings";
-import Util from './util';
-import Throttle from "./throttle";
-import ExecuteApiFetch from "./apifetch";
-import SendStats from "./stats";
-import IndexingApi from "./indexingapi";
+import { Settings } from "./settings.js";
+import Util from './util.js';
+import Throttle from "./throttle.js";
+import ExecuteApiFetch from "./apifetch.js";
+import SendStats from "./stats.js";
+import IndexingApi from "./indexingapi.js";
 
 const API_HOSTNAME = 'api.addsearch.com';
 
@@ -132,11 +132,11 @@ export default class AddSearchClient {
     return IndexingApi.saveDocumentsBatch(this.apiHostname, this.sitekey, this.privatekey, batch);
   }
 
-  deleteDocument = function(id) {
+  deleteDocument(id) {
     return IndexingApi.deleteDocument(this.apiHostname, this.sitekey, this.privatekey, id);
   }
 
-  deleteDocumentsBatch = function(batch) {
+  deleteDocumentsBatch(batch) {
     if (!batch || !batch.documents || !Array.isArray(batch.documents)) {
       throw "Please provide an array of document ids: {documents: []}";
     }
@@ -211,7 +211,7 @@ export default class AddSearchClient {
 
   setStatsSessionId(id) {this.sessionId = id;}
 
-  getStatsSessionId = function() {return this.sessionId;}
+  getStatsSessionId() {return this.sessionId;}
 
   enableLogicalOperators(enableLogicalOperators) {this.settings.enableLogicalOperators(enableLogicalOperators)}
 
@@ -253,7 +253,7 @@ export default class AddSearchClient {
 
 
   // // Deprecated
-  // this.searchResultClicked = function(documentId, position) {
+  // searchResultClicked(documentId, position) {
   //   this.sendStatsEvent('click', this.settings.getSettings().keyword, {documentId: documentId, position: position});
   // }
 

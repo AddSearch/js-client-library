@@ -1,7 +1,7 @@
 'use strict';
 
 import axios from "axios";
-import Util from "./util";
+import Util from "./util.js";
 
 const getHeaders = function(sitekey, privatekey) {
   return {

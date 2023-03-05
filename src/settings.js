@@ -1,6 +1,6 @@
 'use strict';
 
-import Util from './util';
+import Util from './util.js';
 
 export class Settings {
   constructor() {

@@ -4,8 +4,10 @@
   "description": "AddSearch API JavaScript client",
   "main": "index.js",
   "jsdelivr": "./dist/addsearch-js-client.min.js",
+  "type": "module",
+  "types": "addsearch-js-client.d.ts",
   "scripts": {
-    "test": "./node_modules/mocha/bin/mocha.js --recursive --require @babel/register",
+    "test": "./node_modules/mocha/bin/mocha.js --recursive --require @babel/register -r esm",
     "build": "npm run test && ./node_modules/webpack-cli/bin/cli.js",
     "try": "./node_modules/webpack-cli/bin/cli.js",
     "watch": "./node_modules/webpack-cli/bin/cli.js --watch"
@@ -44,7 +46,7 @@
   },
   "devDependencies": {
     "@babel/cli": "^7.20.7",
-    "@babel/core": "^7.12.9",
+    "@babel/core": "^7.13.0",
     "@babel/preset-env": "^7.12.7",
     "@babel/register": "^7.12.1",
     "axios-mock-adapter": "^1.21.2",

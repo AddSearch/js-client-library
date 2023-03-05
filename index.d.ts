@@ -1,14 +1,5 @@
-// export let index: undefined;
-
-export function index(siteKey: string): any;
-
-export function greet(name: string): string;
-
-export function hello(name: string): string;
-
-export function testRequire(): void;
-
-declare class AddSearchClient {
+export declare class AddSearchClient
+{
   constructor(sitekey: string, privatekey?: string);
 
   sitekey: string;
