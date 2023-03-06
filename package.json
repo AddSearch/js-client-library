@@ -9,7 +9,6 @@
   "scripts": {
     "test": "./node_modules/mocha/bin/mocha.js --recursive --require @babel/register -r esm",
     "build": "npm run test && ./node_modules/webpack-cli/bin/cli.js",
-    "try": "./node_modules/webpack-cli/bin/cli.js",
     "watch": "./node_modules/webpack-cli/bin/cli.js --watch"
   },
   "repository": {

@@ -194,9 +194,6 @@ export default class AddSearchClient {
 
   setFilterObject(filter) {this.settings.setFilterObject(filter);}
 
-  // might be deprecated - not typed yet
-  setShuffleAndLimitTo(shuffleAndLimitTo) {this.settings.setShuffleAndLimitTo(shuffleAndLimitTo);}
-
   setFuzzyMatch(fuzzy) {this.settings.setFuzzyMatch(fuzzy);}
 
   setPostfixWildcard(wildcard) {this.settings.setPostfixWildcard(wildcard);}
@@ -252,9 +249,11 @@ export default class AddSearchClient {
   }
 
 
-  // // Deprecated
-  // searchResultClicked(documentId, position) {
-  //   this.sendStatsEvent('click', this.settings.getSettings().keyword, {documentId: documentId, position: position});
-  // }
+  // Deprecated
+  searchResultClicked(documentId, position) {
+    this.sendStatsEvent('click', this.settings.getSettings().keyword, {documentId: documentId, position: position});
+  }
+
+  setShuffleAndLimitTo(shuffleAndLimitTo) {this.settings.setShuffleAndLimitTo(shuffleAndLimitTo);}
 
 }

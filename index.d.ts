@@ -5,8 +5,6 @@ export declare class AddSearchClient
   sitekey: string;
   privatekey: string;
 
-  getSiteKey(): void;
-
   search(keyword: string, cb: (response: any) => void): void;
 
   suggestions(prefix: string, cb: (response: any) => void): void;
@@ -99,5 +97,8 @@ export declare class AddSearchClient
   fetchRangeFacets(options: any, customFilterObject: any, callback: (response: any) => void): void;
 
   recommendations(options: any, callback: (response: any) => void): void;
+
+  // Deprecated
+  searchResultClicked(documentId: string, position: number): void;
 
 }
