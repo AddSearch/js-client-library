@@ -56,7 +56,7 @@
     "mocha-axios": "^1.4.2",
     "terser-webpack-plugin": "^5.3.1",
     "uglify-js": "^3.12.0",
-    "webpack": "^5.72.0",
+    "webpack": "^5.76.1",
     "webpack-cli": "^4.10.0"
   }
 }
