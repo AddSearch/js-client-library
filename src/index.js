@@ -224,7 +224,7 @@ var client = function(sitekey, privatekey) {
         session: useUserTokenInCookie ? this.userTokenInPersonalization : this.sessionId,
         keyword: keyword,
         numberOfResults: data.numberOfResults,
-        analyticsTag: this.getSettings().analyticsTag
+        tag: this.getSettings().analyticsTag
       };
       sendStats(this.apiHostname, this.sitekey, payload);
     }
@@ -236,7 +236,7 @@ var client = function(sitekey, privatekey) {
         keyword: keyword,
         docid: data.documentId,
         position: data.position,
-        analyticsTag: this.getSettings().analyticsTag
+        tag: this.getSettings().analyticsTag
       };
       sendStats(this.apiHostname, this.sitekey, payload);
     }
