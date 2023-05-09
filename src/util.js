@@ -1,4 +1,5 @@
 const Buffer = require('buffer/').Buffer;
+const { v4: uuidv4 } = require('uuid');
 
 const isFunction = function(fn) {
   return fn && {}.toString.call(fn) === '[object Function]';
@@ -39,8 +40,13 @@ const validateSetPagingParams = function(page, pageSize, sortBy, sortOrder) {
   }
 }
 
+const generateUUID = function() {
+  return uuidv4().replace(/-/g, '');
+};
+
 module.exports = {
   isFunction,
   base64,
-  validateSetPagingParams: validateSetPagingParams
+  validateSetPagingParams: validateSetPagingParams,
+  generateUUID
 }
