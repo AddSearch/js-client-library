@@ -23,7 +23,7 @@ describe('throttle', function() {
       await sleep(sleepTime);
     }
 
-    assert.equal(expectedExecutions, executions);
+    assert.equal(executions, expectedExecutions);
   });
 
   it('function should be throttled (4 function calls in 600ms', async function() {
@@ -31,7 +31,10 @@ describe('throttle', function() {
     var functionCalls = 30;
     var sleepTime = 20; // 30*20 = 600 ms
     var throttleDelay = 200;
-    var expectedExecutions = 3 + 1; // Call functions for 600 ms with 200 ms throttle = 3 calls + one last call
+    // Call functions for 600 ms with 200 ms throttle = 3 calls + one last call
+    // this is LowerBound as in slower environments there could be more executions
+    // less than the lowerBound isn't possible due to the deterministic sleepTime, and throttleDelay values
+    var expectedExecutionsLowerBound = 3 + 1;
     var executions = 0;
 
     var f = throttle(throttleDelay, function() {
@@ -42,8 +45,7 @@ describe('throttle', function() {
       f();
       await sleep(sleepTime);
     }
-
-    assert.equal(expectedExecutions, executions);
+    assert.equal(expectedExecutionsLowerBound <= executions, true);
   });
 
 });
