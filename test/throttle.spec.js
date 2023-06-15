@@ -1,5 +1,5 @@
-var assert = require('assert');
-var throttle = require('../src/throttle');
+import assert from "assert";
+import throttle from "../src/throttle.js";
 
 function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));

@@ -3,14 +3,10 @@ const PACKAGE = require('./package.json');
 const banner = PACKAGE.name + ' ' + PACKAGE.version;
 const ESLintPlugin = require('eslint-webpack-plugin');
 const TerserJSPlugin = require('terser-webpack-plugin');
+const path = require('path');
 
-module.exports = {
+const commonConfig = {
   entry: './src/index.js',
-  output: {
-    filename: 'addsearch-js-client.min.js',
-    library: 'AddSearchClient',
-    libraryTarget: 'global'
-  },
   plugins: [
     new ESLintPlugin(),
     new webpack.BannerPlugin({
@@ -30,26 +26,52 @@ module.exports = {
   },
   resolve: {
     fallback: {
-      buffer: require.resolve('buffer/'),
+      buffer: require.resolve('buffer/')
     },
   },
   module: {
     rules: [
       {
-        test: /\.js$/,
+        test: /\.js|mjs$/,
         exclude: /(node_modules|bower_components)/,
         use: {
           loader: 'babel-loader',
           options: {
             presets: [
               [
-              '@babel/preset-env',
+                '@babel/preset-env',
                 {'targets': '> 0.1%, IE 10, not dead'}
               ]
-            ]
+            ],
           }
         }
       }
     ]
   }
 };
+
+module.exports = [
+  Object.assign({
+    output: {
+      filename: 'addsearch-js-client.min.js',
+      libraryExport: 'default',
+      libraryTarget: 'umd',
+      globalObject: 'this',
+      library: {
+        name: 'AddSearchClient',
+        type: 'module'
+      }
+    },
+    target: 'web'
+  }, commonConfig),
+  Object.assign({
+    output: {
+      path: path.resolve(__dirname, 'lib/cjs'),
+      filename: 'addsearch-js-client.min.cjs',
+      libraryTarget: 'commonjs2',
+      globalObject: 'this',
+      libraryExport: 'default',
+    },
+    target: 'node'
+  }, commonConfig)
+];

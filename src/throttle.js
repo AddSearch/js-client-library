@@ -1,4 +1,4 @@
-var throttle = function(delay, callback) {
+var throttle = (delay, callback) => {
 
   // last time callback was executed.
   var lastExec = 0;
@@ -44,4 +44,4 @@ var throttle = function(delay, callback) {
   return wrapper;
 }
 
-module.exports = throttle;
+export default throttle;

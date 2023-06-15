@@ -1,11 +1,13 @@
 {
   "name": "addsearch-js-client",
-  "version": "0.8.3",
+  "version": "1.0.0-beta",
   "description": "AddSearch API JavaScript client",
   "main": "index.js",
   "jsdelivr": "./dist/addsearch-js-client.min.js",
+  "type": "module",
+  "types": "addsearch-js-client.d.ts",
   "scripts": {
-    "test": "./node_modules/mocha/bin/mocha.js --recursive --require @babel/register",
+    "test": "./node_modules/mocha/bin/mocha.js --recursive --require @babel/register -r esm",
     "build": "npm run test && ./node_modules/webpack-cli/bin/cli.js",
     "watch": "./node_modules/webpack-cli/bin/cli.js --watch"
   },
@@ -51,10 +53,12 @@
     "buffer": "^6.0.3",
     "eslint": "^8.13.0",
     "eslint-webpack-plugin": "^3.1.1",
+    "babel-plugin-transform-es2015-modules-commonjs": "^6.26.2",
     "esm": "^3.2.25",
     "fetch-mock": "^9.11.0",
     "mocha": "^10.0.0",
     "mocha-axios": "^1.4.2",
+    "stream-http": "^3.2.0",
     "terser-webpack-plugin": "^5.3.1",
     "uglify-js": "^3.12.0",
     "webpack": "^5.76.1",

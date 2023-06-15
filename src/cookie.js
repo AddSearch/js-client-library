@@ -25,7 +25,7 @@ const deleteCookie = function(name) {
   document.cookie = name +'=; Path=/; Expires=Thu, 01 Jan 2000 00:00:01 GMT;';
 }
 
-module.exports = {
+export default {
   setCookie,
   getCookie,
   deleteCookie

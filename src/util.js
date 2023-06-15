@@ -1,21 +1,24 @@
-const Buffer = require('buffer/').Buffer;
-const { v4: uuidv4 } = require('uuid');
+import { Buffer } from "buffer";
+import { v4 as uuidv4 } from 'uuid';
 
-const isFunction = function(fn) {
+const isFunction = (fn) => {
   return fn && {}.toString.call(fn) === '[object Function]';
 }
 
-const base64 = function(s) {
-  global.window = {};
-  if (window && window.btoa) {
-    return window.btoa(s);
+const base64 = (s) => {
+  const global = typeof globalThis !== 'undefined' ? globalThis : window;
+  if (!global.window) {
+    global.window = {};
+  }
+  if (global.window && global.window.btoa) {
+    return global.window.btoa(s);
   }
   else if (Buffer) {
     return Buffer.from(s).toString('base64');
   }
 }
 
-const validateSetPagingParams = function(page, pageSize, sortBy, sortOrder) {
+const validateSetPagingParams = (page, pageSize, sortBy, sortOrder) => {
   if (page < 1) {
     throw "page must be 1 or bigger";
   }
@@ -44,9 +47,9 @@ const generateUUID = function() {
   return uuidv4().replace(/-/g, '');
 };
 
-module.exports = {
+export default {
+  validateSetPagingParams,
   isFunction,
   base64,
-  validateSetPagingParams: validateSetPagingParams,
   generateUUID
 }

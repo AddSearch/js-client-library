@@ -1,23 +1,24 @@
 'use strict';
 
-var executeApiFetch = require('./apifetch');
-var indexingapi = require('./indexingapi');
-var sendStats = require('./stats');
-var Settings = require('./settings');
-var util = require('./util');
-var throttle = require('./throttle');
-var cookie = require('./cookie');
+import { Settings } from "./settings.js";
+import Util from './util.js';
+import Throttle from "./throttle.js";
+import ExecuteApiFetch from "./apifetch.js";
+import SendStats from "./stats.js";
+import IndexingApi from "./indexingapi.js";
+import Cookie from "./cookie.js";
 
-var API_HOSTNAME = 'api.addsearch.com';
-var USER_TOKEN_COOKIE_NAME = 'addsearchUserToken';
+const API_HOSTNAME = 'api.addsearch.com';
+const USER_TOKEN_COOKIE_NAME = 'addsearchUserToken';
 
-var client = function(sitekey, privatekey) {
-  this.sitekey = sitekey;
-  this.privatekey = privatekey;
-  this.apiHostname = API_HOSTNAME;
-  this.settings = new Settings();
-  this.sessionId = ('a-' + (Math.random() * 100000000)).substring(0, 10);
-  this.userTokenInPersonalization = cookie.getCookie(USER_TOKEN_COOKIE_NAME) || util.generateUUID();
+export default class AddSearchClient {
+  constructor(sitekey, privatekey) {
+    this.sitekey = sitekey;
+    this.privatekey = privatekey;
+    this.apiHostname = API_HOSTNAME;
+    this.settings = new Settings();
+    this.sessionId = ('a-' + (Math.random() * 100000000)).substring(0, 10);
+  }
 
   /**
    * Fetch search results
@@ -27,35 +28,12 @@ var client = function(sitekey, privatekey) {
    *            without keyword (i.e. match all query)
    * @param a2  Callback function to call with search results
    */
-  this.search = function(a1, a2) {
-
-    var keyword = null;
-    var callback = null;
-
-    // Keyword and callback
-    if (a1 && util.isFunction(a2)) {
-      keyword = a1;
-      callback = a2;
-    }
-    // If function is called with callback only, use previous keyword from settings object
-    else if (!a2 && util.isFunction(a1)) {
-      keyword = this.settings.getSettings().keyword;
-      callback = a1;
-    }
-    // Use previous keyword and callback
-    else if (this.settings.getSettings().callback) {
-      keyword = this.settings.getSettings().keyword;
-      callback = this.settings.getSettings().callback;
-    }
-    else {
-      throw "Illegal search parameters. Should be (keyword, callbackFunction) or (callbackFunction)";
-    }
-
+  search(keyword, callback) {
     this.settings.setCallback(callback);
     this.settings.setKeyword(keyword);
 
     if (!this.throttledSearchFetch) {
-      this.throttledSearchFetch = throttle(this.settings.getSettings().throttleTimeMs, executeApiFetch);
+      this.throttledSearchFetch = Throttle(this.settings.getSettings().throttleTimeMs, ExecuteApiFetch);
     }
     this.throttledSearchFetch(this.apiHostname, this.sitekey, 'search', this.settings.getSettings(), callback);
   }
@@ -66,14 +44,14 @@ var client = function(sitekey, privatekey) {
    *
    * @param keyword
    */
-  this.suggestions = function(prefix, callback) {
-    if (!prefix || !callback || !util.isFunction(callback)) {
+  suggestions(prefix, callback) {
+    if (!prefix || !callback || !Util.isFunction(callback)) {
       throw "Illegal suggestions parameters. Should be (prefix, callbackFunction)";
     }
     this.settings.setSuggestionsPrefix(prefix);
 
     if (!this.throttledSuggestionsFetch) {
-      this.throttledSuggestionsFetch = throttle(this.settings.getSettings().throttleTimeMs, executeApiFetch);
+      this.throttledSuggestionsFetch = Throttle(this.settings.getSettings().throttleTimeMs, ExecuteApiFetch);
     }
     this.throttledSuggestionsFetch(this.apiHostname, this.sitekey, 'suggest', this.settings.getSettings(), callback);
   }
@@ -84,32 +62,34 @@ var client = function(sitekey, privatekey) {
    *
    * @param keyword
    */
-  this.autocomplete = function(field, prefix, callback) {
-    if (!field || !prefix || !callback || !util.isFunction(callback)) {
+  autocomplete(field, prefix, callback) {
+    if (!field || !prefix || !callback || !Util.isFunction(callback)) {
       throw "Illegal autocomplete parameters. Should be (field, prefix, callbackFunction)";
     }
     this.settings.setAutocompleteParams(field, prefix);
 
     if (!this.throttledAutocompleteFetch) {
-      this.throttledAutocompleteFetch = throttle(this.settings.getSettings().throttleTimeMs, executeApiFetch);
+      this.throttledAutocompleteFetch = Throttle(this.settings.getSettings().throttleTimeMs, ExecuteApiFetch);
     }
     this.throttledAutocompleteFetch(this.apiHostname, this.sitekey, 'autocomplete', this.settings.getSettings(), callback);
   }
 
+
+
   /**
    * Fetch API with a custom filter object
    */
-  this.fetchCustomApi = function(field, customFilterObject, callback) {
+  fetchCustomApi(field, customFilterObject, callback) {
     var settingsCloned = Object.assign({}, this.settings.getSettings());
 
     settingsCloned.facetFields = settingsCloned.facetFields.filter(facetField => field === facetField);
-    executeApiFetch(this.apiHostname, this.sitekey, 'search', settingsCloned, callback, null, customFilterObject);
+    ExecuteApiFetch(this.apiHostname, this.sitekey, 'search', settingsCloned, callback, null, customFilterObject);
   }
 
   /**
    * Fetch Range Facets
    */
-  this.fetchRangeFacets = function(options, customFilterObject, callback) {
+  fetchRangeFacets(options, customFilterObject, callback) {
     var settingsCloned = Object.assign({}, this.settings.getSettings());
 
     if (!settingsCloned.rangeFacets) {
@@ -119,21 +99,19 @@ var client = function(sitekey, privatekey) {
       field: options.field,
       ranges: options.ranges
     });
-    executeApiFetch(this.apiHostname, this.sitekey, 'search', settingsCloned, callback, null, customFilterObject);
+    ExecuteApiFetch(this.apiHostname, this.sitekey, 'search', settingsCloned, callback, null, customFilterObject);
   }
 
   /**
    * Fetch recommendations
-   *
-   * @param item
    */
-  this.recommendations = function(options, callback) {
-    if (!options || !callback || !util.isFunction(callback)) {
+  recommendations(options, callback) {
+    if (!options || !callback || !Util.isFunction(callback)) {
       throw "Illegal recommendations parameters. Should be (options, callbackFunction)";
     }
 
     if (!this.throttledSuggestionsFetch) {
-      this.throttledSuggestionsFetch = throttle(this.settings.getSettings().throttleTimeMs, executeApiFetch);
+      this.throttledSuggestionsFetch = Throttle(this.settings.getSettings().throttleTimeMs, ExecuteApiFetch);
     }
     this.throttledSuggestionsFetch(this.apiHostname, this.sitekey, 'recommend', null, callback, false, null, options);
   }
@@ -141,81 +119,111 @@ var client = function(sitekey, privatekey) {
   /**
    * Indexing API functions
    */
-  this.getDocument = function(id) {
-    return indexingapi.getDocument(this.apiHostname, this.sitekey, this.privatekey, id);
+  getDocument(id) {
+    return IndexingApi.getDocument(this.apiHostname, this.sitekey, this.privatekey, id);
   }
 
-  this.saveDocument = function(document) {
-    return indexingapi.saveDocument(this.apiHostname, this.sitekey, this.privatekey, document);
+  saveDocument(document) {
+    return IndexingApi.saveDocument(this.apiHostname, this.sitekey, this.privatekey, document);
   }
 
-  this.saveDocumentsBatch = function(batch) {
+  saveDocumentsBatch(batch) {
     if (!batch || !batch.documents || !Array.isArray(batch.documents)) {
       throw "Please provide an array of documents: {documents: []}";
     }
-    return indexingapi.saveDocumentsBatch(this.apiHostname, this.sitekey, this.privatekey, batch);
+    return IndexingApi.saveDocumentsBatch(this.apiHostname, this.sitekey, this.privatekey, batch);
   }
 
-  this.deleteDocument = function(id) {
-    return indexingapi.deleteDocument(this.apiHostname, this.sitekey, this.privatekey, id);
+  deleteDocument(id) {
+    return IndexingApi.deleteDocument(this.apiHostname, this.sitekey, this.privatekey, id);
   }
 
-  this.deleteDocumentsBatch = function(batch) {
+  deleteDocumentsBatch(batch) {
     if (!batch || !batch.documents || !Array.isArray(batch.documents)) {
       throw "Please provide an array of document ids: {documents: []}";
     }
-    return indexingapi.deleteDocumentsBatch(this.apiHostname, this.sitekey, this.privatekey, batch);
+    return IndexingApi.deleteDocumentsBatch(this.apiHostname, this.sitekey, this.privatekey, batch);
   }
 
+  setApiHostname(hostname) {this.apiHostname = hostname;}
+
+  getSettings() {return this.settings.getSettings();}
+
+  setLanguage(lang) {this.settings.setLanguage(lang);}
+
+  setCategoryFilters(categories) {this.settings.setCategoryFilters(categories);}
+
+  addCustomFieldFilter(fieldName, value) {this.settings.addCustomFieldFilter(fieldName, value);}
+
+  removeCustomFieldFilter(fieldName, value) {this.settings.removeCustomFieldFilter(fieldName, value);}
+
+  setPriceRangeFilter(minCents, maxCents) {this.settings.setPriceRangeFilter(minCents, maxCents);}
+
+  setDateFilter(dateFrom, dateTo) {this.settings.setDateFilter(dateFrom, dateTo);}
+
+  setJWT(jwt) {this.settings.setJWT(jwt);}
+
+  setUserToken(token) {this.settings.setUserToken(token);}
+
+  setPaging(page, pageSize, sortBy, sortOder) {this.settings.setPaging(page, pageSize, sortBy, sortOder);}
+
+  nextPage() {this.settings.nextPage();}
+
+  previousPage() {this.settings.previousPage();}
+
+  setSuggestionsSize(size) {this.settings.setSuggestionsSize(size);}
+
+  setAutocompleteSize(size) {this.settings.setAutocompleteSize(size);}
+
+  addFacetField(fieldName) {this.settings.addFacetField(fieldName);}
+
+  addHierarchicalFacetSetting(setting) {this.settings.addHierarchicalFacetSetting(setting);}
+
+  addRangeFacet(field, ranges) {this.settings.addRangeFacet(field, ranges);}
+
+  addStatsField(field) {this.settings.addStatsField(field);}
+
+  setNumberOfFacets(numFacets) {this.settings.setNumberOfFacets(numFacets);}
+
+  setResultType(type) {this.settings.setResultType(type);}
+
+  setPersonalizationEvents(events) {this.settings.setPersonalizationEvents(events);}
+
+  setFilterObject(filter) {this.settings.setFilterObject(filter);}
+
+  setFuzzyMatch(fuzzy) {this.settings.setFuzzyMatch(fuzzy);}
+
+  setPostfixWildcard(wildcard) {this.settings.setPostfixWildcard(wildcard);}
+
+  setCacheResponseTime(cacheResponseTime) {this.settings.setCacheResponseTime(cacheResponseTime)}
+
+  setCollectAnalytics(collectAnalytics) {this.settings.setCollectAnalytics(collectAnalytics);}
+
+  setAnalyticsTag(tagName) {this.settings.setAnalyticsTag(tagName)}
+
+  setThrottleTime(delay) {this.settings.setThrottleTime(delay);}
+
+  setStatsSessionId(id) {
+    this.sessionId = id;
+    this.userTokenInPersonalization = null;
+  }
+
+  getStatsSessionId() {return this.sessionId;}
+
+  enableLogicalOperators(enableLogicalOperators) {this.settings.enableLogicalOperators(enableLogicalOperators)}
+
+  setSearchOperator(operator) {this.settings.setSearchOperator(operator)}
 
 
 
   /**
-   * Public functions
+   *  Analytics events
    */
-  this.setApiHostname = function(hostname) {this.apiHostname = hostname;}
-  this.getSettings = function() {return this.settings.getSettings();}
-  this.setLanguage = function(lang) {this.settings.setLanguage(lang);}
-  this.setCategoryFilters = function(categories) {this.settings.setCategoryFilters(categories);}
-  this.addCustomFieldFilter = function(fieldName, value) {this.settings.addCustomFieldFilter(fieldName, value);}
-  this.removeCustomFieldFilter = function(fieldName, value) {this.settings.removeCustomFieldFilter(fieldName, value);}
-  this.setPriceRangeFilter = function(minCents, maxCents) {this.settings.setPriceRangeFilter(minCents, maxCents);}
-  this.setDateFilter = function(dateFrom, dateTo) {this.settings.setDateFilter(dateFrom, dateTo);}
-  this.setJWT = function(jwt) {this.settings.setJWT(jwt);}
-  this.setUserToken = function(token) {this.settings.setUserToken(token);}
-  this.setPaging = function(page, pageSize, sortBy, sortOder) {this.settings.setPaging(page, pageSize, sortBy, sortOder);}
-  this.nextPage = function() {this.settings.nextPage();}
-  this.previousPage = function() {this.settings.previousPage();}
-  this.setSuggestionsSize = function(size) {this.settings.setSuggestionsSize(size);}
-  this.setAutocompleteSize = function(size) {this.settings.setAutocompleteSize(size);}
-  this.addFacetField = function(fieldName) {this.settings.addFacetField(fieldName);}
-  this.addHierarchicalFacetSetting = function(setting) {this.settings.addHierarchicalFacetSetting(setting);}
-  this.addRangeFacet = function(field, ranges) {this.settings.addRangeFacet(field, ranges);}
-  this.addStatsField = function(field) {this.settings.addStatsField(field);}
-  this.setNumberOfFacets = function(numFacets) {this.settings.setNumberOfFacets(numFacets);}
-  this.setResultType = function(type) {this.settings.setResultType(type);}
-  this.setPersonalizationEvents = function(events) {this.settings.setPersonalizationEvents(events);}
-  this.setFilterObject = function(filter) {this.settings.setFilterObject(filter);}
-  this.setShuffleAndLimitTo = function(shuffleAndLimitTo) {this.settings.setShuffleAndLimitTo(shuffleAndLimitTo);}
-  this.setFuzzyMatch = function(fuzzy) {this.settings.setFuzzyMatch(fuzzy);}
-  this.setPostfixWildcard = function(wildcard) {this.settings.setPostfixWildcard(wildcard);}
-  this.setCacheResponseTime = function(cacheResponseTime) {this.settings.setCacheResponseTime(cacheResponseTime)}
-  this.setCollectAnalytics = function(collectAnalytics) {this.settings.setCollectAnalytics(collectAnalytics);}
-  this.setAnalyticsTag = function(tagName) {this.settings.setAnalyticsTag(tagName)}
-  this.setThrottleTime = function(delay) {this.settings.setThrottleTime(delay);}
-  this.setStatsSessionId = function(id) {
-    this.sessionId = id;
-    this.userTokenInPersonalization = null;
-  }
-  this.getStatsSessionId = function() {return this.sessionId;}
-  this.enableLogicalOperators = function(enableLogicalOperators) {this.settings.enableLogicalOperators(enableLogicalOperators)};
-  this.setSearchOperator = function(operator) {this.settings.setSearchOperator(operator)};
+  sendStatsEvent(type, keyword, data) {
 
-  this.sendStatsEvent = function(type, keyword, data) {
-
-    var useUserTokenInCookie = this.userTokenInPersonalization && isPersonalizationTrackingEnabled && isAddSearchCookieConsented;
-    if (useUserTokenInCookie && !cookie.getCookie(USER_TOKEN_COOKIE_NAME)) {
-      cookie.setCookie(USER_TOKEN_COOKIE_NAME, this.userTokenInPersonalization, personalizationCookieExpireDays);
+    const useUserTokenInCookie = this.userTokenInPersonalization && this.isPersonalizationTrackingEnabled && this.isAddSearchCookieConsented;
+    if (useUserTokenInCookie && !Cookie.getCookie(USER_TOKEN_COOKIE_NAME)) {
+      Cookie.setCookie(USER_TOKEN_COOKIE_NAME, this.userTokenInPersonalization, this.personalizationCookieExpireDays);
     }
 
     if (type === 'search') {
@@ -226,7 +234,7 @@ var client = function(sitekey, privatekey) {
         numberOfResults: data.numberOfResults,
         tag: this.getSettings().analyticsTag
       };
-      sendStats(this.apiHostname, this.sitekey, payload);
+      SendStats(this.apiHostname, this.sitekey, payload);
     }
 
     else if (type === 'click') {
@@ -238,7 +246,7 @@ var client = function(sitekey, privatekey) {
         position: data.position,
         tag: this.getSettings().analyticsTag
       };
-      sendStats(this.apiHostname, this.sitekey, payload);
+      SendStats(this.apiHostname, this.sitekey, payload);
     }
 
     else {
@@ -249,30 +257,31 @@ var client = function(sitekey, privatekey) {
   /*
    * Personalization
    */
-  var isPersonalizationTrackingEnabled = false;
-  var isAddSearchCookieConsented = true;
-  var personalizationCookieExpireDays = 180;
+  isPersonalizationTrackingEnabled = false;
+  isAddSearchCookieConsented = true;
+  personalizationCookieExpireDays = 180;
 
-  this.getUserTokenInPersonalization = function() {
+  getUserTokenInPersonalization() {
     return this.userTokenInPersonalization;
-  };
+  }
 
-  this.enablePersonalizationTracking = function(isEnabled, cookieExpireDays) {
-    isPersonalizationTrackingEnabled = !!isEnabled;
+  enablePersonalizationTracking(isEnabled, cookieExpireDays) {
+    this.isPersonalizationTrackingEnabled = !!isEnabled;
     if (cookieExpireDays) {
-      personalizationCookieExpireDays = cookieExpireDays;
+      this.personalizationCookieExpireDays = cookieExpireDays;
     }
-  };
+  }
 
-  this.consentAddSearchCookie = function(isEnabled) {
-    isAddSearchCookieConsented = !!isEnabled;
-  };
+  consentAddSearchCookie(isEnabled) {
+    this.isAddSearchCookieConsented = !!isEnabled;
+  }
 
 
   // Deprecated
-  this.searchResultClicked = function(documentId, position) {
+  searchResultClicked(documentId, position) {
     this.sendStatsEvent('click', this.settings.getSettings().keyword, {documentId: documentId, position: position});
   }
-}
 
-module.exports = client;
+  setShuffleAndLimitTo(shuffleAndLimitTo) {this.settings.setShuffleAndLimitTo(shuffleAndLimitTo);}
+
+}

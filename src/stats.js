@@ -1,9 +1,9 @@
 'use strict';
 
-require('es6-promise').polyfill();
-const axios = require('axios').default;
+import 'es6-promise/auto.js';
+import axios from 'axios';
 
-var sendStats = function(apiHostname, sitekey, payload) {
+var sendStats = (apiHostname, sitekey, payload) => {
 
   // Beacon in browsers
   if (typeof window !== 'undefined' && window.navigator && window.navigator.sendBeacon) {
@@ -20,4 +20,4 @@ var sendStats = function(apiHostname, sitekey, payload) {
   }
 };
 
-module.exports = sendStats;
+export default sendStats;

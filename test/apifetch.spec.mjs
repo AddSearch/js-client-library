@@ -1,8 +1,9 @@
-var assert = require('assert');
-var apifetch = require('../src/apifetch');
-var MockAdapter = require("axios-mock-adapter");
-const axios = require('axios').default;
-var mock = new MockAdapter(axios);
+import assert from "assert";
+import apifetch from "../src/apifetch.js";
+import MockAdapter from "axios-mock-adapter";
+import axios from "axios";
+const mock = new MockAdapter(axios);
+
 
 mock.onAny().reply(200, { response: 200 });
 

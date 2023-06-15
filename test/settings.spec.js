@@ -1,5 +1,5 @@
-var assert = require('assert');
-var Settings = require('../src/settings');
+import assert from "assert";
+import { Settings } from "../src/settings.js";
 
 
 describe('settings', function() {
