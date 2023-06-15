@@ -1,4 +1,5 @@
 import { Buffer } from "buffer";
+import { v4 as uuidv4 } from 'uuid';
 
 const isFunction = (fn) => {
   return fn && {}.toString.call(fn) === '[object Function]';
@@ -42,8 +43,13 @@ const validateSetPagingParams = (page, pageSize, sortBy, sortOrder) => {
   }
 }
 
+const generateUUID = function() {
+  return uuidv4().replace(/-/g, '');
+};
+
 export default {
   validateSetPagingParams,
   isFunction,
-  base64
+  base64,
+  generateUUID
 }

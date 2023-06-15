@@ -6,8 +6,10 @@ import Throttle from "./throttle.js";
 import ExecuteApiFetch from "./apifetch.js";
 import SendStats from "./stats.js";
 import IndexingApi from "./indexingapi.js";
+import Cookie from "./cookie.js";
 
 const API_HOSTNAME = 'api.addsearch.com';
+const USER_TOKEN_COOKIE_NAME = 'addsearchUserToken';
 
 export default class AddSearchClient {
   constructor(sitekey, privatekey) {
@@ -143,11 +145,6 @@ export default class AddSearchClient {
     return IndexingApi.deleteDocumentsBatch(this.apiHostname, this.sitekey, this.privatekey, batch);
   }
 
-
-
-  /**
-   * Public functions
-   */
   setApiHostname(hostname) {this.apiHostname = hostname;}
 
   getSettings() {return this.settings.getSettings();}
@@ -206,7 +203,10 @@ export default class AddSearchClient {
 
   setThrottleTime(delay) {this.settings.setThrottleTime(delay);}
 
-  setStatsSessionId(id) {this.sessionId = id;}
+  setStatsSessionId(id) {
+    this.sessionId = id;
+    this.userTokenInPersonalization = null;
+  }
 
   getStatsSessionId() {return this.sessionId;}
 
@@ -220,10 +220,16 @@ export default class AddSearchClient {
    *  Analytics events
    */
   sendStatsEvent(type, keyword, data) {
+
+    const useUserTokenInCookie = this.userTokenInPersonalization && this.isPersonalizationTrackingEnabled && this.isAddSearchCookieConsented;
+    if (useUserTokenInCookie && !Cookie.getCookie(USER_TOKEN_COOKIE_NAME)) {
+      Cookie.setCookie(USER_TOKEN_COOKIE_NAME, this.userTokenInPersonalization, this.personalizationCookieExpireDays);
+    }
+
     if (type === 'search') {
       let payload = {
         action: 'search',
-        session: this.sessionId,
+        session: useUserTokenInCookie ? this.userTokenInPersonalization : this.sessionId,
         keyword: keyword,
         numberOfResults: data.numberOfResults,
         tag: this.getSettings().analyticsTag
@@ -234,7 +240,7 @@ export default class AddSearchClient {
     else if (type === 'click') {
       let payload = {
         action: 'click',
-        session: this.sessionId,
+        session: useUserTokenInCookie ? this.userTokenInPersonalization : this.sessionId,
         keyword: keyword,
         docid: data.documentId,
         position: data.position,
@@ -246,6 +252,28 @@ export default class AddSearchClient {
     else {
       throw "Illegal sendStatsEvent type parameters. Should be search or click)";
     }
+  }
+
+  /*
+   * Personalization
+   */
+  isPersonalizationTrackingEnabled = false;
+  isAddSearchCookieConsented = true;
+  personalizationCookieExpireDays = 180;
+
+  getUserTokenInPersonalization() {
+    return this.userTokenInPersonalization;
+  }
+
+  enablePersonalizationTracking(isEnabled, cookieExpireDays) {
+    this.isPersonalizationTrackingEnabled = !!isEnabled;
+    if (cookieExpireDays) {
+      this.personalizationCookieExpireDays = cookieExpireDays;
+    }
+  }
+
+  consentAddSearchCookie(isEnabled) {
+    this.isAddSearchCookieConsented = !!isEnabled;
   }
 
 

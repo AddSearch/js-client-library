@@ -1,6 +1,6 @@
 {
   "name": "addsearch-js-client",
-  "version": "0.8.2",
+  "version": "0.8.3",
   "description": "AddSearch API JavaScript client",
   "main": "index.js",
   "jsdelivr": "./dist/addsearch-js-client.min.js",
@@ -40,20 +40,20 @@
   "dependencies": {
     "axios": "^0.27.2",
     "es6-promise": "^4.2.8",
-    "https-browserify": "^1.0.0",
-    "js-base64": "^3.6.0"
+    "js-base64": "^3.6.0",
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
-    "@babel/cli": "^7.20.7",
-    "@babel/core": "^7.13.0",
+    "@babel/cli": "^7.21.0",
+    "@babel/core": "^7.12.9",
     "@babel/preset-env": "^7.12.7",
     "@babel/register": "^7.12.1",
     "axios-mock-adapter": "^1.21.2",
-    "babel-loader": "^8.2.1",
-    "babel-plugin-transform-es2015-modules-commonjs": "^6.26.2",
+    "babel-loader": "^9.1.2",
     "buffer": "^6.0.3",
     "eslint": "^8.13.0",
     "eslint-webpack-plugin": "^3.1.1",
+    "babel-plugin-transform-es2015-modules-commonjs": "^6.26.2",
     "esm": "^3.2.25",
     "fetch-mock": "^9.11.0",
     "mocha": "^10.0.0",
@@ -61,8 +61,7 @@
     "stream-http": "^3.2.0",
     "terser-webpack-plugin": "^5.3.1",
     "uglify-js": "^3.12.0",
-    "url": "^0.11.0",
-    "webpack": "^5.72.0",
+    "webpack": "^5.76.1",
     "webpack-cli": "^4.10.0"
   }
 }
