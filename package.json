@@ -1,6 +1,6 @@
 {
   "name": "addsearch-js-client",
-  "version": "0.8.3",
+  "version": "0.8.4",
   "description": "AddSearch API JavaScript client",
   "main": "index.js",
   "jsdelivr": "./dist/addsearch-js-client.min.js",
@@ -49,7 +49,7 @@
     "axios-mock-adapter": "^1.21.2",
     "babel-loader": "^9.1.2",
     "buffer": "^6.0.3",
-    "eslint": "^8.13.0",
+    "eslint": "^8.45.0",
     "eslint-webpack-plugin": "^3.1.1",
     "esm": "^3.2.25",
     "fetch-mock": "^9.11.0",
