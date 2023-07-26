@@ -82,8 +82,7 @@ var executeApiFetch = function(apiHostname, sitekey, type, settings, cb, fuzzyRe
         settingToQueryParam(settings.numFacets, 'numFacets') +
         settingToQueryParam(settings.cacheResponseTime, 'cacheResponseWithTtlSeconds') +
         settingToQueryParam(settings.searchOperator, 'defaultOperator') +
-        settingToQueryParam(settings.analyticsTag, 'analyticsTag') +
-        settingToQueryParam(settings.hierarchicalFacetSetting, 'hierarchicalFacets');
+        settingToQueryParam(settings.analyticsTag, 'analyticsTag');
 
       // Add sortBy and sortOrder
       if (Array.isArray(settings.paging.sortBy)) {
@@ -113,7 +112,12 @@ var executeApiFetch = function(apiHostname, sitekey, type, settings, cb, fuzzyRe
 
       // Range facets
       if (settings.rangeFacets) {
-        qs = qs + '&rangeFacets=' + JSON.stringify(settings.rangeFacets);
+        qs = qs + '&rangeFacets=' + encodeURIComponent(JSON.stringify(settings.rangeFacets));
+      }
+
+      // Hierarchical facets
+      if (settings.hierarchicalFacetSetting) {
+        qs = qs + '&hierarchicalFacets=' + encodeURIComponent(JSON.stringify(settings.hierarchicalFacetSetting));
       }
 
 
