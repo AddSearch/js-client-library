@@ -1,4 +1,7 @@
 const setCookie = function(cookieName, cookieValue, expireDays) {
+  if (!document) {
+    return;
+  }
   const date = new Date();
   date.setTime(date.getTime() + (expireDays * 24 * 60 * 60 * 1000));
   let expires = "expires="+ date.toUTCString();
@@ -6,6 +9,9 @@ const setCookie = function(cookieName, cookieValue, expireDays) {
 }
 
 const getCookie = function(cookieName) {
+  if (!document) {
+    return;
+  }
   let name = cookieName + "=";
   let decodedCookie = decodeURIComponent(document.cookie);
   let cookieArray = decodedCookie.split(';');
@@ -22,6 +28,9 @@ const getCookie = function(cookieName) {
 }
 
 const deleteCookie = function(name) {
+  if (!document) {
+    return;
+  }
   document.cookie = name +'=; Path=/; Expires=Thu, 01 Jan 2000 00:00:01 GMT;';
 }
 
