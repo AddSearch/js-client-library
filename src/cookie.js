@@ -1,5 +1,5 @@
 const setCookie = function(cookieName, cookieValue, expireDays) {
-  if (!document) {
+  if (typeof document === 'undefined') {
     return;
   }
   const date = new Date();
@@ -9,7 +9,7 @@ const setCookie = function(cookieName, cookieValue, expireDays) {
 }
 
 const getCookie = function(cookieName) {
-  if (!document) {
+  if (typeof document === 'undefined') {
     return;
   }
   let name = cookieName + "=";
@@ -28,7 +28,7 @@ const getCookie = function(cookieName) {
 }
 
 const deleteCookie = function(name) {
-  if (!document) {
+  if (typeof document === 'undefined') {
     return;
   }
   document.cookie = name +'=; Path=/; Expires=Thu, 01 Jan 2000 00:00:01 GMT;';
