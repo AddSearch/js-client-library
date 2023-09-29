@@ -354,8 +354,8 @@ client.enablePersonalizationTracking(isEnabled, expirationDates);
 #### Allow storing AddSearch's user token in cookie
 By default, the value is true. Set it to false when users reject cookie (AddSearch's cookie can be categorized as functional/analytics cookie).
 ```js
-// Default: true
-client.consentAddSearchCookie(false);
+// Default: false
+client.consentAddSearchCookie(true);
 ```
 
 

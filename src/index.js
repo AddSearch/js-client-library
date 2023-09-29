@@ -250,7 +250,7 @@ var client = function(sitekey, privatekey) {
    * Personalization
    */
   var isPersonalizationTrackingEnabled = false;
-  var isAddSearchCookieConsented = true;
+  var isAddSearchCookieConsented = false;
   var personalizationCookieExpireDays = 180;
 
   this.getUserTokenInPersonalization = function() {
