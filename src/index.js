@@ -205,7 +205,8 @@ var client = function(sitekey, privatekey) {
   this.setThrottleTime = function(delay) {this.settings.setThrottleTime(delay);}
   this.setStatsSessionId = function(id) {
     this.sessionId = id;
-    this.userTokenInPersonalization = null;
+    this.userTokenInPersonalization = id;
+    this.useStatsSessionId = true;
   }
   this.getStatsSessionId = function() {return this.sessionId;}
   this.enableLogicalOperators = function(enableLogicalOperators) {this.settings.enableLogicalOperators(enableLogicalOperators)};
@@ -213,7 +214,7 @@ var client = function(sitekey, privatekey) {
 
   this.sendStatsEvent = function(type, keyword, data) {
 
-    var useUserTokenInCookie = this.userTokenInPersonalization && isPersonalizationTrackingEnabled && isAddSearchCookieConsented;
+    var useUserTokenInCookie = !this.useStatsSessionId && isPersonalizationTrackingEnabled && isAddSearchCookieConsented;
     if (useUserTokenInCookie && !cookie.getCookie(USER_TOKEN_COOKIE_NAME)) {
       cookie.setCookie(USER_TOKEN_COOKIE_NAME, this.userTokenInPersonalization, personalizationCookieExpireDays);
     }
