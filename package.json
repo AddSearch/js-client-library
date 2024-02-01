@@ -1,6 +1,6 @@
 {
   "name": "addsearch-js-client",
-  "version": "0.8.8",
+  "version": "0.8.9",
   "description": "AddSearch API JavaScript client",
   "main": "index.js",
   "jsdelivr": "./dist/addsearch-js-client.min.js",
@@ -36,15 +36,15 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "axios": "^0.27.2",
+    "axios": "^1.6.7",
     "es6-promise": "^4.2.8",
     "js-base64": "^3.6.0",
     "uuid": "^9.0.0"
   },
   "devDependencies": {
-    "@babel/cli": "^7.21.0",
-    "@babel/core": "^7.12.9",
-    "@babel/preset-env": "^7.12.7",
+    "@babel/cli": "^7.23.9",
+    "@babel/core": "^7.23.9",
+    "@babel/preset-env": "^7.23.9",
     "@babel/register": "^7.12.1",
     "axios-mock-adapter": "^1.21.2",
     "babel-loader": "^9.1.2",
@@ -54,7 +54,6 @@
     "esm": "^3.2.25",
     "fetch-mock": "^9.11.0",
     "mocha": "^10.0.0",
-    "mocha-axios": "^1.4.2",
     "terser-webpack-plugin": "^5.3.1",
     "uglify-js": "^3.12.0",
     "webpack": "^5.76.1",
