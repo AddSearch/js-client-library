@@ -7,6 +7,7 @@ var Settings = require('./settings');
 var util = require('./util');
 var throttle = require('./throttle');
 var cookie = require('./cookie');
+var setRequestInterceptor = require('./api').setRequestInterceptor;
 
 var API_HOSTNAME = 'api.addsearch.com';
 var USER_TOKEN_COOKIE_NAME = 'addsearchUserToken';
@@ -267,6 +268,17 @@ var client = function(sitekey, privatekey) {
 
   this.consentAddSearchCookie = function(isEnabled) {
     isAddSearchCookieConsented = !!isEnabled;
+  };
+
+  /*
+   * API interceptor
+   */
+  this.setApiRequestInterceptor = function(callback) {
+    if (typeof callback === 'function') {
+      setRequestInterceptor(callback);
+    } else {
+      window.console.error('API interceptor must be a function');
+    }
   };
 
 

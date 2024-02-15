@@ -1,7 +1,7 @@
 'use strict';
 
 require('es6-promise').polyfill();
-const axios = require('axios').default;
+const apiInstance = require('./api').apiInstance;
 
 /**
  * Fetch search results of search suggestions from the Addsearch API
@@ -174,7 +174,7 @@ var executeApiFetch = function(apiHostname, sitekey, type, settings, cb, fuzzyRe
     'https://' + apiHostname + '/v1/' + apiPath + '/' + sitekey + '?configurationKey=' + recommendOptions.configurationKey + qs :
     'https://' + apiHostname + '/v1/' + apiPath + '/' + sitekey + '?term=' + kw + qs;
 
-  axios.get(api)
+  apiInstance.get(api)
     .then(function(response) {
       var json = response.data;
       // Search again with fuzzy=true if no hits

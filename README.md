@@ -413,6 +413,17 @@ client.setThrottleTime(500);
 client.setApiHostname('api.addsearch.com');
 ```
 
+#### Set API request interceptor
+`configurationObject` contains 2 keys: <string>`url` and <object>`headers`. Modify the `configurationObject` before it is sent.
+```js
+function callback(configurationObject) {
+  configurationObject.headers['X-Api-Key'] = 'YOUR API KEY';
+  return configurationObject;
+}
+client.setApiRequestInterceptor(callback);
+```
+
+
 ## Indexing API
 With the Indexing API, you can fetch, create, update, and delete single documents or
 batches of documents.
