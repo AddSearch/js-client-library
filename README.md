@@ -415,12 +415,17 @@ client.setApiHostname('api.addsearch.com');
 
 #### Set API request interceptor
 `configurationObject` contains 2 keys: <string>`url` and <object>`headers`. Modify the `configurationObject` before it is sent.
+
+`option` is an object with the following properties, all of which are optional. If `option` is not defined, the interceptor will be used for all requests.
+- **searchApiRequestOnly**: If true, the interceptor is only used for searchApi requests (default: false)
+- **statsApiRequestOnly**: If true, the interceptor is only used for statsApi requests (default: false)
+
 ```js
 function callback(configurationObject) {
   configurationObject.headers['X-Api-Key'] = 'YOUR API KEY';
   return configurationObject;
 }
-client.setApiRequestInterceptor(callback);
+client.setApiRequestInterceptor(callback, option);
 ```
 
 

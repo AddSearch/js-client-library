@@ -2,9 +2,11 @@
 
 const axios = require('axios').default;
 const apiInstance = axios.create();
+const statsInstance = axios.create();
 
-const setRequestInterceptor = (callback) => {
-  apiInstance.interceptors.request.use( (config) => {
+const setRequestInterceptor = (callback, requestType) => {
+  const axiosInstance = requestType === 'searchApi' ? apiInstance : statsInstance;
+  axiosInstance.interceptors.request.use( (config) => {
     const updatedConfig = callback({
       url: config.url,
       headers: config.headers
@@ -18,5 +20,6 @@ const setRequestInterceptor = (callback) => {
 
 module.exports = {
   apiInstance,
+  statsInstance,
   setRequestInterceptor
 };

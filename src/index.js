@@ -228,7 +228,7 @@ var client = function(sitekey, privatekey) {
         numberOfResults: data.numberOfResults,
         tag: this.getSettings().analyticsTag
       };
-      sendStats(this.apiHostname, this.sitekey, payload);
+      sendStats(this.apiHostname, this.sitekey, payload, this.settings.getSettings().statsRequestIntercepted);
     }
 
     else if (type === 'click') {
@@ -240,7 +240,7 @@ var client = function(sitekey, privatekey) {
         position: data.position,
         tag: this.getSettings().analyticsTag
       };
-      sendStats(this.apiHostname, this.sitekey, payload);
+      sendStats(this.apiHostname, this.sitekey, payload, this.settings.getSettings().statsRequestIntercepted);
     }
 
     else {
@@ -273,11 +273,26 @@ var client = function(sitekey, privatekey) {
   /*
    * API interceptor
    */
-  this.setApiRequestInterceptor = function(callback) {
-    if (typeof callback === 'function') {
-      setRequestInterceptor(callback);
-    } else {
+  this.setApiRequestInterceptor = function(callback, option = {}) {
+    if (typeof callback !== 'function') {
       window.console.error('API interceptor must be a function');
+      return;
+    }
+
+    const { searchApiRequestOnly = false, statsApiRequestOnly = false } = option;
+
+    if (!searchApiRequestOnly && !statsApiRequestOnly) {
+      setRequestInterceptor(callback, 'searchApi');
+      setRequestInterceptor(callback, 'statsApi');
+      this.settings.setStatsRequestIntercepted(true);
+    } else {
+      if (searchApiRequestOnly)  {
+        setRequestInterceptor(callback, 'searchApi');
+      }
+      if (statsApiRequestOnly)  {
+        setRequestInterceptor(callback, 'statsApi');
+        this.settings.setStatsRequestIntercepted(true);
+      }
     }
   };
 

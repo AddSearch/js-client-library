@@ -22,7 +22,8 @@ var settings = function() {
     },
     searchOperator: null,
     enableLogicalOperators: false,
-    cacheResponseTime: null
+    cacheResponseTime: null,
+    statsRequestIntercepted: false,
   };
 
   this.getSettings = function() {
@@ -232,6 +233,10 @@ var settings = function() {
     }
     this.settings.searchOperator = operator;
   }
+
+  this.setStatsRequestIntercepted = function(isIntercepted) {
+    this.settings.statsRequestIntercepted = isIntercepted;
+  };
 }
 
 module.exports = settings;
