@@ -413,7 +413,7 @@ client.setThrottleTime(500);
 - **statsApiRequestOnly**: If true, the new host name is only applied for statsApi requests (default: false)
 ```js
 // Set API hostname (e.g. for dedicated environments)
-client.setApiHostname('api.addsearch.com');
+client.setApiHostname('api.addsearch.com', option);
 ```
 
 #### Set API request interceptor
