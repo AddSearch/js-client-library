@@ -7,6 +7,7 @@ var Settings = require('./settings');
 var util = require('./util');
 var throttle = require('./throttle');
 var cookie = require('./cookie');
+var setRequestInterceptor = require('./api').setRequestInterceptor;
 
 var API_HOSTNAME = 'api.addsearch.com';
 var USER_TOKEN_COOKIE_NAME = 'addsearchUserToken';
@@ -15,6 +16,7 @@ var client = function(sitekey, privatekey) {
   this.sitekey = sitekey;
   this.privatekey = privatekey;
   this.apiHostname = API_HOSTNAME;
+  this.statsApiHostname = API_HOSTNAME;
   this.settings = new Settings();
   this.sessionId = ('a-' + (Math.random() * 100000000)).substring(0, 10);
   this.userTokenInPersonalization = cookie.getCookie(USER_TOKEN_COOKIE_NAME) || util.generateUUID();
@@ -173,7 +175,14 @@ var client = function(sitekey, privatekey) {
   /**
    * Public functions
    */
-  this.setApiHostname = function(hostname) {this.apiHostname = hostname;}
+  this.setApiHostname = function(hostname, conf) {
+    if (!conf || !conf.statsApiRequestOnly) {
+      this.apiHostname = hostname;
+    }
+    if (!conf || !conf.searchApiRequestOnly) {
+      this.statsApiHostname = hostname;
+    }
+  }
   this.getSettings = function() {return this.settings.getSettings();}
   this.setLanguage = function(lang) {this.settings.setLanguage(lang);}
   this.setCategoryFilters = function(categories) {this.settings.setCategoryFilters(categories);}
@@ -227,7 +236,7 @@ var client = function(sitekey, privatekey) {
         numberOfResults: data.numberOfResults,
         tag: this.getSettings().analyticsTag
       };
-      sendStats(this.apiHostname, this.sitekey, payload);
+      sendStats(this.statsApiHostname, this.sitekey, payload, this.settings.getSettings().statsRequestIntercepted);
     }
 
     else if (type === 'click') {
@@ -239,7 +248,7 @@ var client = function(sitekey, privatekey) {
         position: data.position,
         tag: this.getSettings().analyticsTag
       };
-      sendStats(this.apiHostname, this.sitekey, payload);
+      sendStats(this.statsApiHostname, this.sitekey, payload, this.settings.getSettings().statsRequestIntercepted);
     }
 
     else {
@@ -267,6 +276,32 @@ var client = function(sitekey, privatekey) {
 
   this.consentAddSearchCookie = function(isEnabled) {
     isAddSearchCookieConsented = !!isEnabled;
+  };
+
+  /*
+   * API interceptor
+   */
+  this.setApiRequestInterceptor = function(callback, option = {}) {
+    if (typeof callback !== 'function') {
+      window.console.error('API interceptor must be a function');
+      return;
+    }
+
+    const { searchApiRequestOnly = false, statsApiRequestOnly = false } = option;
+
+    if (!searchApiRequestOnly && !statsApiRequestOnly) {
+      setRequestInterceptor(callback, 'searchApi');
+      setRequestInterceptor(callback, 'statsApi');
+      this.settings.setStatsRequestIntercepted(true);
+    } else {
+      if (searchApiRequestOnly)  {
+        setRequestInterceptor(callback, 'searchApi');
+      }
+      if (statsApiRequestOnly)  {
+        setRequestInterceptor(callback, 'statsApi');
+        this.settings.setStatsRequestIntercepted(true);
+      }
+    }
   };
 
 
