@@ -169,7 +169,9 @@ var executeApiFetch = function(apiHostname, sitekey, type, settings, cb, fuzzyRe
 
   else if (type === 'recommend') {
     if (recommendOptions.type === 'RELATED_ITEMS') {
-      apiPath = 'recommendations/index/' + sitekey + '/block/' + recommendOptions.blockId;
+      qs = settingToQueryParam(recommendOptions.itemId, 'itemId') +
+           settingToQueryParam(recommendOptions.itemIdPath, 'itemIdPath');
+      apiPath = 'recommendations/index/' + sitekey + '/block/' + recommendOptions.blockId + '?' + qs;
     } else if (recommendOptions.type === 'FREQUENTLY_BOUGHT_TOGETHER') {
       qs = settingToQueryParam(recommendOptions.itemId, 'itemId');
       apiPath = 'recommendations/' + sitekey + '?configurationKey=' + recommendOptions.configurationKey + qs;
