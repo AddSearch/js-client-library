@@ -146,6 +146,7 @@ var executeApiFetch = function(apiHostname, sitekey, type, settings, cb, fuzzyRe
       }
 
     }
+    api = 'https://' + apiHostname + '/v1/' + apiPath + '/' + sitekey + '?term=' + kw + qs;
   }
 
   // Suggest
@@ -154,6 +155,7 @@ var executeApiFetch = function(apiHostname, sitekey, type, settings, cb, fuzzyRe
     qs = settingToQueryParam(settings.suggestionsSize, 'size') +
       settingToQueryParam(settings.lang, 'lang');
     kw = settings.suggestionsPrefix;
+    api = 'https://' + apiHostname + '/v1/' + apiPath + '/' + sitekey + '?term=' + kw + qs;
   }
 
   // Autocomplete
@@ -162,17 +164,19 @@ var executeApiFetch = function(apiHostname, sitekey, type, settings, cb, fuzzyRe
     qs = settingToQueryParam(settings.autocomplete.field, 'source') +
          settingToQueryParam(settings.autocomplete.size, 'size');
     kw = settings.autocomplete.prefix;
+    api = 'https://' + apiHostname + '/v1/' + apiPath + '/' + sitekey + '?term=' + kw + qs;
   }
 
   else if (type === 'recommend') {
-    apiPath = 'recommendations';
-    qs = settingToQueryParam(recommendOptions.itemId, 'itemId');
+    if (recommendOptions.type === 'RELATED_ITEMS') {
+      qs = settingToQueryParam(recommendOptions.itemId, 'itemId');
+      apiPath = 'recommendations/index/' + sitekey + '/block/' + recommendOptions.blockId + '?' + qs;
+    } else if (recommendOptions.type === 'FREQUENTLY_BOUGHT_TOGETHER') {
+      qs = settingToQueryParam(recommendOptions.itemId, 'itemId');
+      apiPath = 'recommendations/' + sitekey + '?configurationKey=' + recommendOptions.configurationKey + qs;
+    }
+    api = 'https://' + apiHostname + '/v1/' + apiPath;
   }
-
-  // Execute API call
-  api = type === 'recommend' ?
-    'https://' + apiHostname + '/v1/' + apiPath + '/' + sitekey + '?configurationKey=' + recommendOptions.configurationKey + qs :
-    'https://' + apiHostname + '/v1/' + apiPath + '/' + sitekey + '?term=' + kw + qs;
 
   apiInstance.get(api)
     .then(function(response) {
