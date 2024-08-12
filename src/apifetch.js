@@ -153,7 +153,7 @@ var executeApiFetch = function(apiHostname, sitekey, type, settings, cb, fuzzyRe
   else if (type === 'suggest') {
     apiPath = type;
     qs = settingToQueryParam(settings.suggestionsSize, 'size') +
-      settingToQueryParam(settings.lang, 'lang');
+      settingToQueryParam(settings.lang, 'language');
     kw = settings.suggestionsPrefix;
     api = 'https://' + apiHostname + '/v1/' + apiPath + '/' + sitekey + '?term=' + kw + qs;
   }
