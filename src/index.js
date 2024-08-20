@@ -147,7 +147,7 @@ var client = function(sitekey, privatekey) {
     if (!options || !callback || !util.isFunction(callback)) {
       throw "Illegal generateAnswers parameters. Should be (options, callbackFunction)";
     }
-
+    this.settings.setKeyword(options);
     if (!this.throttledSuggestionsFetch) {
       this.throttledSuggestionsFetch = throttle(this.settings.getSettings().throttleTimeMs, executeApiFetch);
     }
