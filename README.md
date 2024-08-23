@@ -137,6 +137,8 @@ Caching the response, define the time-to-live of the cache.
 client.setCacheResponseTime(3600);  
 ```
 
+Please contact our [Support](https://github.com/AddSearch/js-client-library?tab=readme-ov-file#support) team to active Response Caching for your index.
+
 
 ### Pagination
 Set page number, page size and sorting parameters. It's possible to order results by:
