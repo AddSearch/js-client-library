@@ -160,7 +160,7 @@ sortOrder = ['desc', 'asc'];
 
 
 ```js
-// Defaults: page "1", pageSize "10", sortBy "relevance", sortOrder "desc"
+// Defaults: page: 1, pageSize: 10, sortBy: "relevance", sortOrder: "desc"
 client.setPaging(page, pageSize, sortBy, sortOrder);
 ```
 
