@@ -20,7 +20,7 @@ var executeApiFetch = function(apiHostname, sitekey, type, settings, cb, fuzzyRe
 
 
   // Validate query type
-  if (type !== 'search' && type !== 'suggest' && type !== 'autocomplete' && type !== 'recommend') {
+  if (type !== 'search' && type !== 'suggest' && type !== 'autocomplete' && type !== 'recommend' && type !== 'generator') {
     cb({error: {response: RESPONSE_BAD_REQUEST, message: 'invalid query type'}});
     return;
   }
@@ -176,6 +176,27 @@ var executeApiFetch = function(apiHostname, sitekey, type, settings, cb, fuzzyRe
       apiPath = 'recommendations/' + sitekey + '?configurationKey=' + recommendOptions.configurationKey + qs;
     }
     api = 'https://' + apiHostname + '/v1/' + apiPath;
+  }
+
+  else if (type === 'generator')  {
+    // todo remove when releasing
+    // staging
+    // api = 'https://' + apiHostname + '/v2/indices/' + sitekey + '/rag/query';
+
+    // production
+    api = 'https://' + apiHostname + '/v2/indices/' + sitekey + '/conversations';
+    var question = settings.keyword;
+    apiInstance.post(api, {question: question})
+      .then(function(response) {
+        var json = response.data;
+
+        cb(json.response);
+      })
+      .catch(function(ex) {
+        console.debug(ex);
+        cb({error: {response: RESPONSE_SERVER_ERROR, message: 'invalid server response'}});
+      })
+    return;
   }
 
   apiInstance.get(api)

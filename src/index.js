@@ -141,6 +141,20 @@ var client = function(sitekey, privatekey) {
   }
 
   /**
+   *  Generate answers
+   */
+  this.generateAnswer = function(options, callback) {
+    if (!options || !callback || !util.isFunction(callback)) {
+      throw "Illegal generateAnswers parameters. Should be (options, callbackFunction)";
+    }
+    this.settings.setKeyword(options);
+    if (!this.throttledSuggestionsFetch) {
+      this.throttledSuggestionsFetch = throttle(this.settings.getSettings().throttleTimeMs, executeApiFetch);
+    }
+    this.throttledSuggestionsFetch(this.apiHostname, this.sitekey, 'generator', this.settings.getSettings(), callback);
+  };
+
+  /**
    * Indexing API functions
    */
   this.getDocument = function(id) {

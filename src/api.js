@@ -9,7 +9,9 @@ const setRequestInterceptor = (callback, requestType) => {
   axiosInstance.interceptors.request.use( (config) => {
     const updatedConfig = callback({
       url: config.url,
-      headers: config.headers
+      headers: config.headers,
+      // todo remove when releasing: this is for adding customized "prompt" in the conversational search demo
+      data: config.data
     });
     config = {...config, ...updatedConfig};
     return config;
