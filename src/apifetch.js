@@ -179,32 +179,16 @@ var executeApiFetch = function(apiHostname, sitekey, type, settings, cb, fuzzyRe
   }
 
   else if (type === 'generator')  {
-    // api = 'https://' + apiHostname + '/generator/' + sitekey + '/query';
-    api = 'https://' + apiHostname + '/v2/indices/' + sitekey + '/rag/query';
+    // todo remove when releasing
+    // staging
+    // api = 'https://' + apiHostname + '/v2/indices/' + sitekey + '/rag/query';
+
+    // production
+    api = 'https://' + apiHostname + '/v2/indices/' + sitekey + '/conversations';
     var question = settings.keyword;
     apiInstance.post(api, {question: question})
       .then(function(response) {
         var json = response.data;
-
-        // json = {
-        //   "response": {
-        //     "answer": "The story revolves around two characters, Alexander Adell and Bertram Lupov, who work with a giant computer called Multivac. They discuss the eventual end of the universe and the concept of entropy. Adell suggests that humanity might be able to restore the sun to its full youthfulness even after it dies of old age, but Lupov disagrees, believing that everything will eventually run down. They make a bet on whether Multivac can answer this question.",
-        //     "ids": [
-        //       "Prod19679",
-        //       "27ad9d2f873463b315f2e3fc00e5f4d0_docid"
-        //     ],
-        //     "sourceDocuments": "{\"page\":1,\"total_hits\":1,\"processing_time_ms\":227,\"hits\":[{\"id\":\"Prod19679\",\"url\":\"https://www.travelcountry.com/shop/grand-trunk/double-parachute-nylon-hammock.html\",\"title\":\"Grand Trunk Double Parachute Nylon Hammock\",\"meta_description\":\"The Grand Trunk Double Parachute Nylon Hammock is a huge hammock with over 60 square feet of usable space yet it weighs in at just over one pound. Made from super strong and ultra \",\"highlight\":{},\"ts\":\"2024-04-16T04:10:01\",\"categories\":[\"0xwww.travelcountry.com\",\"1xshop\",\"2xgrand-trunk\",\"3xdouble-parachute-nylon-hammock.html\"],\"document_type\":\"html\",\"images\":{\"main\":\"https://www.travelcountry.com/images-conret/gtr-dh_nvyred_500x500.jpg\"},\"score\":1.0}]}"
-        //   },
-        //   "tokenUsage": {
-        //     "session": "NoSession",
-        //     "embeddingTokenUsage": 9,
-        //     "generationInputTokenUsage": 1866,
-        //     "generationOutputTokenUsage": 93
-        //   },
-        //   "executionTime": 1.6012773513793945
-        // };
-
-        // window.console.log('+++ json', json.response);
 
         cb(json.response);
       })
