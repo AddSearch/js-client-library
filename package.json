@@ -2,17 +2,6 @@
   "name": "addsearch-js-client",
   "version": "0.8.14",
   "description": "AddSearch API JavaScript client",
-  "main": "index.js",
-  "jsdelivr": "./dist/addsearch-js-client.min.js",
-  "scripts": {
-    "test": "./node_modules/mocha/bin/mocha.js --recursive --require @babel/register",
-    "build": "npm run test && ./node_modules/webpack-cli/bin/cli.js",
-    "watch": "./node_modules/webpack-cli/bin/cli.js --watch"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/AddSearch/js-client-library.git"
-  },
   "keywords": [
     "addsearch",
     "search",
@@ -24,6 +13,11 @@
   ],
   "homepage": "https://www.addsearch.com/",
   "bugs": "https://github.com/AddSearch/js-client-library/issues",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/AddSearch/js-client-library.git"
+  },
+  "license": "MIT",
   "author": {
     "name": "AddSearch",
     "url": "https://www.addsearch.com"
@@ -34,13 +28,24 @@
       "url": "https://www.addsearch.com"
     }
   ],
-  "license": "MIT",
+  "main": "index.js",
+  "jsdelivr": "./dist/addsearch-js-client.min.js",
+  "types": "index.d.ts",
+  "files": [
+    "dist",
+    "index.d.ts"
+  ],
+  "scripts": {
+    "build": "npm run test && ./node_modules/webpack-cli/bin/cli.js",
+    "test": "./node_modules/mocha/bin/mocha.js --recursive --require @babel/register",
+    "watch": "./node_modules/webpack-cli/bin/cli.js --watch"
+  },
   "dependencies": {
     "axios": "^1.7.2",
+    "buffer": "^6.0.3",
     "es6-promise": "^4.2.8",
     "js-base64": "^3.6.0",
-    "uuid": "^9.0.0",
-    "buffer": "^6.0.3"
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.23.9",
