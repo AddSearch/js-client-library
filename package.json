@@ -2,13 +2,6 @@
   "name": "addsearch-js-client",
   "version": "0.8.14",
   "description": "AddSearch API JavaScript client",
-  "main": "index.js",
-  "jsdelivr": "./dist/addsearch-js-client.min.js",
-  "scripts": {
-    "test": "./node_modules/mocha/bin/mocha.js --recursive --require @babel/register",
-    "build": "npm run test && ./node_modules/webpack-cli/bin/cli.js",
-    "watch": "./node_modules/webpack-cli/bin/cli.js --watch"
-  },
   "repository": {
     "type": "git",
     "url": "git://github.com/AddSearch/js-client-library.git"
@@ -34,7 +27,19 @@
       "url": "https://www.addsearch.com"
     }
   ],
-  "license": "MIT",
+  "main": "index.js",
+  "jsdelivr": "./dist/addsearch-js-client.min.js",
+  "types": "index.d.ts",
+  "files": [
+    "dist",
+    "index.d.ts"
+  ],
+  "scripts": {
+    "build": "npm run test && ./node_modules/webpack-cli/bin/cli.js",
+    "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md}\"",
+    "test": "./node_modules/mocha/bin/mocha.js --recursive --require @babel/register",
+    "watch": "./node_modules/webpack-cli/bin/cli.js --watch"
+  },
   "dependencies": {
     "axios": "^1.7.2",
     "es6-promise": "^4.2.8",
@@ -54,6 +59,7 @@
     "esm": "^3.2.25",
     "fetch-mock": "^9.11.0",
     "mocha": "^10.0.0",
+    "prettier": "^3.3.3",
     "terser-webpack-plugin": "^5.3.1",
     "uglify-js": "^3.12.0",
     "webpack": "^5.76.1",

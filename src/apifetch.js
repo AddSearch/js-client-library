@@ -6,22 +6,29 @@ const apiInstance = require('./api').apiInstance;
 /**
  * Fetch search results of search suggestions from the Addsearch API
  */
-var executeApiFetch = function(apiHostname, sitekey, type, settings, cb, fuzzyRetry, customFilterObject, recommendOptions) {
-
+var executeApiFetch = function (
+  apiHostname,
+  sitekey,
+  type,
+  settings,
+  cb,
+  fuzzyRetry,
+  customFilterObject,
+  recommendOptions
+) {
   const RESPONSE_BAD_REQUEST = 400;
   const RESPONSE_SERVER_ERROR = 500;
 
-  var settingToQueryParam = function(setting, key) {
+  var settingToQueryParam = function (setting, key) {
     if (setting || setting === false) {
       return '&' + key + '=' + setting;
     }
     return '';
   };
 
-
   // Validate query type
   if (type !== 'search' && type !== 'suggest' && type !== 'autocomplete' && type !== 'recommend') {
-    cb({error: {response: RESPONSE_BAD_REQUEST, message: 'invalid query type'}});
+    cb({ error: { response: RESPONSE_BAD_REQUEST, message: 'invalid query type' } });
     return;
   }
 
@@ -42,9 +49,9 @@ var executeApiFetch = function(apiHostname, sitekey, type, settings, cb, fuzzyRe
     kw = settings.keyword;
 
     // Boolean operators (AND, OR, NOT) uppercase
-    kw = settings.enableLogicalOperators ?
-      kw.replace(/ and /g, ' AND ').replace(/ or /g, ' OR ').replace(/ not /g, ' NOT ') :
-      kw.replace(/ AND /g, ' and ').replace(/ OR /g, ' or ').replace(/ NOT /g, ' not ');
+    kw = settings.enableLogicalOperators
+      ? kw.replace(/ and /g, ' AND ').replace(/ or /g, ' OR ').replace(/ not /g, ' NOT ')
+      : kw.replace(/ AND /g, ' and ').replace(/ OR /g, ' or ').replace(/ NOT /g, ' not ');
 
     // Escape
     kw = encodeURIComponent(kw);
@@ -64,7 +71,8 @@ var executeApiFetch = function(apiHostname, sitekey, type, settings, cb, fuzzyRe
 
     // Construct query string from settings
     if (type === 'search') {
-      qs = settingToQueryParam(settings.lang, 'lang') +
+      qs =
+        settingToQueryParam(settings.lang, 'lang') +
         settingToQueryParam(fuzzy, 'fuzzy') +
         settingToQueryParam(settings.collectAnalytics, 'collectAnalytics') +
         settingToQueryParam(settings.postfixWildcard, 'postfixWildcard') +
@@ -86,12 +94,16 @@ var executeApiFetch = function(apiHostname, sitekey, type, settings, cb, fuzzyRe
 
       // Add sortBy and sortOrder
       if (Array.isArray(settings.paging.sortBy)) {
-        settings.paging.sortBy.forEach(function(value, index) {
-          qs = qs + settingToQueryParam(value, 'sort') +
+        settings.paging.sortBy.forEach(function (value, index) {
+          qs =
+            qs +
+            settingToQueryParam(value, 'sort') +
             settingToQueryParam(settings.paging.sortOrder[index], 'order');
         });
       } else {
-        qs = qs + settingToQueryParam(settings.paging.sortBy, 'sort') +
+        qs =
+          qs +
+          settingToQueryParam(settings.paging.sortBy, 'sort') +
           settingToQueryParam(settings.paging.sortOrder, 'order');
       }
 
@@ -104,11 +116,10 @@ var executeApiFetch = function(apiHostname, sitekey, type, settings, cb, fuzzyRe
 
       // Add facet fields
       if (settings.facetFields) {
-        for (let i = 0; i<settings.facetFields.length; i++) {
+        for (let i = 0; i < settings.facetFields.length; i++) {
           qs = qs + '&facet=' + settings.facetFields[i];
         }
       }
-
 
       // Range facets
       if (settings.rangeFacets) {
@@ -117,21 +128,22 @@ var executeApiFetch = function(apiHostname, sitekey, type, settings, cb, fuzzyRe
 
       // Hierarchical facets
       if (settings.hierarchicalFacetSetting) {
-        qs = qs + '&hierarchicalFacets=' + encodeURIComponent(JSON.stringify(settings.hierarchicalFacetSetting));
+        qs =
+          qs +
+          '&hierarchicalFacets=' +
+          encodeURIComponent(JSON.stringify(settings.hierarchicalFacetSetting));
       }
-
 
       // Stats fields
       if (settings.statsFields) {
-        for (var i = 0; i<settings.statsFields.length; i++) {
+        for (var i = 0; i < settings.statsFields.length; i++) {
           qs = qs + '&fieldStat=' + settings.statsFields[i];
         }
       }
 
-
       // Personalization events
       if (settings.personalizationEvents && Array.isArray(settings.personalizationEvents)) {
-        for (let i = 0; i<settings.personalizationEvents.length; i++) {
+        for (let i = 0; i < settings.personalizationEvents.length; i++) {
           var obj = settings.personalizationEvents[i];
           var key = Object.keys(obj);
           qs = qs + '&personalizationEvent=' + encodeURIComponent(key + '=' + obj[key]);
@@ -144,7 +156,6 @@ var executeApiFetch = function(apiHostname, sitekey, type, settings, cb, fuzzyRe
       } else if (settings.filterObject) {
         qs = qs + '&filter=' + encodeURIComponent(JSON.stringify(settings.filterObject));
       }
-
     }
     api = 'https://' + apiHostname + '/v1/' + apiPath + '/' + sitekey + '?term=' + kw + qs;
   }
@@ -152,7 +163,8 @@ var executeApiFetch = function(apiHostname, sitekey, type, settings, cb, fuzzyRe
   // Suggest
   else if (type === 'suggest') {
     apiPath = type;
-    qs = settingToQueryParam(settings.suggestionsSize, 'size') +
+    qs =
+      settingToQueryParam(settings.suggestionsSize, 'size') +
       settingToQueryParam(settings.lang, 'language');
     kw = settings.suggestionsPrefix;
     api = 'https://' + apiHostname + '/v1/' + apiPath + '/' + sitekey + '?term=' + kw + qs;
@@ -161,34 +173,44 @@ var executeApiFetch = function(apiHostname, sitekey, type, settings, cb, fuzzyRe
   // Autocomplete
   else if (type === 'autocomplete') {
     apiPath = 'autocomplete/document-field';
-    qs = settingToQueryParam(settings.autocomplete.field, 'source') +
-         settingToQueryParam(settings.autocomplete.size, 'size');
+    qs =
+      settingToQueryParam(settings.autocomplete.field, 'source') +
+      settingToQueryParam(settings.autocomplete.size, 'size');
     kw = settings.autocomplete.prefix;
     api = 'https://' + apiHostname + '/v1/' + apiPath + '/' + sitekey + '?term=' + kw + qs;
-  }
-
-  else if (type === 'recommend') {
+  } else if (type === 'recommend') {
     if (recommendOptions.type === 'RELATED_ITEMS') {
       qs = settingToQueryParam(recommendOptions.itemId, 'itemId');
-      apiPath = 'recommendations/index/' + sitekey + '/block/' + recommendOptions.blockId + '?' + qs;
+      apiPath =
+        'recommendations/index/' + sitekey + '/block/' + recommendOptions.blockId + '?' + qs;
     } else if (recommendOptions.type === 'FREQUENTLY_BOUGHT_TOGETHER') {
       qs = settingToQueryParam(recommendOptions.itemId, 'itemId');
-      apiPath = 'recommendations/' + sitekey + '?configurationKey=' + recommendOptions.configurationKey + qs;
+      apiPath =
+        'recommendations/' +
+        sitekey +
+        '?configurationKey=' +
+        recommendOptions.configurationKey +
+        qs;
     }
     api = 'https://' + apiHostname + '/v1/' + apiPath;
   }
 
-  apiInstance.get(api)
-    .then(function(response) {
+  apiInstance
+    .get(api)
+    .then(function (response) {
       var json = response.data;
       // Search again with fuzzy=true if no hits
-      if (type === 'search' && settings.fuzzy === 'retry' && json.total_hits === 0 && fuzzyRetry !== true) {
+      if (
+        type === 'search' &&
+        settings.fuzzy === 'retry' &&
+        json.total_hits === 0 &&
+        fuzzyRetry !== true
+      ) {
         executeApiFetch(apiHostname, sitekey, type, settings, cb, true);
       }
 
       // Fuzzy not "retry" OR fuzzyRetry already returning
       else {
-
         // Cap fuzzy results to one page as quality decreases quickly
         if (fuzzyRetry === true) {
           var pageSize = settings.paging.pageSize;
@@ -201,9 +223,9 @@ var executeApiFetch = function(apiHostname, sitekey, type, settings, cb, fuzzyRe
         cb(json);
       }
     })
-    .catch(function(ex) {
+    .catch(function (ex) {
       console.log(ex);
-      cb({error: {response: RESPONSE_SERVER_ERROR, message: 'invalid server response'}});
+      cb({ error: { response: RESPONSE_SERVER_ERROR, message: 'invalid server response' } });
     });
 };
 module.exports = executeApiFetch;

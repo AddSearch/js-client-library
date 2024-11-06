@@ -1,7 +1,7 @@
 'use strict';
 
 var util = require('./util');
-var settings = function() {
+var settings = function () {
   this.settings = {
     keyword: '*',
     callback: null,
@@ -23,107 +23,107 @@ var settings = function() {
     searchOperator: null,
     enableLogicalOperators: false,
     cacheResponseTime: null,
-    statsRequestIntercepted: false,
+    statsRequestIntercepted: false
   };
 
-  this.getSettings = function() {
+  this.getSettings = function () {
     return this.settings;
-  }
+  };
 
-  this.setKeyword = function(keyword) {
+  this.setKeyword = function (keyword) {
     this.settings.keyword = keyword || '*';
-  }
+  };
 
-  this.setCallback = function(cb) {
+  this.setCallback = function (cb) {
     this.settings.callback = cb;
-  }
+  };
 
-  this.setThrottleTime = function(delay) {
+  this.setThrottleTime = function (delay) {
     this.settings.throttleTimeMs = delay;
-  }
+  };
 
-  this.setSuggestionsPrefix = function(prefix) {
+  this.setSuggestionsPrefix = function (prefix) {
     this.settings.suggestionsPrefix = prefix;
-  }
+  };
 
-  this.setSuggestionsSize = function(size) {
+  this.setSuggestionsSize = function (size) {
     this.settings.suggestionsSize = size;
-  }
+  };
 
-  this.setAutocompleteSize = function(size) {
+  this.setAutocompleteSize = function (size) {
     this.settings.autocomplete.size = size;
-  }
+  };
 
-  this.setAutocompleteParams = function(field, prefix) {
+  this.setAutocompleteParams = function (field, prefix) {
     this.settings.autocomplete.field = field;
     this.settings.autocomplete.prefix = prefix;
-  }
+  };
 
-  this.setLanguage = function(language) {
+  this.setLanguage = function (language) {
     var languageIntlLocale;
     if (Intl && Intl.Locale) {
       try {
         languageIntlLocale = new Intl.Locale(language).language;
       } catch (e) {
-        throw "use accepted language code provided by ECMAScript Internationalization API (e.g. \"en\", \"en-GB\")";
+        throw 'use accepted language code provided by ECMAScript Internationalization API (e.g. "en", "en-GB")';
       }
     } else {
       languageIntlLocale = language;
     }
     if (languageIntlLocale && languageIntlLocale.length !== 2) {
-      throw "use 2-char/4-char language code (e.g. \"en\", \"en-GB\")";
+      throw 'use 2-char/4-char language code (e.g. "en", "en-GB")';
     }
     this.settings.lang = languageIntlLocale;
-  }
+  };
 
-  this.setFuzzyMatch = function(fuzzy) {
+  this.setFuzzyMatch = function (fuzzy) {
     if (fuzzy !== true && fuzzy !== false && fuzzy !== 'auto' && fuzzy !== 'retry') {
       throw "fuzzy matching can be true, false, 'auto', or 'retry'";
     }
     this.settings.fuzzy = fuzzy;
-  }
+  };
 
-  this.enableLogicalOperators = function(enableLogicalOperators) {
+  this.enableLogicalOperators = function (enableLogicalOperators) {
     this.settings.enableLogicalOperators = enableLogicalOperators;
-  }
+  };
 
-  this.setCacheResponseTime = function(cacheResponseTime) {
+  this.setCacheResponseTime = function (cacheResponseTime) {
     this.settings.cacheResponseTime = cacheResponseTime;
-  }
+  };
 
-  this.setPostfixWildcard = function(wildcard) {
+  this.setPostfixWildcard = function (wildcard) {
     this.settings.postfixWildcard = wildcard;
-  }
+  };
 
-  this.setCollectAnalytics = function(collectAnalytics) {
+  this.setCollectAnalytics = function (collectAnalytics) {
     this.settings.collectAnalytics = collectAnalytics;
-  }
+  };
 
-  this.setAnalyticsTag = function(tagName) {
+  this.setAnalyticsTag = function (tagName) {
     this.settings.analyticsTag = tagName;
-  }
+  };
 
-  this.setCategoryFilters = function(categories) {
+  this.setCategoryFilters = function (categories) {
     this.settings.categories = categories;
-  }
+  };
 
-  this.setFilterObject = function(filter) {
-    this.settings.filterObject= filter;
-  }
+  this.setFilterObject = function (filter) {
+    this.settings.filterObject = filter;
+  };
 
-  this.setPriceRangeFilter = function(minCents, maxCents) {
+  this.setPriceRangeFilter = function (minCents, maxCents) {
     this.settings.priceFromCents = minCents;
     this.settings.priceToCents = maxCents;
-  }
+  };
 
-  this.addCustomFieldFilter = function(fieldName, value) {
+  this.addCustomFieldFilter = function (fieldName, value) {
     var filter = encodeURIComponent(fieldName + '=' + value);
     if (this.settings.customFieldFilters.indexOf(filter) === -1) {
       this.settings.customFieldFilters.push(filter);
     }
-  }
+  };
 
-  this.removeCustomFieldFilter = function(fieldName, value) {
+  this.removeCustomFieldFilter = function (fieldName, value) {
     var removeAll = false;
     var filter = encodeURIComponent(fieldName + '=' + value);
 
@@ -133,54 +133,53 @@ var settings = function() {
       filter = encodeURIComponent(fieldName + '=');
     }
 
-    for (var i=this.settings.customFieldFilters.length; i>0; i--) {
-      var v = this.settings.customFieldFilters[i-1];
+    for (var i = this.settings.customFieldFilters.length; i > 0; i--) {
+      var v = this.settings.customFieldFilters[i - 1];
 
       if (removeAll && v.indexOf(filter) === 0) {
-        this.settings.customFieldFilters.splice(i-1, 1);
-      }
-      else if (v === filter) {
-        this.settings.customFieldFilters.splice(i-1, 1);
+        this.settings.customFieldFilters.splice(i - 1, 1);
+      } else if (v === filter) {
+        this.settings.customFieldFilters.splice(i - 1, 1);
       }
     }
-  }
+  };
 
-  this.setDateFilter = function(dateFrom, dateTo) {
+  this.setDateFilter = function (dateFrom, dateTo) {
     this.settings.dateFrom = dateFrom;
     this.settings.dateTo = dateTo;
-  }
+  };
 
-  this.setKeyword = function(keyword) {
+  this.setKeyword = function (keyword) {
     this.settings.keyword = keyword || '*';
-  }
+  };
 
-  this.setJWT = function(jwt) {
+  this.setJWT = function (jwt) {
     this.settings.jwt = jwt;
-  }
+  };
 
-  this.setUserToken = function(token) {
+  this.setUserToken = function (token) {
     this.settings.userToken = token;
-  }
+  };
 
-  this.setPersonalizationEvents = function(events) {
+  this.setPersonalizationEvents = function (events) {
     this.settings.personalizationEvents = events;
-  }
+  };
 
-  this.setResultType = function(type) {
+  this.setResultType = function (type) {
     this.settings.resultType = type;
-  }
+  };
 
-  this.addFacetField = function(field) {
+  this.addFacetField = function (field) {
     if (this.settings.facetFields.indexOf(field) === -1) {
       this.settings.facetFields.push(field);
     }
-  }
+  };
 
-  this.addHierarchicalFacetSetting = function(setting) {
+  this.addHierarchicalFacetSetting = function (setting) {
     this.settings.hierarchicalFacetSetting = setting;
-  }
+  };
 
-  this.addRangeFacet = function(field, ranges) {
+  this.addRangeFacet = function (field, ranges) {
     if (!this.settings.rangeFacets) {
       this.settings.rangeFacets = [];
     }
@@ -188,22 +187,22 @@ var settings = function() {
       field: field,
       ranges: ranges
     });
-  }
+  };
 
-  this.addStatsField = function(field) {
+  this.addStatsField = function (field) {
     if (!this.settings.statsFields) {
       this.settings.statsFields = [];
     }
     if (this.settings.statsFields.indexOf(field) === -1) {
       this.settings.statsFields.push(field);
     }
-  }
+  };
 
-  this.setNumberOfFacets = function(numFacets) {
+  this.setNumberOfFacets = function (numFacets) {
     this.settings.numFacets = numFacets;
-  }
+  };
 
-  this.setPaging = function(page, pageSize, sortBy, sortOrder) {
+  this.setPaging = function (page, pageSize, sortBy, sortOrder) {
     // Validate
     util.validateSetPagingParams(page, pageSize, sortBy, sortOrder);
 
@@ -211,32 +210,32 @@ var settings = function() {
     this.settings.paging.pageSize = pageSize;
     this.settings.paging.sortBy = sortBy;
     this.settings.paging.sortOrder = sortOrder;
-  }
+  };
 
-  this.setShuffleAndLimitTo = function(shuffleAndLimitTo) {
+  this.setShuffleAndLimitTo = function (shuffleAndLimitTo) {
     this.settings.shuffleAndLimitTo = shuffleAndLimitTo;
-  }
+  };
 
-  this.nextPage = function() {
+  this.nextPage = function () {
     this.settings.paging.page = this.settings.paging.page + 1;
-  }
+  };
 
-  this.previousPage = function() {
+  this.previousPage = function () {
     if (this.settings.paging.page > 0) {
       this.settings.paging.page = this.settings.paging.page - 1;
     }
-  }
+  };
 
-  this.setSearchOperator = function(operator) {
+  this.setSearchOperator = function (operator) {
     if (operator !== 'and' && operator !== 'or') {
-      throw "operator must be 'and' || 'or'"
+      throw "operator must be 'and' || 'or'";
     }
     this.settings.searchOperator = operator;
-  }
+  };
 
-  this.setStatsRequestIntercepted = function(isIntercepted) {
+  this.setStatsRequestIntercepted = function (isIntercepted) {
     this.settings.statsRequestIntercepted = isIntercepted;
   };
-}
+};
 
 module.exports = settings;

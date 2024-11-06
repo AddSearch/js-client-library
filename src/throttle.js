@@ -1,5 +1,4 @@
-var throttle = function(delay, callback) {
-
+var throttle = function (delay, callback) {
   // last time callback was executed.
   var lastExec = 0;
 
@@ -17,7 +16,6 @@ var throttle = function(delay, callback) {
    * Wrap the callback inside a throttled function
    */
   function wrapper() {
-
     var self = this;
     var elapsed = Date.now() - lastExec;
     var args = arguments;
@@ -42,6 +40,6 @@ var throttle = function(delay, callback) {
 
   // Return the wrapper function.
   return wrapper;
-}
+};
 
 module.exports = throttle;
