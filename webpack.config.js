@@ -19,19 +19,21 @@ module.exports = {
   ],
   mode: 'production',
   optimization: {
-    minimizer: [new TerserJSPlugin({
-      extractComments: false,
-      terserOptions: {
-        format: {
-          comments: /addsearch-js-client/i,
+    minimizer: [
+      new TerserJSPlugin({
+        extractComments: false,
+        terserOptions: {
+          format: {
+            comments: /addsearch-js-client/i
+          }
         }
-      },
-    })]
+      })
+    ]
   },
   resolve: {
     fallback: {
-      buffer: require.resolve('buffer/'),
-    },
+      buffer: require.resolve('buffer/')
+    }
   },
   module: {
     rules: [
@@ -41,12 +43,7 @@ module.exports = {
         use: {
           loader: 'babel-loader',
           options: {
-            presets: [
-              [
-              '@babel/preset-env',
-                {'targets': '> 0.1%, IE 10, not dead'}
-              ]
-            ]
+            presets: [['@babel/preset-env', { targets: '> 0.1%, IE 10, not dead' }]]
           }
         }
       }
