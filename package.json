@@ -1,6 +1,6 @@
 {
   "name": "addsearch-js-client",
-  "version": "0.8.14",
+  "version": "0.8.15",
   "description": "AddSearch API JavaScript client",
   "repository": {
     "type": "git",
