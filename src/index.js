@@ -70,6 +70,32 @@ var client = function (sitekey, privatekey) {
   };
 
   /**
+   * Fetch conversational search answer
+   *
+   * @param keyword  Argument 1: Keyword
+   * @param callback  Callback function to call with the result
+   */
+  this.conversationalSearch = function (keyword, callback) {
+    this.settings.setCallback(callback);
+    this.settings.setKeyword(keyword);
+
+    if (!this.throttledConversationalSearchFetch) {
+      this.throttledConversationalSearchFetch = throttle(
+        this.settings.getSettings().throttleTimeMs,
+        executeApiFetch
+      );
+    }
+
+    this.throttledConversationalSearchFetch(
+      this.apiHostname,
+      this.sitekey,
+      'conversational-search',
+      this.settings.getSettings(),
+      callback
+    );
+  };
+
+  /**
    * Fetch search suggestions
    *
    * @param keyword

@@ -17,6 +17,7 @@
   ],
   "homepage": "https://www.addsearch.com/",
   "bugs": "https://github.com/AddSearch/js-client-library/issues",
+  "license": "MIT",
   "author": {
     "name": "AddSearch",
     "url": "https://www.addsearch.com"
@@ -42,10 +43,10 @@
   },
   "dependencies": {
     "axios": "^1.7.2",
+    "buffer": "^6.0.3",
     "es6-promise": "^4.2.8",
     "js-base64": "^3.6.0",
-    "uuid": "^9.0.0",
-    "buffer": "^6.0.3"
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.23.9",
