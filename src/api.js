@@ -3,6 +3,10 @@
 const axios = require('axios').default;
 const apiInstance = axios.create();
 const statsInstance = axios.create();
+const conversationalSearchInteractionsInstance = axios.create();
+
+const RESPONSE_BAD_REQUEST = 400;
+const RESPONSE_SERVER_ERROR = 500;
 
 const setRequestInterceptor = (callback, requestType) => {
   const axiosInstance = requestType === 'searchApi' ? apiInstance : statsInstance;
@@ -24,5 +28,8 @@ const setRequestInterceptor = (callback, requestType) => {
 module.exports = {
   apiInstance,
   statsInstance,
-  setRequestInterceptor
+  conversationalSearchInteractionsInstance,
+  setRequestInterceptor,
+  RESPONSE_BAD_REQUEST,
+  RESPONSE_SERVER_ERROR
 };

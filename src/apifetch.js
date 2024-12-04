@@ -1,6 +1,8 @@
 'use strict';
 require('es6-promise').polyfill();
 const apiInstance = require('./api').apiInstance;
+const RESPONSE_BAD_REQUEST = require('./api').RESPONSE_BAD_REQUEST;
+const RESPONSE_SERVER_ERROR = require('./api').RESPONSE_SERVER_ERROR;
 
 /**
  * Fetch search results of search suggestions from the Addsearch API
@@ -15,9 +17,6 @@ var executeApiFetch = function (
   customFilterObject,
   recommendOptions
 ) {
-  const RESPONSE_BAD_REQUEST = 400;
-  const RESPONSE_SERVER_ERROR = 500;
-
   var settingToQueryParam = function (setting, key) {
     if (setting || setting === false) {
       return '&' + key + '=' + setting;

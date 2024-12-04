@@ -3,6 +3,8 @@
 var executeApiFetch = require('./apifetch');
 var indexingapi = require('./indexingapi');
 var sendStats = require('./stats');
+var putSentimentClick = require('./conversational-search-interactions-api').putSentimentClick;
+
 var Settings = require('./settings');
 var util = require('./util');
 var throttle = require('./throttle');
@@ -93,6 +95,27 @@ var client = function (sitekey, privatekey) {
       this.settings.getSettings(),
       callback
     );
+  };
+
+  /**
+   * Put a sentiment click value to the conversational search interactions API
+   *
+   * @param {string} conversationId  Argument 1: Conversation ID
+   * @param {('positive'|'negative'|'neutral')} sentimentValue  Argument 2: Sentiment value (positive, negative, neutral)
+   * @returns {Promise<boolean|Object>} Resolves to true if successful, rejects with an error object if unsuccessful
+   */
+  this.putSentimentClick = function (conversationId, sentimentValue) {
+    return putSentimentClick(this.apiHostname, this.sitekey, conversationId, sentimentValue);
+  };
+
+  /**
+   * Post a copy click value to the conversational search interactions API
+   *
+   * @param {string} conversationId  Argument 1: Conversation ID
+   * @returns {Promise<boolean|Object>} Resolves to true if successful, rejects with an error object if unsuccessful
+   */
+  this.putCopyClick = function (conversationId) {
+    return putCopyClick(this.apiHostname, this.sitekey, conversationId);
   };
 
   /**
