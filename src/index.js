@@ -109,16 +109,6 @@ var client = function (sitekey, privatekey) {
   };
 
   /**
-   * Post a copy click value to the conversational search interactions API
-   *
-   * @param {string} conversationId  Argument 1: Conversation ID
-   * @returns {Promise<boolean|Object>} Resolves to true if successful, rejects with an error object if unsuccessful
-   */
-  this.putCopyClick = function (conversationId) {
-    return putCopyClick(this.apiHostname, this.sitekey, conversationId);
-  };
-
-  /**
    * Fetch search suggestions
    *
    * @param keyword
