@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "outDir": "./dist/types",
+    "skipLibCheck": true,
+    "module": "CommonJS"
+  },
+  "include": ["./index.ts", "./src/**/*"],
+  "exclude": ["node_modules", "dist"]
+}

@@ -1,13 +1,59 @@
-'use strict';
-require('es6-promise').polyfill();
-const apiInstance = require('./api').apiInstance;
-const RESPONSE_BAD_REQUEST = require('./api').RESPONSE_BAD_REQUEST;
-const RESPONSE_SERVER_ERROR = require('./api').RESPONSE_SERVER_ERROR;
+import 'es6-promise/auto';
+import { apiInstance, RESPONSE_BAD_REQUEST, RESPONSE_SERVER_ERROR } from './api';
+import { Settings } from './settings';
+import { AxiosResponse } from 'axios';
+
+interface RecommendOptions {
+  type: 'RELATED_ITEMS' | 'FREQUENTLY_BOUGHT_TOGETHER';
+  itemId?: string;
+  blockId?: string;
+  configurationKey?: string;
+}
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+export interface Callback {
+  (response: any): void;
+}
+/* eslint-enable @typescript-eslint/no-explicit-any */
+
+interface SourceDocuments {
+  page: number;
+  hits: Document[];
+  total_hits: number;
+}
+
+interface GenericApiResponse {
+  total_hits?: number;
+}
+
+interface ConversationsApiResponse {
+  response: {
+    conversation_id: string;
+    answer: string;
+    ids: string[];
+    source_documents: SourceDocuments;
+  };
+  errors: string[];
+  status: number;
+}
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+export type ExecuteApiFetch = (
+  apiHostname: string,
+  sitekey: string,
+  type: string,
+  settings: Settings,
+  cb: Callback,
+  fuzzyRetry?: boolean,
+  customFilterObject?: Record<string, any>,
+  recommendOptions?: RecommendOptions
+) => void;
+/* eslint-enable @typescript-eslint/no-explicit-any */
 
 /**
  * Fetch search results of search suggestions from the Addsearch API
  */
-var executeApiFetch = function (
+const executeApiFetch: ExecuteApiFetch = function (
   apiHostname,
   sitekey,
   type,
@@ -17,12 +63,14 @@ var executeApiFetch = function (
   customFilterObject,
   recommendOptions
 ) {
-  var settingToQueryParam = function (setting, key) {
+  /* eslint-disable @typescript-eslint/no-explicit-any */
+  const settingToQueryParam = function (setting: any, key: string) {
     if (setting || setting === false) {
       return '&' + key + '=' + setting;
     }
     return '';
   };
+  /* eslint-enable @typescript-eslint/no-explicit-any */
 
   // Validate query type
   if (
@@ -38,12 +86,12 @@ var executeApiFetch = function (
     return;
   }
 
-  var keyword = '';
-  var queryParamsString = '';
+  let keyword = '';
+  let queryParamsString = '';
 
   // API Path (eq. /search, /suggest, /autocomplete/document-field)
-  var apiEndpoint = null;
-  var apiPath = null;
+  let apiEndpoint: string | null = null;
+  let apiPath = null;
 
   // Search
   if (type === 'search') {
@@ -62,7 +110,7 @@ var executeApiFetch = function (
     keyword = encodeURIComponent(keyword);
 
     // Fuzzy
-    var fuzzy = settings.fuzzy;
+    let fuzzy = settings.fuzzy;
     if (fuzzy === 'retry') {
       // First call, non fuzzy
       if (fuzzyRetry !== true) {
@@ -142,7 +190,7 @@ var executeApiFetch = function (
 
     // Stats fields
     if (settings.statsFields) {
-      for (var i = 0; i < settings.statsFields.length; i++) {
+      for (let i = 0; i < settings.statsFields.length; i++) {
         queryParamsString = queryParamsString + '&fieldStat=' + settings.statsFields[i];
       }
     }
@@ -150,8 +198,8 @@ var executeApiFetch = function (
     // Personalization events
     if (settings.personalizationEvents && Array.isArray(settings.personalizationEvents)) {
       for (let i = 0; i < settings.personalizationEvents.length; i++) {
-        var obj = settings.personalizationEvents[i];
-        var key = Object.keys(obj);
+        const obj = settings.personalizationEvents[i];
+        const key = Object.keys(obj)[0];
         queryParamsString =
           queryParamsString + '&personalizationEvent=' + encodeURIComponent(key + '=' + obj[key]);
       }
@@ -185,7 +233,7 @@ var executeApiFetch = function (
       .post(`https://api.addsearch.com/v2/indices/${sitekey}/conversations`, {
         question: settings.keyword
       })
-      .then(function (response) {
+      .then(function (response: AxiosResponse<ConversationsApiResponse>) {
         if (response.data.response) {
           cb(response.data.response);
         } else {
@@ -269,8 +317,8 @@ var executeApiFetch = function (
   if (type !== 'conversational-search') {
     apiInstance
       .get(apiEndpoint)
-      .then(function (response) {
-        var json = response.data;
+      .then(function (response: AxiosResponse<GenericApiResponse>) {
+        const json = response.data;
 
         // Search again with fuzzy=true if no hits
         if (
@@ -285,7 +333,7 @@ var executeApiFetch = function (
         else {
           // Cap fuzzy results to one page as quality decreases quickly
           if (fuzzyRetry === true) {
-            var pageSize = settings.paging.pageSize;
+            const pageSize = settings.paging.pageSize;
             if (json.total_hits >= pageSize) {
               json.total_hits = pageSize;
             }
@@ -307,4 +355,5 @@ var executeApiFetch = function (
       });
   }
 };
-module.exports = executeApiFetch;
+
+export default executeApiFetch;

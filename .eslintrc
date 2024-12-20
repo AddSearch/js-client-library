@@ -4,13 +4,30 @@
     "commonjs": true,
     "es2021": true
   },
+  "parser": "@typescript-eslint/parser",
   "parserOptions": {
-    "ecmaVersion": "latest"
+    "ecmaVersion": "latest",
+    "sourceType": "module",
+    "project": "./tsconfig.json"
   },
-  "extends": "eslint:recommended",
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:@typescript-eslint/recommended-requiring-type-checking",
+    "plugin:prettier/recommended"
+  ],
+  "plugins": ["@typescript-eslint"],
   "rules": {
     "no-eval": ["error"],
     "no-trailing-spaces": "error",
-    "no-irregular-whitespace": "off"
-  }
+    "no-irregular-whitespace": "off",
+    "@typescript-eslint/no-unused-vars": ["warn"],
+    "@typescript-eslint/explicit-function-return-type": "off"
+  },
+  "ignorePatterns": [
+    "dist/",
+    "node_modules/",
+    "webpack.config.js",
+    "test/"
+  ]
 }
