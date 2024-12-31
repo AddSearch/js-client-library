@@ -2,10 +2,18 @@
   "compilerOptions": {
     "allowJs": true,
     "declaration": true,
-    "emitDeclarationOnly": true,
+    "declarationMap": true,
+    "emitDeclarationOnly": false,
+    "noEmitOnError": true,
+//    "outFile": "./dist/index.d.ts",
     "outDir": "./dist/types",
-    "skipLibCheck": true,
-    "module": "CommonJS"
+    "skipLibCheck": false,
+    "module": "CommonJS",
+    "strict": true,
+    "strictNullChecks": true,
+    "esModuleInterop": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
   },
   "include": ["./index.ts", "./src/**/*"],
   "exclude": ["node_modules", "dist"]

@@ -134,9 +134,9 @@ class SettingsManager {
       try {
         languageIntlLocale = new Intl.Locale(language).language;
       } catch (e) {
+        console.debug(e);
         throw new Error(
-          'Use an accepted language code provided by the ECMAScript Internationalization API (e.g., "en", "en-GB"). Error message: ' +
-            e
+          `Use an accepted language code provided by the ECMAScript Internationalization API (e.g., "en", "en-GB").`
         );
       }
     } else {

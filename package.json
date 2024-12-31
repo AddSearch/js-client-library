@@ -37,11 +37,11 @@
     "src"
   ],
   "scripts": {
-    "build": "npm run test && ./node_modules/webpack-cli/bin/cli.js",
-    "build:new": "webpack",
+    "build": "tsc && npm run test && webpack",
+    "watch": "webpack --watch",
+    "watch:tsc": "tsc --watch",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md}\"",
     "test": "./node_modules/mocha/bin/mocha.js --recursive --require @babel/register",
-    "watch": "./node_modules/webpack-cli/bin/cli.js --watch",
     "lint": "eslint . --ext .ts,.js",
     "lint:fix": "eslint . --ext .ts,.js --fix",
     "lint:watch": "nodemon --exec 'npm run lint' --watch src --ext ts"
@@ -72,6 +72,7 @@
     "nodemon": "^3.1.9",
     "prettier": "^3.3.3",
     "terser-webpack-plugin": "^5.3.1",
+    "ts-loader": "^9.5.1",
     "typescript": "^5.7.2",
     "typescript-eslint": "^8.18.1",
     "uglify-js": "^3.12.0",

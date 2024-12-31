@@ -1,4 +1,4 @@
-import executeApiFetch, { ExecuteApiFetch } from './apifetch';
+import executeApiFetch, { ApiFetchCallback, ExecuteApiFetch } from './apifetch';
 import {
   getDocument,
   saveDocument,
@@ -42,7 +42,6 @@ interface CustomFilterObject {
   [key: string]: unknown;
 }
 
-type Callback = () => void;
 type SearchEventPayload = {
   numberOfResults: number;
 };
@@ -65,11 +64,12 @@ class Client {
   private throttledSearchFetch?: ExecuteApiFetch;
   private throttledConversationalSearchFetch?: ExecuteApiFetch;
   private throttledSuggestionsFetch?: ExecuteApiFetch;
+  private throttledRecommendationFetch?: ExecuteApiFetch;
   private throttledAutocompleteFetch?: ExecuteApiFetch;
 
-  constructor(sitekey: string, privatekey: string) {
+  constructor(sitekey: string, privatekey?: string) {
     this.sitekey = sitekey;
-    this.privatekey = privatekey;
+    this.privatekey = privatekey || '';
     this.apiHostname = API_HOSTNAME;
     this.statsApiHostname = API_HOSTNAME;
     this.settings = new SettingsManager();
@@ -78,9 +78,12 @@ class Client {
       cookie.getCookie(USER_TOKEN_COOKIE_NAME) || util.generateUUID();
   }
 
-  search(a1: string | Callback, a2?: Callback): void {
+  search(): void;
+  search(a1: string, a2: ApiFetchCallback): void;
+  search(a1: ApiFetchCallback): void;
+  search(a1?: string | ApiFetchCallback, a2?: ApiFetchCallback): void {
     let keyword: string | null = null;
-    let callback: Callback | null = null;
+    let callback: ApiFetchCallback | null = null;
 
     if (typeof a1 === 'string' && typeof a2 === 'function') {
       keyword = a1;
@@ -98,7 +101,7 @@ class Client {
     }
 
     this.settings.setCallback(() => callback);
-    this.settings.setKeyword(keyword);
+    this.settings.setKeyword(keyword as string);
 
     if (!this.throttledSearchFetch) {
       this.throttledSearchFetch = throttle(
@@ -112,11 +115,11 @@ class Client {
       this.sitekey,
       'search',
       this.settings.getSettings(),
-      callback
+      callback as ApiFetchCallback
     );
   }
 
-  conversationalSearch(keyword: string, callback: Callback): void {
+  conversationalSearch(keyword: string, callback: ApiFetchCallback): void {
     this.settings.setCallback(() => callback);
     this.settings.setKeyword(keyword);
 
@@ -143,7 +146,7 @@ class Client {
     return putSentimentClick(this.apiHostname, this.sitekey, conversationId, sentimentValue);
   }
 
-  suggestions(prefix: string, callback: Callback): void {
+  suggestions(prefix: string, callback: ApiFetchCallback): void {
     if (!prefix || !callback || !util.isFunction(callback)) {
       throw new Error('Illegal suggestions parameters. Should be (prefix, callbackFunction)');
     }
@@ -165,7 +168,7 @@ class Client {
     );
   }
 
-  autocomplete(field: string, prefix: string, callback: Callback): void {
+  autocomplete(field: string, prefix: string, callback: ApiFetchCallback): void {
     if (!field || !prefix || !callback || !util.isFunction(callback)) {
       throw new Error(
         'Illegal autocomplete parameters. Should be (field, prefix, callbackFunction)'
@@ -189,7 +192,11 @@ class Client {
     );
   }
 
-  fetchCustomApi(field: string, customFilterObject: CustomFilterObject, callback: Callback): void {
+  fetchCustomApi(
+    field: string,
+    customFilterObject: CustomFilterObject,
+    callback: ApiFetchCallback
+  ): void {
     const settingsCloned = { ...this.settings.getSettings() };
     settingsCloned.facetFields = settingsCloned.facetFields?.filter(
       (facetField: string) => field === facetField
@@ -209,7 +216,7 @@ class Client {
   fetchRangeFacets(
     options: RangeFacetOption,
     customFilterObject: CustomFilterObject,
-    callback: Callback
+    callback: ApiFetchCallback
   ): void {
     const settingsCloned = { ...this.settings.getSettings() };
 
@@ -229,19 +236,19 @@ class Client {
     );
   }
 
-  recommendations(options: RecommendationsOptions, callback: Callback): void {
+  recommendations(options: RecommendationsOptions, callback: ApiFetchCallback): void {
     if (!options || !callback || !util.isFunction(callback)) {
       throw new Error('Illegal recommendations parameters. Should be (options, callbackFunction)');
     }
 
-    if (!this.throttledSuggestionsFetch) {
-      this.throttledSuggestionsFetch = throttle(
+    if (!this.throttledRecommendationFetch) {
+      this.throttledRecommendationFetch = throttle(
         this.settings.getSettings().throttleTimeMs,
         executeApiFetch
       );
     }
 
-    this.throttledSuggestionsFetch(
+    this.throttledRecommendationFetch(
       this.apiHostname,
       this.sitekey,
       'recommend',
@@ -330,8 +337,8 @@ class Client {
   setPaging(
     page: number,
     pageSize: number,
-    sortBy?: SortByOptions,
-    sortOder?: SortOrderOptions
+    sortBy: SortByOptions,
+    sortOder: SortOrderOptions
   ): void {
     this.settings.setPaging(page, pageSize, sortBy, sortOder);
   }

@@ -9,7 +9,10 @@ module.exports = {
   output: {
     filename: 'addsearch-js-client.min.js',
     library: 'AddSearchClient',
-    libraryTarget: 'global'
+    libraryExport: 'default',
+    libraryTarget: 'umd',
+    globalObject: 'this',
+    clean: true
   },
   plugins: [
     new ESLintPlugin(),
@@ -39,17 +42,25 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.ts$/,
-        exclude: /(node_modules|bower_components)/,
-        use: {
-          loader: 'babel-loader',
-          options: {
-            presets: [
-              ['@babel/preset-env', { targets: '> 0.1%, IE 10, not dead' }],
-              '@babel/preset-typescript'
-            ]
+        test: /\.ts|js$/,
+        exclude: /node_modules/,
+        use: [
+          {
+            loader: 'babel-loader',
+            options: {
+              presets: [
+                ['@babel/preset-env', { targets: '> 0.1%, IE 10, not dead' }],
+                '@babel/preset-typescript'
+              ]
+            }
+          },
+          {
+            loader: 'ts-loader',
+            options: {
+              transpileOnly: false
+            }
           }
-        }
+        ]
       }
     ]
   }

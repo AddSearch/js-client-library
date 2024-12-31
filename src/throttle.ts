@@ -1,6 +1,9 @@
-type ThrottleCallback = (...args: unknown[]) => void;
+import { ExecuteApiFetch } from './apifetch';
 
-const throttle = (delay: number, callback: ThrottleCallback): ((...args: unknown[]) => void) => {
+const throttle = (
+  delay: number,
+  callback: ExecuteApiFetch
+): ((...args: Parameters<ExecuteApiFetch>) => void) => {
   // Last time the callback was executed
   let lastExec = 0;
 
@@ -18,18 +21,18 @@ const throttle = (delay: number, callback: ThrottleCallback): ((...args: unknown
   /*
    * Wrap the callback inside a throttled function
    */
-  function wrapper(this: unknown, ...args: unknown[]): void {
+  function wrapper(...args: Parameters<ExecuteApiFetch>) {
     const elapsed = Date.now() - lastExec;
 
     // Execute callback function
-    const exec = (): void => {
+    const exec = () => {
       lastExec = Date.now();
-      callback.apply(this, args);
+      callback(...args);
     };
 
     clearExistingTimeout();
 
-    // Execute immediately if the delay has passed
+    // Execute
     if (elapsed > delay) {
       exec();
     }
