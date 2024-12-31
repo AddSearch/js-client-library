@@ -1,4 +1,8 @@
-import executeApiFetch, { ApiFetchCallback, ExecuteApiFetch } from './apifetch';
+import executeApiFetch, {
+  ApiFetchCallback,
+  ExecuteApiFetch,
+  SuggestionsResponse
+} from './apifetch';
 import {
   getDocument,
   saveDocument,
@@ -146,7 +150,7 @@ class Client {
     return putSentimentClick(this.apiHostname, this.sitekey, conversationId, sentimentValue);
   }
 
-  suggestions(prefix: string, callback: ApiFetchCallback): void {
+  suggestions(prefix: string, callback: ApiFetchCallback<SuggestionsResponse>): void {
     if (!prefix || !callback || !util.isFunction(callback)) {
       throw new Error('Illegal suggestions parameters. Should be (prefix, callbackFunction)');
     }

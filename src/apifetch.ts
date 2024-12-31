@@ -10,11 +10,17 @@ interface RecommendOptions {
   configurationKey?: string;
 }
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-export interface ApiFetchCallback {
-  (response: any): void;
+interface Suggestion {
+  value: string;
 }
-/* eslint-enable @typescript-eslint/no-explicit-any */
+
+export interface SuggestionsResponse {
+  suggestions: Suggestion[];
+}
+
+export interface ApiFetchCallback<T = any> {
+  (response: T): void;
+}
 
 interface SourceDocuments {
   page: number;
