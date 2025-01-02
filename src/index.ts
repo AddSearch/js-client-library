@@ -8,8 +8,7 @@ import {
   saveDocument,
   saveDocumentsBatch,
   deleteDocumentsBatch,
-  deleteDocument,
-  Document
+  deleteDocument
 } from './indexingapi';
 import sendStats from './stats';
 import { putSentimentClick } from './conversational-search-interactions-api';
@@ -19,7 +18,8 @@ import SettingsManager, {
   SearchOperator,
   SortByOptions,
   SortOrderOptions,
-  FromToRange
+  FromToRange,
+  FuzzyMatch
 } from './settings';
 
 import * as util from './util';
@@ -37,9 +37,9 @@ interface RangeFacetOption {
 
 interface RecommendationsOptions {
   type: 'RELATED_ITEMS' | 'FREQUENTLY_BOUGHT_TOGETHER';
-  itemId: string;
-  blockId: string;
-  configurationKey: string;
+  itemId?: string;
+  blockId?: string;
+  configurationKey?: string;
 }
 
 interface CustomFilterObject {
@@ -56,7 +56,7 @@ type ClickEventPayload = {
 type StatsEventPayload = SearchEventPayload | ClickEventPayload;
 type SentimentValue = 'positive' | 'negative' | 'neutral';
 
-class Client {
+class AddSearchClient {
   private readonly sitekey: string;
   private readonly privatekey: string;
   private apiHostname: string;
@@ -283,7 +283,7 @@ class Client {
     return deleteDocument(this.apiHostname, this.sitekey, this.privatekey, id);
   }
 
-  deleteDocumentsBatch(batch: { documents: Document[] }): Promise<object> {
+  deleteDocumentsBatch(batch: { documents: string[] }): Promise<object> {
     if (!batch || !batch.documents || !Array.isArray(batch.documents)) {
       throw new Error('Please provide an array of document ids: {documents: []}');
     }
@@ -310,7 +310,7 @@ class Client {
     this.settings.setLanguage(lang);
   }
 
-  setCategoryFilters(categories: string[]): void {
+  setCategoryFilters(categories: string): void {
     this.settings.setCategoryFilters(categories);
   }
 
@@ -322,7 +322,7 @@ class Client {
     this.settings.removeCustomFieldFilter(fieldName, value);
   }
 
-  setPriceRangeFilter(minCents: number, maxCents: number): void {
+  setPriceRangeFilter(minCents: string, maxCents: string): void {
     this.settings.setPriceRangeFilter(minCents, maxCents);
   }
 
@@ -383,7 +383,7 @@ class Client {
     this.settings.setNumberOfFacets(numFacets);
   }
 
-  setResultType(type: string): void {
+  setResultType(type: 'organic' | null): void {
     this.settings.setResultType(type);
   }
 
@@ -399,7 +399,7 @@ class Client {
     this.settings.setShuffleAndLimitTo(shuffleAndLimitTo);
   }
 
-  setFuzzyMatch(fuzzy: boolean): void {
+  setFuzzyMatch(fuzzy: FuzzyMatch): void {
     this.settings.setFuzzyMatch(fuzzy);
   }
 
@@ -539,4 +539,4 @@ let isPersonalizationTrackingEnabled = false;
 let isAddSearchCookieConsented = false;
 let personalizationCookieExpireDays = 180;
 
-export default Client;
+export = AddSearchClient;

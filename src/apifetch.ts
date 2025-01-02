@@ -10,6 +10,33 @@ interface RecommendOptions {
   configurationKey?: string;
 }
 
+export interface SearchResponseDocument {
+  id: string;
+  score: number;
+  url: string;
+  title: string;
+  ts: string;
+  images: {
+    main: string;
+    mainB64: string;
+    capture: string;
+  };
+  categories: string[];
+  type: string;
+  custom_fields: Record<string, string>;
+  document_type: string;
+  meta_description: string;
+  highlight: string;
+}
+
+export interface SearchResponse {
+  total_hits: number;
+  hits: SearchResponseDocument[];
+  facets: any;
+  stats: any;
+  response_time: number;
+}
+
 interface Suggestion {
   value: string;
 }

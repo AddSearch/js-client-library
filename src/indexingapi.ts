@@ -1,29 +1,19 @@
 import axios from 'axios';
 import { AxiosResponse } from 'axios';
 import { base64 } from './util';
+import { SearchResponse } from './apifetch';
 
 interface ApiResponse {
   status: number;
   text: string;
 }
 
-export interface Document {
-  id: string;
-  score: number;
-  url: string;
-  title: string;
-  ts: string;
-  images: {
-    main: string;
-    mainB64: string;
-    capture: string;
-  };
-  categories: string[];
-  type: string;
-  custom_fields: Record<string, string>;
-  document_type: string;
-  meta_description: string;
-  highlight: string;
+export interface IndexingDocument {
+  id?: string;
+  url?: string;
+  title?: string;
+  main_content?: string;
+  custom_fields?: Record<string, string | number>;
 }
 
 const getHeaders = (sitekey: string, privatekey: string): Record<string, string> => {
@@ -41,7 +31,7 @@ const getDocument = (
   sitekey: string,
   privatekey: string,
   id: string
-): Promise<Document> => {
+): Promise<SearchResponse> => {
   return new Promise((resolve, reject) => {
     axios
       .get(`https://${apiHostname}/v2/indices/${sitekey}/documents/${id}`, {
@@ -49,7 +39,7 @@ const getDocument = (
       })
       .then((response: AxiosResponse) => {
         if (response.status === 200) {
-          resolve(response.data as Document);
+          resolve(response.data as SearchResponse);
         } else {
           reject(new Error(JSON.stringify({ status: response.status, text: response.statusText })));
         }
@@ -67,7 +57,7 @@ const saveDocument = (
   apiHostname: string,
   sitekey: string,
   privatekey: string,
-  document: Document
+  document: IndexingDocument
 ): Promise<ApiResponse> => {
   const isPut = Boolean(document.id || document.url);
 
@@ -98,7 +88,7 @@ const saveDocumentsBatch = (
   apiHostname: string,
   sitekey: string,
   privatekey: string,
-  documents: { documents: Document[] }
+  documents: { documents: IndexingDocument[] }
 ): Promise<ApiResponse> => {
   return new Promise((resolve, reject) => {
     axios({
@@ -154,7 +144,7 @@ const deleteDocumentsBatch = (
   apiHostname: string,
   sitekey: string,
   privatekey: string,
-  batch: { documents: Document[] }
+  batch: { documents: string[] }
 ): Promise<ApiResponse> => {
   return new Promise((resolve, reject) => {
     axios

@@ -1,6 +1,6 @@
 import { validateSetPagingParams } from './util';
 
-type SortOrder = 'asc' | 'desc';
+export type SortOrder = 'asc' | 'desc';
 export type SortByOptions = string | string[];
 export type SortOrderOptions = SortOrder | SortOrder[];
 export type SearchOperator = 'and' | 'or';
@@ -13,14 +13,14 @@ export type MinMaxRange = {
   max?: number;
 };
 
-type PagingSettings = {
+export type PagingSettings = {
   page: number;
   pageSize: number;
   sortBy: SortByOptions;
   sortOrder: SortOrderOptions;
 };
 
-type AutocompleteSettings = {
+export type AutocompleteSettings = {
   size: number;
   field?: string;
   prefix?: string;
@@ -30,11 +30,13 @@ export type PersonalizationEvent = {
   [key: string]: string;
 };
 
+export type FuzzyMatch = boolean | 'auto' | 'retry';
+
 export type Settings = {
   keyword: string;
   callback: (() => void) | null;
   throttleTimeMs: number;
-  fuzzy: boolean | 'auto' | 'retry';
+  fuzzy: FuzzyMatch;
   paging: PagingSettings;
   customFieldFilters: string[];
   userToken: string | null;
@@ -50,15 +52,15 @@ export type Settings = {
   postfixWildcard?: boolean;
   collectAnalytics?: boolean;
   analyticsTag?: string;
-  categories?: string[];
+  categories?: string;
   filterObject?: object;
-  priceFromCents?: number;
-  priceToCents?: number;
+  priceFromCents?: string;
+  priceToCents?: string;
   dateFrom?: string;
   dateTo?: string;
   jwt?: string;
   personalizationEvents?: PersonalizationEvent[];
-  resultType?: string;
+  resultType?: 'organic' | null;
   hierarchicalFacetSetting?: object;
   rangeFacets?: Array<{ field: string; ranges: FromToRange[] }>;
   statsFields?: string[];
@@ -175,7 +177,7 @@ class SettingsManager {
     this.settings.analyticsTag = tagName;
   }
 
-  setCategoryFilters(categories: string[]): void {
+  setCategoryFilters(categories: string): void {
     this.settings.categories = categories;
   }
 
@@ -183,7 +185,7 @@ class SettingsManager {
     this.settings.filterObject = filter;
   }
 
-  setPriceRangeFilter(minCents: number, maxCents: number): void {
+  setPriceRangeFilter(minCents: string, maxCents: string): void {
     this.settings.priceFromCents = minCents;
     this.settings.priceToCents = maxCents;
   }
@@ -226,7 +228,7 @@ class SettingsManager {
     }
   }
 
-  setResultType(type: string): void {
+  setResultType(type: 'organic' | null): void {
     this.settings.resultType = type;
   }
 

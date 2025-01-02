@@ -1,11 +1,11 @@
-var assert = require('assert');
-var util = require('../src/util');
+import { strict as assert } from 'assert';
+import * as util from '../src/util';
 
 describe('util', function () {
   describe('isFunction', function () {
     it('function should be properly detected', function () {
-      var f = function (f) {
-        console.log(f);
+      const f = (arg: unknown): void => {
+        console.log(arg);
       };
       assert.equal(util.isFunction(f), true);
       assert.equal(util.isFunction(console.log), true);
