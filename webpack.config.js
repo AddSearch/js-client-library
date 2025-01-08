@@ -9,7 +9,6 @@ module.exports = {
   output: {
     filename: 'addsearch-js-client.min.js',
     library: 'AddSearchClient',
-    libraryExport: 'default',
     libraryTarget: 'umd',
     globalObject: 'this',
     clean: true
