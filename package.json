@@ -1,6 +1,6 @@
 {
   "name": "addsearch-js-client",
-  "version": "0.9.0",
+  "version": "1.0.0",
   "description": "AddSearch API JavaScript client",
   "repository": {
     "type": "git",
@@ -28,41 +28,54 @@
       "url": "https://www.addsearch.com"
     }
   ],
-  "main": "index.js",
+  "main": "dist/index.js",
   "jsdelivr": "./dist/addsearch-js-client.min.js",
-  "types": "index.d.ts",
+  "types": "dist/types/index.d.ts",
   "files": [
     "dist",
-    "index.d.ts",
-    "src"
+    "index.d.ts"
   ],
   "scripts": {
-    "build": "npm run test && ./node_modules/webpack-cli/bin/cli.js",
+    "build": "npm run test && webpack && tsc",
+    "watch": "webpack --watch",
+    "watch:tsc": "tsc --watch",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md}\"",
-    "test": "./node_modules/mocha/bin/mocha.js --recursive --require @babel/register",
-    "watch": "./node_modules/webpack-cli/bin/cli.js --watch"
+    "test": "mocha --recursive --require ts-node/register 'test/**/*.test.ts'",
+    "lint": "eslint . --ext .ts,.js",
+    "lint:fix": "eslint . --ext .ts,.js --fix",
+    "lint:watch": "nodemon --exec 'npm run lint' --watch src --ext ts"
   },
   "dependencies": {
     "axios": "^1.7.2",
     "buffer": "^6.0.3",
     "es6-promise": "^4.2.8",
     "js-base64": "^3.6.0",
-    "uuid": "^9.0.0"
+    "uuid": "^11.0.3"
   },
   "devDependencies": {
     "@babel/cli": "^7.23.9",
     "@babel/core": "^7.23.9",
     "@babel/preset-env": "^7.23.9",
+    "@babel/preset-typescript": "^7.26.0",
     "@babel/register": "^7.12.1",
+    "@types/mocha": "^10.0.10",
+    "@typescript-eslint/parser": "^8.18.1",
     "axios-mock-adapter": "^1.21.2",
     "babel-loader": "^9.1.2",
     "eslint": "^8.45.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.2.1",
     "eslint-webpack-plugin": "^3.1.1",
     "esm": "^3.2.25",
     "fetch-mock": "^12.1.0",
-    "mocha": "^10.0.0",
+    "mocha": "^10.8.2",
+    "nodemon": "^3.1.9",
     "prettier": "^3.3.3",
     "terser-webpack-plugin": "^5.3.1",
+    "ts-loader": "^9.5.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.2",
+    "typescript-eslint": "^8.18.1",
     "uglify-js": "^3.12.0",
     "webpack": "^5.76.1",
     "webpack-cli": "^4.10.0"
