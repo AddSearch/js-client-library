@@ -11,7 +11,7 @@ import {
   deleteDocument
 } from './indexingapi';
 import sendStats from './stats';
-import { putSentimentClick } from './conversational-search-interactions-api';
+import { putSentimentClick } from './ai-answers-interactions-api';
 import SettingsManager, {
   Settings,
   PersonalizationEvent,
@@ -66,7 +66,7 @@ class AddSearchClient {
   private userTokenInPersonalization: string;
   private useStatsSessionId = false;
   private throttledSearchFetch?: ExecuteApiFetch;
-  private throttledConversationalSearchFetch?: ExecuteApiFetch;
+  private throttledAiAnswersFetch?: ExecuteApiFetch;
   private throttledSuggestionsFetch?: ExecuteApiFetch;
   private throttledRecommendationFetch?: ExecuteApiFetch;
   private throttledAutocompleteFetch?: ExecuteApiFetch;
@@ -123,21 +123,21 @@ class AddSearchClient {
     );
   }
 
-  conversationalSearch(keyword: string, callback: ApiFetchCallback): void {
+  aiAnswers(keyword: string, callback: ApiFetchCallback): void {
     this.settings.setCallback(() => callback);
     this.settings.setKeyword(keyword);
 
-    if (!this.throttledConversationalSearchFetch) {
-      this.throttledConversationalSearchFetch = throttle(
+    if (!this.throttledAiAnswersFetch) {
+      this.throttledAiAnswersFetch = throttle(
         this.settings.getSettings().throttleTimeMs,
         executeApiFetch
       );
     }
 
-    this.throttledConversationalSearchFetch(
+    this.throttledAiAnswersFetch(
       this.apiHostname,
       this.sitekey,
-      'conversational-search',
+      'ai-answers',
       this.settings.getSettings(),
       callback
     );

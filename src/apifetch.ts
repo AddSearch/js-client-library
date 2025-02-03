@@ -108,7 +108,7 @@ const executeApiFetch: ExecuteApiFetch = function (
   // Validate query type
   if (
     type !== 'search' &&
-    type !== 'conversational-search' &&
+    type !== 'ai-answers' &&
     type !== 'suggest' &&
     type !== 'autocomplete' &&
     type !== 'recommend'
@@ -259,8 +259,8 @@ const executeApiFetch: ExecuteApiFetch = function (
       queryParamsString;
   }
 
-  // Conversational Search
-  else if (type === 'conversational-search') {
+  // Ai Answers
+  else if (type === 'ai-answers') {
     // TODO use apiHostname instead of hardcoded URL
     apiInstance
       .post(`https://api.addsearch.com/v2/indices/${sitekey}/conversations`, {
@@ -273,7 +273,7 @@ const executeApiFetch: ExecuteApiFetch = function (
           cb({
             error: {
               response: RESPONSE_SERVER_ERROR,
-              message: 'Could not get conversational search response in the expected data format'
+              message: 'Could not get ai-answers response in the expected data format'
             }
           });
         }
@@ -347,7 +347,7 @@ const executeApiFetch: ExecuteApiFetch = function (
     apiEndpoint = 'https://' + apiHostname + '/v1/' + apiPath;
   }
 
-  if (type !== 'conversational-search') {
+  if (type !== 'ai-answers') {
     apiInstance
       .get(apiEndpoint as string)
       .then(function (response: AxiosResponse<GenericApiResponse>) {

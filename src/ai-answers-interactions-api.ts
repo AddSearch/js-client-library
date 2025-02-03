@@ -1,7 +1,7 @@
 'use strict';
 
 import 'es6-promise/auto';
-import { RESPONSE_SERVER_ERROR, conversationalSearchInteractionsInstance } from './api';
+import { RESPONSE_SERVER_ERROR, aiAnswersInteractionsInstance } from './api';
 
 const putSentimentClick = (
   apiHostname: string,
@@ -10,7 +10,7 @@ const putSentimentClick = (
   sentimentValue: 'positive' | 'negative' | 'neutral'
 ): Promise<boolean> => {
   return new Promise((resolve, reject) => {
-    conversationalSearchInteractionsInstance
+    aiAnswersInteractionsInstance
       .put(`https://${apiHostname}/v2/indices/${sitekey}/conversations/${conversationId}/rating`, {
         value: sentimentValue === 'positive' ? 1 : sentimentValue === 'negative' ? -1 : 0
       })
