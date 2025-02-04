@@ -2,7 +2,7 @@ import axios, { AxiosInstance, InternalAxiosRequestConfig } from 'axios';
 
 const apiInstance: AxiosInstance = axios.create();
 const statsInstance: AxiosInstance = axios.create();
-const conversationalSearchInteractionsInstance: AxiosInstance = axios.create();
+const aiAnswersInteractionsInstance: AxiosInstance = axios.create();
 
 const RESPONSE_BAD_REQUEST = 400;
 const RESPONSE_SERVER_ERROR = 500;
@@ -38,7 +38,7 @@ const setRequestInterceptor = (
 export {
   apiInstance,
   statsInstance,
-  conversationalSearchInteractionsInstance,
+  aiAnswersInteractionsInstance,
   setRequestInterceptor,
   RESPONSE_BAD_REQUEST,
   RESPONSE_SERVER_ERROR

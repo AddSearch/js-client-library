@@ -500,6 +500,38 @@ function callback(configurationObject) {
 client.setApiRequestInterceptor(callback, option);
 ```
 
+## AI Answers API
+
+#### Fetch AI answers
+
+```js
+// Get AI generated answer with a question
+client.aiAnswers('A question to get AI generated answers', callback);
+```
+
+Example of callback function and how the response looks like:
+```js
+callbackFn = function (response) {
+  
+  console.log(response);
+  
+  // response object contains the answer
+  // {
+  //   "answer": "The answer to the question",
+  //   "conversation_id": "31f33b53-1fe1-4734-884f-fefa470f1389",
+  //   "ids": <array of ids belonging to source documents>, for example ['073010f023db7c6d558123f73a9b4f82', '821f7bea12daf0eda17ba2755979f7a5'],
+  //   "source_documents": <documents that provide context for AI generated answers, the object of this field looks similarly to the response of regular SearchApi result>
+  // }
+};
+````
+
+#### Send Sentiment Analysis
+
+```js
+// possible sentiment_value: positive, negative
+client.putSentimentClick('conversation_id', 'sentiment_value');
+```
+
 ## Indexing API
 
 With the Indexing API, you can fetch, create, update, and delete single documents or batches of
