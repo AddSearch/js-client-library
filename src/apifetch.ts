@@ -263,7 +263,7 @@ const executeApiFetch: ExecuteApiFetch = function (
   else if (type === 'ai-answers') {
     // TODO use apiHostname instead of hardcoded URL
     apiInstance
-      .post(`https://api.addsearch.com/v2/indices/${sitekey}/conversations`, {
+      .post(`https://${apiHostname}/v2/indices/${sitekey}/conversations`, {
         question: settings?.keyword
       })
       .then(function (response: AxiosResponse<ConversationsApiResponse>) {
