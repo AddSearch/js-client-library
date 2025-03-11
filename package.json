@@ -1,6 +1,6 @@
 {
   "name": "addsearch-js-client",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "AddSearch API JavaScript client",
   "repository": {
     "type": "git",
@@ -48,6 +48,7 @@
   "dependencies": {
     "axios": "^1.7.2",
     "buffer": "^6.0.3",
+    "cookie": "^1.0.2",
     "es6-promise": "^4.2.8",
     "js-base64": "^3.6.0",
     "uuid": "^11.0.3"
