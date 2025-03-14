@@ -318,7 +318,7 @@ class AddSearchClient {
     this.settings.addCustomFieldFilter(fieldName, value);
   }
 
-  removeCustomFieldFilter(fieldName: string, value: string): void {
+  removeCustomFieldFilter(fieldName: string, value?: string): void {
     this.settings.removeCustomFieldFilter(fieldName, value);
   }
 
