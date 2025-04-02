@@ -19,7 +19,8 @@ import SettingsManager, {
   SortByOptions,
   SortOrderOptions,
   FromToRange,
-  FuzzyMatch
+  FuzzyMatch,
+  ApiMethod
 } from './settings';
 
 import * as util from './util';
@@ -256,7 +257,7 @@ class AddSearchClient {
       this.apiHostname,
       this.sitekey,
       'recommend',
-      null,
+      this.settings.getSettings(),
       callback,
       false,
       null,
@@ -439,6 +440,10 @@ class AddSearchClient {
 
   setSearchOperator(operator: SearchOperator): void {
     this.settings.setSearchOperator(operator);
+  }
+
+  setApiMethod(method: ApiMethod): void {
+    this.settings.setApiMethod(method);
   }
 
   sendStatsEvent(type: 'search' | 'click', keyword: string, data: StatsEventPayload): void {

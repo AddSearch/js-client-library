@@ -66,7 +66,10 @@ export type Settings = {
   statsFields?: string[];
   numFacets?: number;
   shuffleAndLimitTo?: number;
+  apiMethod?: ApiMethod;
 };
+
+export type ApiMethod = 'GET' | 'POST';
 
 class SettingsManager {
   private settings: Settings;
@@ -93,7 +96,8 @@ class SettingsManager {
       searchOperator: null,
       enableLogicalOperators: false,
       cacheResponseTime: null,
-      statsRequestIntercepted: false
+      statsRequestIntercepted: false,
+      apiMethod: 'GET'
     };
   }
 
@@ -295,6 +299,10 @@ class SettingsManager {
 
   setStatsRequestIntercepted(isIntercepted: boolean): void {
     this.settings.statsRequestIntercepted = isIntercepted;
+  }
+
+  setApiMethod(method: ApiMethod): void {
+    this.settings.apiMethod = method;
   }
 }
 

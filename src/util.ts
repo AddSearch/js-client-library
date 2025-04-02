@@ -53,4 +53,8 @@ const generateUUID = (): string => {
   return uuidv4().replace(/-/g, '');
 };
 
-export { isFunction, base64, validateSetPagingParams, generateUUID };
+const isEmptyObject = (obj: object): boolean => {
+  return Object.keys(obj).length === 0;
+};
+
+export { isFunction, base64, validateSetPagingParams, generateUUID, isEmptyObject };
