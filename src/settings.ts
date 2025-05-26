@@ -298,6 +298,9 @@ class SettingsManager {
   }
 
   setApiMethod(method: ApiMethod): void {
+    if (method !== 'GET' && method !== 'POST') {
+      throw new Error("API method must be 'GET' or 'POST'");
+    }
     this.settings.apiMethod = method;
   }
 }

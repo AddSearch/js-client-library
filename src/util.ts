@@ -53,8 +53,16 @@ const generateUUID = (): string => {
   return uuidv4().replace(/-/g, '');
 };
 
-const isEmptyObject = (obj: object): boolean => {
-  return Object.keys(obj).length === 0;
+const isEmptyObject = (obj: unknown): boolean => {
+  if (obj == null) {
+    return true;
+  }
+
+  if (Array.isArray(obj) || Object.prototype.toString.call(obj) !== '[object Object]') {
+    return true;
+  }
+
+  return Object.keys(obj as Record<string, unknown>).length === 0;
 };
 
 export { isFunction, base64, validateSetPagingParams, generateUUID, isEmptyObject };

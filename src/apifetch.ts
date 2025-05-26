@@ -188,8 +188,8 @@ const executeApiFetch: ExecuteApiFetch = function (
       collectAnalytics: settings?.collectAnalytics,
       postfixWildcard: settings?.postfixWildcard,
       categories: settings?.categories ? settings?.categories.split(',') : undefined,
-      priceFromCents: settings?.priceFromCents ? parseFloat(settings?.priceFromCents) : undefined,
-      priceToCents: settings?.priceToCents ? parseFloat(settings?.priceToCents) : undefined,
+      priceFromCents: settings?.priceFromCents ? parseInt(settings?.priceFromCents, 10) : undefined,
+      priceToCents: settings?.priceToCents ? parseInt(settings?.priceToCents, 10) : undefined,
       dateFrom: settings?.dateFrom,
       dateTo: settings?.dateTo,
       paging: {
@@ -488,8 +488,9 @@ const executeApiFetch: ExecuteApiFetch = function (
 
     if (settings?.apiMethod === 'POST' && ['search', 'suggest', 'autocomplete'].includes(type)) {
       apiEndpoint = 'https://' + apiHostname + '/v1/' + apiPath + '/' + sitekey;
+      const term = type === 'search' ? decodeURIComponent(keyword) : keyword;
       requestPayloadObject = {
-        term: decodeURIComponent(keyword),
+        term: decodeURIComponent(term),
         ...requestPayloadObject
       };
       apiInstance
