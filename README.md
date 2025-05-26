@@ -532,6 +532,16 @@ callbackFn = function (response) {
 client.putSentimentClick('conversation_id', 'sentiment_value');
 ```
 
+## POST API
+:exclamation: POST API is not fully supported. If you need to use some methods in the library, please contact our support.
+
+#### Fetch AI answers
+
+```js
+// default method: "GET"
+client.setApiMethod('POST');
+```
+
 ## Indexing API
 
 With the Indexing API, you can fetch, create, update, and delete single documents or batches of

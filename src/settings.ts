@@ -66,7 +66,10 @@ export type Settings = {
   statsFields?: string[];
   numFacets?: number;
   shuffleAndLimitTo?: number;
+  apiMethod?: ApiMethod;
 };
+
+export type ApiMethod = 'GET' | 'POST';
 
 class SettingsManager {
   private settings: Settings;
@@ -93,7 +96,8 @@ class SettingsManager {
       searchOperator: null,
       enableLogicalOperators: false,
       cacheResponseTime: null,
-      statsRequestIntercepted: false
+      statsRequestIntercepted: false,
+      apiMethod: 'GET'
     };
   }
 
@@ -243,16 +247,12 @@ class SettingsManager {
   }
 
   addRangeFacet(field: string, ranges: FromToRange[]): void {
-    if (!this.settings.rangeFacets) {
-      this.settings.rangeFacets = [];
-    }
+    this.settings.rangeFacets ??= [];
     this.settings.rangeFacets.push({ field, ranges });
   }
 
   addStatsField(field: string): void {
-    if (!this.settings.statsFields) {
-      this.settings.statsFields = [];
-    }
+    this.settings.statsFields ??= [];
     if (!this.settings.statsFields.includes(field)) {
       this.settings.statsFields.push(field);
     }
@@ -295,6 +295,13 @@ class SettingsManager {
 
   setStatsRequestIntercepted(isIntercepted: boolean): void {
     this.settings.statsRequestIntercepted = isIntercepted;
+  }
+
+  setApiMethod(method: ApiMethod): void {
+    if (method !== 'GET' && method !== 'POST') {
+      throw new Error("API method must be 'GET' or 'POST'");
+    }
+    this.settings.apiMethod = method;
   }
 }
 
