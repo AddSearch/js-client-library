@@ -490,7 +490,7 @@ const executeApiFetch: ExecuteApiFetch = function (
       apiEndpoint = 'https://' + apiHostname + '/v1/' + apiPath + '/' + sitekey;
       const term = type === 'search' ? decodeURIComponent(keyword) : keyword;
       requestPayloadObject = {
-        term: decodeURIComponent(term),
+        term,
         ...requestPayloadObject
       };
       apiInstance
