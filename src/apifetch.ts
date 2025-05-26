@@ -184,8 +184,7 @@ const executeApiFetch: ExecuteApiFetch = function (
     requestPayloadObject = {
       ...requestPayloadObject,
       language: settings?.lang,
-      // fuzzy: fuzzy !== true && fuzzy !== false ? fuzzy : JSON.stringify(fuzzy),
-      fuzzy: fuzzy,
+      fuzzy: fuzzy !== true && fuzzy !== false ? fuzzy : JSON.stringify(fuzzy),
       collectAnalytics: settings?.collectAnalytics,
       postfixWildcard: settings?.postfixWildcard,
       categories: settings?.categories ? settings?.categories.split(',') : undefined,
