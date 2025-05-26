@@ -1,6 +1,6 @@
 import 'es6-promise/auto';
 import { apiInstance, RESPONSE_BAD_REQUEST, RESPONSE_SERVER_ERROR } from './api';
-import { Settings, SortByOptions, SortOrder, SortOrderOptions } from './settings';
+import { Settings } from './settings';
 import { AxiosResponse } from 'axios';
 import { isEmptyObject } from './util';
 
@@ -184,8 +184,8 @@ const executeApiFetch: ExecuteApiFetch = function (
     requestPayloadObject = {
       ...requestPayloadObject,
       language: settings?.lang,
-      fuzzy: fuzzy !== true && fuzzy !== false ? fuzzy : JSON.stringify(fuzzy),
-      // fuzzy: fuzzy,
+      // fuzzy: fuzzy !== true && fuzzy !== false ? fuzzy : JSON.stringify(fuzzy),
+      fuzzy: fuzzy,
       collectAnalytics: settings?.collectAnalytics,
       postfixWildcard: settings?.postfixWildcard,
       categories: settings?.categories ? settings?.categories.split(',') : undefined,
@@ -194,33 +194,28 @@ const executeApiFetch: ExecuteApiFetch = function (
       dateFrom: settings?.dateFrom,
       dateTo: settings?.dateTo,
       paging: {
-        page: settings?.paging.page ? settings?.paging.page : 1,
-        pageSize: settings?.paging.pageSize ? settings?.paging.pageSize : 10,
-        shuffleAndLimitTo: settings?.shuffleAndLimitTo || undefined,
+        page: settings?.paging.page ?? 1,
+        pageSize: settings?.paging.pageSize ?? 10,
+        shuffleAndLimitTo: settings?.shuffleAndLimitTo ?? undefined,
         sortByField: settings?.paging.sortBy,
         sortOrder: settings?.paging.sortOrder
       },
       jwt: settings?.jwt,
       resultType: settings?.resultType,
-      userToken: settings?.userToken || undefined,
+      userToken: settings?.userToken ?? undefined,
       numFacets: settings?.numFacets,
-      cacheResponseWithTtlSeconds: settings?.cacheResponseTime || undefined,
-      defaultOperator: settings?.searchOperator || undefined,
+      cacheResponseWithTtlSeconds: settings?.cacheResponseTime ?? undefined,
+      defaultOperator: settings?.searchOperator ?? undefined,
       analyticsTag: settings?.analyticsTag
     };
 
     // Add sortBy and sortOrder
     if (Array.isArray(settings?.paging.sortBy) && settings?.paging.sortBy.length > 1) {
-      const sortByValues: SortByOptions = [];
-      const sortOrderValues: SortOrderOptions[] = [];
       settings?.paging.sortBy.forEach(function (value, index) {
         queryParamsString =
           queryParamsString +
           settingToQueryParam(value, 'sort') +
           settingToQueryParam(settings?.paging.sortOrder[index], 'order');
-
-        sortByValues.push(value);
-        sortOrderValues.push(settings?.paging.sortOrder[index] as SortOrder);
       });
     } else {
       queryParamsString =
@@ -235,10 +230,10 @@ const executeApiFetch: ExecuteApiFetch = function (
       for (let i = 0; i < settings?.customFieldFilters.length; i++) {
         queryParamsString = queryParamsString + '&customField=' + settings?.customFieldFilters[i];
 
-        var decodedCustomFieldFilter = decodeURIComponent(settings?.customFieldFilters[i]);
-        var customFieldFilterPair = decodedCustomFieldFilter.split('=');
-        var customFieldName = customFieldFilterPair[0];
-        var customFieldValue = customFieldFilterPair[1];
+        const decodedCustomFieldFilter = decodeURIComponent(settings?.customFieldFilters[i]);
+        const customFieldFilterPair = decodedCustomFieldFilter.split('=');
+        const customFieldName = customFieldFilterPair[0];
+        const customFieldValue = customFieldFilterPair[1];
         customFieldFiltersValues[customFieldName] = customFieldValue;
       }
 
@@ -434,7 +429,7 @@ const executeApiFetch: ExecuteApiFetch = function (
 
       requestPayloadObject = {
         ...requestPayloadObject,
-        itemId: recommendOptions.itemId ? recommendOptions.itemId : undefined,
+        itemId: recommendOptions.itemId ?? undefined,
         blockId: recommendOptions.blockId
       };
     } else if (recommendOptions?.type === 'FREQUENTLY_BOUGHT_TOGETHER') {
@@ -448,7 +443,7 @@ const executeApiFetch: ExecuteApiFetch = function (
 
       requestPayloadObject = {
         ...requestPayloadObject,
-        itemId: recommendOptions.itemId ? recommendOptions.itemId : undefined,
+        itemId: recommendOptions.itemId ?? undefined,
         configurationKey: recommendOptions.configurationKey
       };
     }
@@ -495,7 +490,7 @@ const executeApiFetch: ExecuteApiFetch = function (
     if (settings?.apiMethod === 'POST' && ['search', 'suggest', 'autocomplete'].includes(type)) {
       apiEndpoint = 'https://' + apiHostname + '/v1/' + apiPath + '/' + sitekey;
       requestPayloadObject = {
-        term: keyword,
+        term: decodeURIComponent(keyword),
         ...requestPayloadObject
       };
       apiInstance

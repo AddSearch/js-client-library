@@ -108,12 +108,10 @@ class AddSearchClient {
     this.settings.setCallback(() => callback);
     this.settings.setKeyword(keyword as string);
 
-    if (!this.throttledSearchFetch) {
-      this.throttledSearchFetch = throttle(
-        this.settings.getSettings().throttleTimeMs,
-        executeApiFetch
-      );
-    }
+    this.throttledSearchFetch ??= throttle(
+      this.settings.getSettings().throttleTimeMs,
+      executeApiFetch
+    );
 
     this.throttledSearchFetch(
       this.apiHostname,
@@ -128,12 +126,10 @@ class AddSearchClient {
     this.settings.setCallback(() => callback);
     this.settings.setKeyword(keyword);
 
-    if (!this.throttledAiAnswersFetch) {
-      this.throttledAiAnswersFetch = throttle(
-        this.settings.getSettings().throttleTimeMs,
-        executeApiFetch
-      );
-    }
+    this.throttledAiAnswersFetch ??= throttle(
+      this.settings.getSettings().throttleTimeMs,
+      executeApiFetch
+    );
 
     this.throttledAiAnswersFetch(
       this.apiHostname,
@@ -157,12 +153,10 @@ class AddSearchClient {
     }
     this.settings.setSuggestionsPrefix(prefix);
 
-    if (!this.throttledSuggestionsFetch) {
-      this.throttledSuggestionsFetch = throttle(
-        this.settings.getSettings().throttleTimeMs,
-        executeApiFetch
-      );
-    }
+    this.throttledSuggestionsFetch ??= throttle(
+      this.settings.getSettings().throttleTimeMs,
+      executeApiFetch
+    );
 
     this.throttledSuggestionsFetch(
       this.apiHostname,
@@ -181,12 +175,10 @@ class AddSearchClient {
     }
     this.settings.setAutocompleteParams(field, prefix);
 
-    if (!this.throttledAutocompleteFetch) {
-      this.throttledAutocompleteFetch = throttle(
-        this.settings.getSettings().throttleTimeMs,
-        executeApiFetch
-      );
-    }
+    this.throttledAutocompleteFetch ??= throttle(
+      this.settings.getSettings().throttleTimeMs,
+      executeApiFetch
+    );
 
     this.throttledAutocompleteFetch(
       this.apiHostname,
@@ -225,9 +217,7 @@ class AddSearchClient {
   ): void {
     const settingsCloned = { ...this.settings.getSettings() };
 
-    if (!settingsCloned.rangeFacets) {
-      settingsCloned.rangeFacets = [];
-    }
+    settingsCloned.rangeFacets ??= [];
     settingsCloned.rangeFacets.push({ field: options.field, ranges: options.ranges });
 
     executeApiFetch(
@@ -246,12 +236,10 @@ class AddSearchClient {
       throw new Error('Illegal recommendations parameters. Should be (options, callbackFunction)');
     }
 
-    if (!this.throttledRecommendationFetch) {
-      this.throttledRecommendationFetch = throttle(
-        this.settings.getSettings().throttleTimeMs,
-        executeApiFetch
-      );
-    }
+    this.throttledRecommendationFetch ??= throttle(
+      this.settings.getSettings().throttleTimeMs,
+      executeApiFetch
+    );
 
     this.throttledRecommendationFetch(
       this.apiHostname,

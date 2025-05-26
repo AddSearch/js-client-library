@@ -247,16 +247,12 @@ class SettingsManager {
   }
 
   addRangeFacet(field: string, ranges: FromToRange[]): void {
-    if (!this.settings.rangeFacets) {
-      this.settings.rangeFacets = [];
-    }
+    this.settings.rangeFacets ??= [];
     this.settings.rangeFacets.push({ field, ranges });
   }
 
   addStatsField(field: string): void {
-    if (!this.settings.statsFields) {
-      this.settings.statsFields = [];
-    }
+    this.settings.statsFields ??= [];
     if (!this.settings.statsFields.includes(field)) {
       this.settings.statsFields.push(field);
     }
