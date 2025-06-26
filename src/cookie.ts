@@ -1,4 +1,4 @@
-import cookie from 'cookie';
+import * as cookie from 'cookie';
 
 const setCookie = (cookieName: string, cookieValue: string, expireDays: number): void => {
   if (typeof document === 'undefined') {
