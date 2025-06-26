@@ -520,6 +520,14 @@ class AddSearchClient {
     }
   }
 
+  setCookie(cookieName: string, cookieValue: string, expireDays: number): void {
+    cookie.setCookie(cookieName, cookieValue, expireDays);
+  }
+
+  getCookie(cookieName: string): string | undefined {
+    return cookie.getCookie(cookieName);
+  }
+
   searchResultClicked(documentId: string, position: number): void {
     this.sendStatsEvent('click', this.settings.getSettings().keyword || '', {
       documentId,
