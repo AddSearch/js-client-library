@@ -187,8 +187,12 @@ const executeApiFetch: ExecuteApiFetch = function (
       collectAnalytics: settings?.collectAnalytics,
       postfixWildcard: settings?.postfixWildcard,
       categories: settings?.categories ? settings?.categories.split(',') : undefined,
-      priceFromCents: settings?.priceFromCents ? parseInt(settings?.priceFromCents, 10) : undefined,
-      priceToCents: settings?.priceToCents ? parseInt(settings?.priceToCents, 10) : undefined,
+      priceFromCents: settings?.priceFromCents
+        ? Number.parseInt(settings?.priceFromCents, 10)
+        : undefined,
+      priceToCents: settings?.priceToCents
+        ? Number.parseInt(settings?.priceToCents, 10)
+        : undefined,
       dateFrom: settings?.dateFrom,
       dateTo: settings?.dateTo,
       paging: {
