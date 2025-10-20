@@ -52,7 +52,7 @@ export interface ApiFetchCallback<T = any> {
 
 interface SourceDocuments {
   page: number;
-  hits: Document[];
+  hits: SearchResponseDocument[];
   total_hits: number;
 }
 
@@ -141,8 +141,11 @@ const executeApiFetch: ExecuteApiFetch = function (
 
     // Boolean operators (AND, OR, NOT) uppercase
     keyword = settings?.enableLogicalOperators
-      ? keyword.replace(/ and /g, ' AND ').replace(/ or /g, ' OR ').replace(/ not /g, ' NOT ')
-      : keyword.replace(/ AND /g, ' and ').replace(/ OR /g, ' or ').replace(/ NOT /g, ' not ');
+      ? keyword.replaceAll(' and ', ' AND ').replaceAll(' or ', ' OR ').replaceAll(' not ', ' NOT ')
+      : keyword
+          .replaceAll(' AND ', ' and ')
+          .replaceAll(' OR ', ' or ')
+          .replaceAll(' NOT ', ' not ');
 
     // Escape
     keyword = encodeURIComponent(keyword);
