@@ -85,6 +85,18 @@ export type ExecuteApiFetch = (
 /* eslint-enable @typescript-eslint/no-explicit-any */
 
 /**
+ * Helper function to convert a setting to a query parameter string
+ */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+const settingToQueryParam = function (setting: any, key: string): string {
+  if (setting || setting === false) {
+    return '&' + key + '=' + setting;
+  }
+  return '';
+};
+/* eslint-enable @typescript-eslint/no-explicit-any */
+
+/**
  * Fetch search results of search suggestions from the Addsearch API
  */
 const executeApiFetch: ExecuteApiFetch = function (
@@ -97,15 +109,6 @@ const executeApiFetch: ExecuteApiFetch = function (
   customFilterObject,
   recommendOptions
 ) {
-  /* eslint-disable @typescript-eslint/no-explicit-any */
-  const settingToQueryParam = function (setting: any, key: string) {
-    if (setting || setting === false) {
-      return '&' + key + '=' + setting;
-    }
-    return '';
-  };
-  /* eslint-enable @typescript-eslint/no-explicit-any */
-
   // Validate query type
   if (
     type !== 'search' &&
