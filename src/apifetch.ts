@@ -339,10 +339,10 @@ const executeApiFetch: ExecuteApiFetch = function (
 
   // Ai Answers
   else if (type === 'ai-answers') {
-    // TODO use apiHostname instead of hardcoded URL
     apiInstance
       .post(`https://${apiHostname}/v2/indices/${sitekey}/conversations`, {
-        question: settings?.keyword
+        question: settings?.keyword,
+        filter: settings?.aiAnswersFilterObject
       })
       .then(function (response: AxiosResponse<ConversationsApiResponse>) {
         if (response.data.response) {

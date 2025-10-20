@@ -384,6 +384,10 @@ class AddSearchClient {
     this.settings.setFilterObject(filter);
   }
 
+  setAiAnswersFilterObject(filter: object): void {
+    this.settings.setAiAnswersFilterObject(filter);
+  }
+
   setShuffleAndLimitTo(shuffleAndLimitTo: number): void {
     this.settings.setShuffleAndLimitTo(shuffleAndLimitTo);
   }

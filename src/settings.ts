@@ -54,6 +54,7 @@ export type Settings = {
   analyticsTag?: string;
   categories?: string;
   filterObject?: object;
+  aiAnswersFilterObject?: object;
   priceFromCents?: string;
   priceToCents?: string;
   dateFrom?: string;
@@ -187,6 +188,10 @@ class SettingsManager {
 
   setFilterObject(filter: object): void {
     this.settings.filterObject = filter;
+  }
+
+  setAiAnswersFilterObject(filter: object): void {
+    this.settings.aiAnswersFilterObject = filter;
   }
 
   setPriceRangeFilter(minCents: string, maxCents: string): void {
