@@ -153,14 +153,7 @@ const executeApiFetch: ExecuteApiFetch = function (
     // Fuzzy
     let fuzzy = settings?.fuzzy;
     if (fuzzy === 'retry') {
-      // First call, non fuzzy
-      if (fuzzyRetry !== true) {
-        fuzzy = false;
-      }
-      // Second call, fuzzy
-      else {
-        fuzzy = true;
-      }
+      fuzzy = fuzzyRetry === true; // true on retry (second call), false on initial call
     }
 
     // GET Parameters
