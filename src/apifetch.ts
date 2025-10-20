@@ -213,15 +213,13 @@ const executeApiFetch: ExecuteApiFetch = function (
 
     // Add sortBy and sortOrder
     if (Array.isArray(settings?.paging.sortBy) && settings?.paging.sortBy.length > 1) {
-      settings?.paging.sortBy.forEach(function (value, index) {
-        queryParamsString =
-          queryParamsString +
+      for (const [index, value] of settings.paging.sortBy.entries()) {
+        queryParamsString +=
           settingToQueryParam(value, 'sort') +
-          settingToQueryParam(settings?.paging.sortOrder[index], 'order');
-      });
+          settingToQueryParam(settings.paging.sortOrder[index], 'order');
+      }
     } else {
-      queryParamsString =
-        queryParamsString +
+      queryParamsString +=
         settingToQueryParam(settings?.paging.sortBy, 'sort') +
         settingToQueryParam(settings?.paging.sortOrder, 'order');
     }
