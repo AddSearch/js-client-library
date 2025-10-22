@@ -52,7 +52,7 @@ export interface ApiFetchCallback<T = any> {
 
 interface SourceDocuments {
   page: number;
-  hits: Document[];
+  hits: SearchResponseDocument[];
   total_hits: number;
 }
 
@@ -85,6 +85,18 @@ export type ExecuteApiFetch = (
 /* eslint-enable @typescript-eslint/no-explicit-any */
 
 /**
+ * Helper function to convert a setting to a query parameter string
+ */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+const settingToQueryParam = function (setting: any, key: string): string {
+  if (setting !== null && setting !== undefined && setting !== '') {
+    return '&' + key + '=' + setting;
+  }
+  return '';
+};
+/* eslint-enable @typescript-eslint/no-explicit-any */
+
+/**
  * Fetch search results of search suggestions from the Addsearch API
  */
 const executeApiFetch: ExecuteApiFetch = function (
@@ -97,15 +109,6 @@ const executeApiFetch: ExecuteApiFetch = function (
   customFilterObject,
   recommendOptions
 ) {
-  /* eslint-disable @typescript-eslint/no-explicit-any */
-  const settingToQueryParam = function (setting: any, key: string) {
-    if (setting || setting === false) {
-      return '&' + key + '=' + setting;
-    }
-    return '';
-  };
-  /* eslint-enable @typescript-eslint/no-explicit-any */
-
   // Validate query type
   if (
     type !== 'search' &&
@@ -138,8 +141,11 @@ const executeApiFetch: ExecuteApiFetch = function (
 
     // Boolean operators (AND, OR, NOT) uppercase
     keyword = settings?.enableLogicalOperators
-      ? keyword.replace(/ and /g, ' AND ').replace(/ or /g, ' OR ').replace(/ not /g, ' NOT ')
-      : keyword.replace(/ AND /g, ' and ').replace(/ OR /g, ' or ').replace(/ NOT /g, ' not ');
+      ? keyword.replaceAll(' and ', ' AND ').replaceAll(' or ', ' OR ').replaceAll(' not ', ' NOT ')
+      : keyword
+          .replaceAll(' AND ', ' and ')
+          .replaceAll(' OR ', ' or ')
+          .replaceAll(' NOT ', ' not ');
 
     // Escape
     keyword = encodeURIComponent(keyword);
@@ -147,14 +153,7 @@ const executeApiFetch: ExecuteApiFetch = function (
     // Fuzzy
     let fuzzy = settings?.fuzzy;
     if (fuzzy === 'retry') {
-      // First call, non fuzzy
-      if (fuzzyRetry !== true) {
-        fuzzy = false;
-      }
-      // Second call, fuzzy
-      else {
-        fuzzy = true;
-      }
+      fuzzy = fuzzyRetry === true; // true on retry (second call), false on initial call
     }
 
     // GET Parameters
@@ -188,8 +187,12 @@ const executeApiFetch: ExecuteApiFetch = function (
       collectAnalytics: settings?.collectAnalytics,
       postfixWildcard: settings?.postfixWildcard,
       categories: settings?.categories ? settings?.categories.split(',') : undefined,
-      priceFromCents: settings?.priceFromCents ? parseInt(settings?.priceFromCents, 10) : undefined,
-      priceToCents: settings?.priceToCents ? parseInt(settings?.priceToCents, 10) : undefined,
+      priceFromCents: settings?.priceFromCents
+        ? Number.parseInt(settings?.priceFromCents, 10)
+        : undefined,
+      priceToCents: settings?.priceToCents
+        ? Number.parseInt(settings?.priceToCents, 10)
+        : undefined,
       dateFrom: settings?.dateFrom,
       dateTo: settings?.dateTo,
       paging: {
@@ -210,15 +213,13 @@ const executeApiFetch: ExecuteApiFetch = function (
 
     // Add sortBy and sortOrder
     if (Array.isArray(settings?.paging.sortBy) && settings?.paging.sortBy.length > 1) {
-      settings?.paging.sortBy.forEach(function (value, index) {
-        queryParamsString =
-          queryParamsString +
+      for (const [index, value] of settings.paging.sortBy.entries()) {
+        queryParamsString +=
           settingToQueryParam(value, 'sort') +
-          settingToQueryParam(settings?.paging.sortOrder[index], 'order');
-      });
+          settingToQueryParam(settings.paging.sortOrder[index], 'order');
+      }
     } else {
-      queryParamsString =
-        queryParamsString +
+      queryParamsString +=
         settingToQueryParam(settings?.paging.sortBy, 'sort') +
         settingToQueryParam(settings?.paging.sortOrder, 'order');
     }
@@ -339,10 +340,10 @@ const executeApiFetch: ExecuteApiFetch = function (
 
   // Ai Answers
   else if (type === 'ai-answers') {
-    // TODO use apiHostname instead of hardcoded URL
     apiInstance
       .post(`https://${apiHostname}/v2/indices/${sitekey}/conversations`, {
-        question: settings?.keyword
+        question: settings?.keyword,
+        filter: settings?.aiAnswersFilterObject
       })
       .then(function (response: AxiosResponse<ConversationsApiResponse>) {
         if (response.data.response) {

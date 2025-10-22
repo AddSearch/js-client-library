@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "target": "ES6",
+    "lib": ["ES6", "ES2021.String", "DOM"],
     "module": "CommonJS",
     "outDir": "./dist",
     "declaration": true,

@@ -532,6 +532,24 @@ callbackFn = function (response) {
 client.putSentimentClick('conversation_id', 'sentiment_value');
 ```
 
+
+#### Set AI-answers filtering object
+
+Set complex filtering object that can contain nested _and_, _or_, _not_.
+Key filterable properties include: _category_, _custom_fields.<your_field_name>_, _language_, _doc_date_
+
+```js
+// Find results where region is en-us, color is not white
+var aiAnswersFilter = {
+  and: [
+    { 'custom_fields.region': 'en-us' },
+    { not: { 'custom_fields.color': 'white' } }
+  ]
+};
+
+client.setAiAnswersFilterObject(aiAnswersFilter);
+```
+
 ## POST API
 :exclamation: POST API is not fully supported. If you need to use some methods in the library, please contact our support.
 
