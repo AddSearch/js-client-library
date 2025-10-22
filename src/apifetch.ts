@@ -89,7 +89,7 @@ export type ExecuteApiFetch = (
  */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 const settingToQueryParam = function (setting: any, key: string): string {
-  if (setting || setting === false) {
+  if (setting !== null && setting !== undefined && setting !== '') {
     return '&' + key + '=' + setting;
   }
   return '';
