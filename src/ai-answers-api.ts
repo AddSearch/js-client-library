@@ -81,6 +81,21 @@ const executeStreamingAiAnswers = (
 ): void => {
   const streamingEndpoint = `https://${apiHostname}/v2/indices/${sitekey}/conversations_new`;
 
+  // Throttling state at outer scope for proper cleanup
+  const THROTTLE_MS = 500;
+  let lastCallbackTime = 0;
+  let throttleTimeout: ReturnType<typeof setTimeout> | null = null;
+  let pendingCallback = false;
+
+  // Cleanup helper
+  const cleanup = () => {
+    if (throttleTimeout) {
+      clearTimeout(throttleTimeout);
+      throttleTimeout = null;
+    }
+    pendingCallback = false;
+  };
+
   fetch(streamingEndpoint, {
     method: 'POST',
     headers: {
@@ -109,21 +124,11 @@ const executeStreamingAiAnswers = (
       let done = false;
       let buffer = ''; // Buffer for incomplete lines
 
-      // Throttling for token callbacks
-      const THROTTLE_MS = 500;
-      let lastCallbackTime = 0;
-      let throttleTimeout: ReturnType<typeof setTimeout> | null = null;
-      let pendingCallback = false;
-
       // Helper to call callback with throttling for tokens
       const throttledCallback = (response: AiAnswersResponse, immediate: boolean = false) => {
         if (immediate) {
           // Clear any pending throttled callback
-          if (throttleTimeout) {
-            clearTimeout(throttleTimeout);
-            throttleTimeout = null;
-          }
-          pendingCallback = false;
+          cleanup();
           lastCallbackTime = Date.now();
           cb(response);
         } else {
@@ -152,6 +157,8 @@ const executeStreamingAiAnswers = (
           }
         }
       };
+
+      let completedNormally = false;
 
       while (!done) {
         const { value, done: readerDone } = await reader.read();
@@ -225,6 +232,7 @@ const executeStreamingAiAnswers = (
 
                   case 'complete':
                     // Response is complete - always call immediately
+                    completedNormally = true;
                     if (event.status === 200) {
                       // Call callback with final complete data
                       throttledCallback(
@@ -268,10 +276,34 @@ const executeStreamingAiAnswers = (
           }
         }
       }
+
+      // Handle unexpected disconnection (stream ended without 'complete' event)
+      if (!completedNormally) {
+        console.warn('AI Answers: Stream ended unexpectedly, returning partial data');
+
+        // Clean up any pending throttle timeout
+        cleanup();
+
+        // Call callback with whatever data we have
+        cb({
+          conversation_id: conversationId || '',
+          answer: answer,
+          sources: sources,
+          is_streaming_complete: true,
+          error: {
+            response: RESPONSE_SERVER_ERROR,
+            message: 'Connection closed unexpectedly. Partial response returned.'
+          }
+        });
+      }
     })
     .catch(function (error) {
       console.error('AI Answers streaming error:', error);
-      // Call error callback immediately without throttling
+
+      // Clean up any pending throttle timeout
+      cleanup();
+
+      // Call error callback immediately
       cb({
         conversation_id: '',
         answer: '',
