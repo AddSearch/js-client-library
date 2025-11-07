@@ -11,7 +11,7 @@ import {
   deleteDocument
 } from './indexingapi';
 import sendStats from './stats';
-import { putSentimentClick } from './ai-answers-interactions-api';
+import { putSentimentClick, SentimentValue } from './ai-answers-api';
 import SettingsManager, {
   Settings,
   PersonalizationEvent,
@@ -55,7 +55,6 @@ type ClickEventPayload = {
   position: number;
 };
 type StatsEventPayload = SearchEventPayload | ClickEventPayload;
-type SentimentValue = 'positive' | 'negative' | 'neutral';
 
 class AddSearchClient {
   private readonly sitekey: string;
@@ -537,6 +536,10 @@ class AddSearchClient {
       documentId,
       position
     });
+  }
+
+  useAiAnswersStream(enable: boolean): void {
+    this.settings.useAiAnswersStream(enable);
   }
 }
 

@@ -68,6 +68,7 @@ export type Settings = {
   numFacets?: number;
   shuffleAndLimitTo?: number;
   apiMethod?: ApiMethod;
+  useAiAnswersStream?: boolean;
 };
 
 export type ApiMethod = 'GET' | 'POST';
@@ -307,6 +308,10 @@ class SettingsManager {
       throw new Error("API method must be 'GET' or 'POST'");
     }
     this.settings.apiMethod = method;
+  }
+
+  useAiAnswersStream(enable: boolean): void {
+    this.settings.useAiAnswersStream = enable;
   }
 }
 
