@@ -79,10 +79,10 @@ const executeStreamingAiAnswers = (
   settings: Settings | null,
   cb: ApiFetchCallback<AiAnswersResponse>
 ): void => {
-  const streamingEndpoint = `https://${apiHostname}/v2/indices/${sitekey}/conversations_new`;
+  const streamingEndpoint = `https://${apiHostname}/v2/indices/${sitekey}/conversations`;
 
   // Throttling state at outer scope for proper cleanup
-  const THROTTLE_MS = 500;
+  const THROTTLE_MS = 100;
   let lastCallbackTime = 0;
   let throttleTimeout: ReturnType<typeof setTimeout> | null = null;
   let pendingCallback = false;
@@ -103,7 +103,8 @@ const executeStreamingAiAnswers = (
     },
     body: JSON.stringify({
       question: settings?.keyword,
-      filter: settings?.aiAnswersFilterObject
+      filter: settings?.aiAnswersFilterObject,
+      streaming: true
     })
   })
     .then(async (response) => {
@@ -177,17 +178,11 @@ const executeStreamingAiAnswers = (
             if (line.startsWith('data: ')) {
               const dataStr = line.substring(6).trim(); // Remove "data: " prefix and trim
 
-              // Check for [DONE] marker
-              if (dataStr === '[DONE]') {
-                done = true;
-                break;
-              }
-
               try {
                 const event = JSON.parse(dataStr);
 
                 switch (event.type) {
-                  case 'conversation':
+                  case 'metadata':
                     conversationId = event.conversation_id;
 
                     // Call callback immediately with initial conversation data
@@ -230,35 +225,19 @@ const executeStreamingAiAnswers = (
                     );
                     break;
 
-                  case 'complete':
+                  case 'done':
                     // Response is complete - always call immediately
                     completedNormally = true;
-                    if (event.status === 200) {
-                      // Call callback with final complete data
-                      throttledCallback(
-                        {
-                          conversation_id: conversationId,
-                          answer: answer,
-                          sources: sources,
-                          is_streaming_complete: true
-                        },
-                        true // immediate
-                      );
-                    } else {
-                      throttledCallback(
-                        {
-                          conversation_id: conversationId,
-                          answer: answer,
-                          sources: sources,
-                          is_streaming_complete: true,
-                          error: {
-                            response: event.status,
-                            message: event.errors.join(', ') || 'Unknown error'
-                          }
-                        },
-                        true // immediate
-                      );
-                    }
+                    throttledCallback(
+                      {
+                        conversation_id: conversationId,
+                        answer: answer,
+                        sources: sources,
+                        is_streaming_complete: true
+                      },
+                      true
+                    );
+                    done = true;
                     break;
 
                   default:
@@ -271,6 +250,17 @@ const executeStreamingAiAnswers = (
                   'Data:',
                   dataStr
                 );
+                // Call error callback immediately
+                cb({
+                  conversation_id: '',
+                  answer: '',
+                  sources: [],
+                  is_streaming_complete: true,
+                  error: {
+                    response: RESPONSE_SERVER_ERROR,
+                    message: 'Streaming request failed: ' + parseError
+                  }
+                });
               }
             }
           }
@@ -342,8 +332,7 @@ const executeNonStreamingAiAnswers = (
         cb({
           conversation_id: data.response.conversation_id,
           answer: data.response.answer,
-          sources: data.response.sources,
-          is_streaming_complete: true
+          sources: data.response.sources
         });
       } else {
         cb({
