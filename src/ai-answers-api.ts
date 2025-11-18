@@ -48,26 +48,207 @@ interface ConversationsApiResponse {
 export type SentimentValue = 'positive' | 'negative' | 'neutral';
 
 /**
- * Execute AI Answers query with streaming support
+ * Execute AI Answers query with streaming
  *
  * @param apiHostname - API hostname
  * @param sitekey - Site key
  * @param settings - Query settings
  * @param cb - Callback function called progressively during streaming
- * @param useStreaming - Whether to use streaming endpoint (default: false)
  */
-export const executeAiAnswersFetch = (
+export const executeAiAnswersStreamingFetch = (
   apiHostname: string,
   sitekey: string,
   settings: Settings | null,
-  cb: ApiFetchCallback<AiAnswersResponse>,
-  useStreaming: boolean = false
+  cb: ApiFetchCallback<AiAnswersResponse>
 ): void => {
-  if (useStreaming) {
-    executeStreamingAiAnswers(apiHostname, sitekey, settings, cb);
-  } else {
-    executeNonStreamingAiAnswers(apiHostname, sitekey, settings, cb);
+  executeStreamingAiAnswers(apiHostname, sitekey, settings, cb);
+};
+
+/**
+ * Execute AI Answers query without streaming
+ *
+ * @param apiHostname - API hostname
+ * @param sitekey - Site key
+ * @param settings - Query settings
+ * @param cb - Callback function called once when complete
+ */
+export const executeAiAnswersNonStreamingFetch = (
+  apiHostname: string,
+  sitekey: string,
+  settings: Settings | null,
+  cb: ApiFetchCallback<AiAnswersResponse>
+): void => {
+  executeNonStreamingAiAnswers(apiHostname, sitekey, settings, cb);
+};
+
+/**
+ * Manages throttled callback execution for streaming responses
+ */
+class CallbackThrottler {
+  private static readonly THROTTLE_MS = 100;
+  private lastCallbackTime = 0;
+  private throttleTimeout: ReturnType<typeof setTimeout> | null = null;
+  private pendingCallback = false;
+
+  constructor(private cb: ApiFetchCallback<AiAnswersResponse>) {}
+
+  /**
+   * Call callback immediately, bypassing throttling
+   * @param response - Response data to pass to callback
+   */
+  callImmediate(response: AiAnswersResponse): void {
+    this.cleanup();
+    this.lastCallbackTime = Date.now();
+    this.cb(response);
   }
+
+  /**
+   * Call callback with throttling applied
+   * @param response - Response data to pass to callback
+   */
+  callThrottled(response: AiAnswersResponse): void {
+    this.throttle(response);
+  }
+
+  /**
+   * Cleanup any pending throttled callbacks
+   */
+  cleanup(): void {
+    if (this.throttleTimeout) {
+      clearTimeout(this.throttleTimeout);
+      this.throttleTimeout = null;
+    }
+    this.pendingCallback = false;
+  }
+
+  private throttle(response: AiAnswersResponse): void {
+    const now = Date.now();
+    const timeSinceLastCallback = now - this.lastCallbackTime;
+
+    if (timeSinceLastCallback >= CallbackThrottler.THROTTLE_MS) {
+      this.lastCallbackTime = now;
+      this.pendingCallback = false;
+      this.cb(response);
+    } else {
+      this.scheduleCallback(response, CallbackThrottler.THROTTLE_MS - timeSinceLastCallback);
+    }
+  }
+
+  private scheduleCallback(response: AiAnswersResponse, delay: number): void {
+    this.pendingCallback = true;
+    if (this.throttleTimeout) {
+      clearTimeout(this.throttleTimeout);
+    }
+    this.throttleTimeout = setTimeout(() => {
+      if (this.pendingCallback) {
+        this.lastCallbackTime = Date.now();
+        this.pendingCallback = false;
+        this.cb(response);
+      }
+    }, delay);
+  }
+}
+
+/**
+ * Manages accumulated state during streaming
+ */
+class StreamState {
+  conversationId = '';
+  answer = '';
+  sources: AiAnswersSource[] = [];
+  completedNormally = false;
+
+  getCurrentResponse(isComplete: boolean): AiAnswersResponse {
+    return {
+      conversation_id: this.conversationId,
+      answer: this.answer,
+      sources: this.sources,
+      is_streaming_complete: isComplete
+    };
+  }
+}
+
+/**
+ * SSE event types
+ */
+interface SSEEvent {
+  type: 'metadata' | 'token' | 'sources' | 'done';
+  conversation_id?: string;
+  content?: string;
+  sources?: AiAnswersSource[];
+}
+
+/**
+ * Parse SSE data line into event object
+ */
+const parseSSEEvent = (line: string): SSEEvent | null => {
+  if (!line.startsWith('data: ')) {
+    return null;
+  }
+
+  const dataStr = line.substring(6).trim();
+  try {
+    return JSON.parse(dataStr) as SSEEvent;
+  } catch (parseError) {
+    console.error('AI Answers: Error parsing Streaming event:', parseError, 'Data:', dataStr);
+    throw new Error('Streaming request failed: ' + parseError);
+  }
+};
+
+/**
+ * Handle a single SSE event and update state
+ * @returns true if stream should end
+ */
+const handleSSEEvent = (
+  event: SSEEvent,
+  state: StreamState,
+  throttler: CallbackThrottler
+): boolean => {
+  switch (event.type) {
+    case 'metadata':
+      state.conversationId = event.conversation_id || '';
+      throttler.callImmediate(state.getCurrentResponse(false));
+      return false;
+
+    case 'token':
+      state.answer += event.content || '';
+      throttler.callThrottled(state.getCurrentResponse(false));
+      return false;
+
+    case 'sources':
+      state.sources = event.sources || [];
+      throttler.callImmediate(state.getCurrentResponse(false));
+      return false;
+
+    case 'done':
+      state.completedNormally = true;
+      throttler.callImmediate(state.getCurrentResponse(true));
+      return true;
+
+    default:
+      return false;
+  }
+};
+
+/**
+ * Process lines from stream buffer
+ * @returns true if stream should end
+ */
+const processStreamLines = (
+  lines: string[],
+  state: StreamState,
+  throttler: CallbackThrottler
+): boolean => {
+  for (const line of lines) {
+    const event = parseSSEEvent(line);
+    if (event) {
+      const shouldEnd = handleSSEEvent(event, state, throttler);
+      if (shouldEnd) {
+        return true;
+      }
+    }
+  }
+  return false;
 };
 
 /**
@@ -80,20 +261,37 @@ const executeStreamingAiAnswers = (
   cb: ApiFetchCallback<AiAnswersResponse>
 ): void => {
   const streamingEndpoint = `https://${apiHostname}/v2/indices/${sitekey}/conversations`;
+  const throttler = new CallbackThrottler(cb);
+  const state = new StreamState();
 
-  // Throttling state at outer scope for proper cleanup
-  const THROTTLE_MS = 100;
-  let lastCallbackTime = 0;
-  let throttleTimeout: ReturnType<typeof setTimeout> | null = null;
-  let pendingCallback = false;
+  const handleError = (error: Error) => {
+    console.error('AI Answers streaming error:', error);
+    throttler.cleanup();
+    cb({
+      conversation_id: '',
+      answer: '',
+      sources: [],
+      is_streaming_complete: true,
+      error: {
+        response: RESPONSE_SERVER_ERROR,
+        message: 'Streaming request failed: ' + error.message
+      }
+    });
+  };
 
-  // Cleanup helper
-  const cleanup = () => {
-    if (throttleTimeout) {
-      clearTimeout(throttleTimeout);
-      throttleTimeout = null;
-    }
-    pendingCallback = false;
+  const handleUnexpectedDisconnection = () => {
+    console.warn('AI Answers: Stream ended unexpectedly, returning partial data');
+    throttler.cleanup();
+    cb({
+      conversation_id: state.conversationId || '',
+      answer: state.answer,
+      sources: state.sources,
+      is_streaming_complete: true,
+      error: {
+        response: RESPONSE_SERVER_ERROR,
+        message: 'Connection closed unexpectedly. Partial response returned.'
+      }
+    });
   };
 
   fetch(streamingEndpoint, {
@@ -113,198 +311,53 @@ const executeStreamingAiAnswers = (
       }
 
       const reader = response.body?.getReader();
-      const decoder = new TextDecoder();
-
       if (!reader) {
         throw new Error('No response body reader available');
       }
 
-      let conversationId = '';
-      let answer = '';
-      let sources: AiAnswersSource[] = [];
-      let done = false;
-      let buffer = ''; // Buffer for incomplete lines
+      await readStream(reader, state, throttler);
 
-      // Helper to call callback with throttling for tokens
-      const throttledCallback = (response: AiAnswersResponse, immediate: boolean = false) => {
-        if (immediate) {
-          // Clear any pending throttled callback
-          cleanup();
-          lastCallbackTime = Date.now();
-          cb(response);
-        } else {
-          // Throttle token callbacks
-          const now = Date.now();
-          const timeSinceLastCallback = now - lastCallbackTime;
-
-          if (timeSinceLastCallback >= THROTTLE_MS) {
-            // Enough time has passed, call immediately
-            lastCallbackTime = now;
-            pendingCallback = false;
-            cb(response);
-          } else {
-            // Schedule for later, replacing any existing scheduled callback
-            pendingCallback = true;
-            if (throttleTimeout) {
-              clearTimeout(throttleTimeout);
-            }
-            throttleTimeout = setTimeout(() => {
-              if (pendingCallback) {
-                lastCallbackTime = Date.now();
-                pendingCallback = false;
-                cb(response);
-              }
-            }, THROTTLE_MS - timeSinceLastCallback);
-          }
-        }
-      };
-
-      let completedNormally = false;
-
-      while (!done) {
-        const { value, done: readerDone } = await reader.read();
-
-        done = readerDone;
-
-        if (value) {
-          const chunk = decoder.decode(value, { stream: true });
-          buffer += chunk;
-
-          // Split by newlines, keeping incomplete line in buffer
-          const lines = buffer.split('\n');
-          buffer = lines.pop() || ''; // Keep the last (potentially incomplete) line
-
-          for (const line of lines) {
-            if (line.startsWith('data: ')) {
-              const dataStr = line.substring(6).trim(); // Remove "data: " prefix and trim
-
-              try {
-                const event = JSON.parse(dataStr);
-
-                switch (event.type) {
-                  case 'metadata':
-                    conversationId = event.conversation_id;
-
-                    // Call callback immediately with initial conversation data
-                    throttledCallback(
-                      {
-                        conversation_id: conversationId,
-                        answer: '',
-                        sources: [],
-                        is_streaming_complete: false
-                      },
-                      true // immediate
-                    );
-                    break;
-
-                  case 'token':
-                    answer += event.content;
-                    // Call callback with throttling for token updates
-                    throttledCallback(
-                      {
-                        conversation_id: conversationId,
-                        answer: answer,
-                        sources: sources,
-                        is_streaming_complete: false
-                      },
-                      false // throttled
-                    );
-                    break;
-
-                  case 'sources':
-                    sources = event.sources;
-                    // Call callback immediately with sources
-                    throttledCallback(
-                      {
-                        conversation_id: conversationId,
-                        answer: answer,
-                        sources: sources,
-                        is_streaming_complete: false
-                      },
-                      true // immediate
-                    );
-                    break;
-
-                  case 'done':
-                    // Response is complete - always call immediately
-                    completedNormally = true;
-                    throttledCallback(
-                      {
-                        conversation_id: conversationId,
-                        answer: answer,
-                        sources: sources,
-                        is_streaming_complete: true
-                      },
-                      true
-                    );
-                    done = true;
-                    break;
-
-                  default:
-                    break;
-                }
-              } catch (parseError) {
-                console.error(
-                  'AI Answers: Error parsing Streaming event:',
-                  parseError,
-                  'Data:',
-                  dataStr
-                );
-                // Call error callback immediately
-                cb({
-                  conversation_id: '',
-                  answer: '',
-                  sources: [],
-                  is_streaming_complete: true,
-                  error: {
-                    response: RESPONSE_SERVER_ERROR,
-                    message: 'Streaming request failed: ' + parseError
-                  }
-                });
-              }
-            }
-          }
-        }
-      }
-
-      // Handle unexpected disconnection (stream ended without 'complete' event)
-      if (!completedNormally) {
-        console.warn('AI Answers: Stream ended unexpectedly, returning partial data');
-
-        // Clean up any pending throttle timeout
-        cleanup();
-
-        // Call callback with whatever data we have
-        cb({
-          conversation_id: conversationId || '',
-          answer: answer,
-          sources: sources,
-          is_streaming_complete: true,
-          error: {
-            response: RESPONSE_SERVER_ERROR,
-            message: 'Connection closed unexpectedly. Partial response returned.'
-          }
-        });
+      if (!state.completedNormally) {
+        handleUnexpectedDisconnection();
       }
     })
-    .catch(function (error) {
-      console.error('AI Answers streaming error:', error);
+    .catch(handleError);
+};
 
-      // Clean up any pending throttle timeout
-      cleanup();
+/**
+ * Read and process SSE stream
+ */
+const readStream = async (
+  reader: ReadableStreamDefaultReader<Uint8Array>,
+  state: StreamState,
+  throttler: CallbackThrottler
+): Promise<void> => {
+  const decoder = new TextDecoder();
+  let buffer = '';
+  let done = false;
 
-      // Call error callback immediately
-      cb({
-        conversation_id: '',
-        answer: '',
-        sources: [],
-        is_streaming_complete: true,
-        error: {
-          response: RESPONSE_SERVER_ERROR,
-          message: 'Streaming request failed: ' + error.message
+  while (!done) {
+    const { value, done: readerDone } = await reader.read();
+    done = readerDone;
+
+    if (value) {
+      const chunk = decoder.decode(value, { stream: true });
+      buffer += chunk;
+
+      const lines = buffer.split('\n');
+      buffer = lines.pop() || '';
+
+      try {
+        const shouldEnd = processStreamLines(lines, state, throttler);
+        if (shouldEnd) {
+          done = true;
         }
-      });
-    });
+      } catch (error) {
+        throttler.cleanup();
+        throw error;
+      }
+    }
+  }
 };
 
 /**
@@ -363,6 +416,21 @@ const executeNonStreamingAiAnswers = (
 };
 
 /**
+ * Convert sentiment value to numeric rating
+ * @param sentimentValue - Sentiment value ('positive', 'negative', or 'neutral')
+ * @returns Numeric rating: 1 for positive, -1 for negative, 0 for neutral
+ */
+const sentimentToNumericRating = (sentimentValue: SentimentValue): number => {
+  if (sentimentValue === 'positive') {
+    return 1;
+  }
+  if (sentimentValue === 'negative') {
+    return -1;
+  }
+  return 0;
+};
+
+/**
  * Submit a sentiment rating for an AI Answers conversation
  *
  * @param apiHostname - API hostname
@@ -380,7 +448,7 @@ export const putSentimentClick = (
   return new Promise((resolve, reject) => {
     aiAnswersInteractionsInstance
       .put(`https://${apiHostname}/v2/indices/${sitekey}/conversations/${conversationId}/rating`, {
-        value: sentimentValue === 'positive' ? 1 : sentimentValue === 'negative' ? -1 : 0
+        value: sentimentToNumericRating(sentimentValue)
       })
       .then((response) => {
         if (response.status === 200) {

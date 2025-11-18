@@ -3,7 +3,7 @@ import { apiInstance, RESPONSE_BAD_REQUEST, RESPONSE_SERVER_ERROR } from './api'
 import { Settings } from './settings';
 import { AxiosResponse } from 'axios';
 import { isEmptyObject } from './util';
-import { executeAiAnswersFetch } from './ai-answers-api';
+import { executeAiAnswersStreamingFetch, executeAiAnswersNonStreamingFetch } from './ai-answers-api';
 
 interface RecommendOptions {
   type: 'RELATED_ITEMS' | 'FREQUENTLY_BOUGHT_TOGETHER';
@@ -325,7 +325,11 @@ const executeApiFetch: ExecuteApiFetch = function (
   // Ai Answers
   else if (type === 'ai-answers') {
     // Delegate to the AI Answers API module
-    executeAiAnswersFetch(apiHostname, sitekey, settings, cb, settings?.useAiAnswersStream);
+    if (settings?.useAiAnswersStream) {
+      executeAiAnswersStreamingFetch(apiHostname, sitekey, settings, cb);
+    } else {
+      executeAiAnswersNonStreamingFetch(apiHostname, sitekey, settings, cb);
+    }
     return; // Exit early, no need to continue to the generic handler
   }
 
