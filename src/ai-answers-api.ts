@@ -90,7 +90,7 @@ class CallbackThrottler {
   private throttleTimeout: ReturnType<typeof setTimeout> | null = null;
   private pendingCallback = false;
 
-  constructor(private cb: ApiFetchCallback<AiAnswersResponse>) {}
+  constructor(private readonly cb: ApiFetchCallback<AiAnswersResponse>) {}
 
   /**
    * Call callback immediately, bypassing throttling
@@ -379,7 +379,12 @@ const executeNonStreamingAiAnswers = (
       filter: settings?.aiAnswersFilterObject
     })
   })
-    .then((response) => response.json())
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return response.json();
+    })
     .then((data: ConversationsApiResponse) => {
       if (data.response) {
         cb({
