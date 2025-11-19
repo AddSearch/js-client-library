@@ -3,6 +3,7 @@ import { apiInstance, RESPONSE_BAD_REQUEST, RESPONSE_SERVER_ERROR } from './api'
 import { Settings } from './settings';
 import { AxiosResponse } from 'axios';
 import { isEmptyObject } from './util';
+import { executeAiAnswersStreamingFetch, executeAiAnswersNonStreamingFetch } from './ai-answers-api';
 
 interface RecommendOptions {
   type: 'RELATED_ITEMS' | 'FREQUENTLY_BOUGHT_TOGETHER';
@@ -50,25 +51,8 @@ export interface ApiFetchCallback<T = any> {
   (response: T): void;
 }
 
-interface SourceDocuments {
-  page: number;
-  hits: SearchResponseDocument[];
-  total_hits: number;
-}
-
 interface GenericApiResponse {
   total_hits?: number;
-}
-
-interface ConversationsApiResponse {
-  response: {
-    conversation_id: string;
-    answer: string;
-    ids: string[];
-    source_documents: SourceDocuments;
-  };
-  errors: string[];
-  status: number;
 }
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -340,32 +324,13 @@ const executeApiFetch: ExecuteApiFetch = function (
 
   // Ai Answers
   else if (type === 'ai-answers') {
-    apiInstance
-      .post(`https://${apiHostname}/v2/indices/${sitekey}/conversations`, {
-        question: settings?.keyword,
-        filter: settings?.aiAnswersFilterObject
-      })
-      .then(function (response: AxiosResponse<ConversationsApiResponse>) {
-        if (response.data.response) {
-          cb(response.data.response);
-        } else {
-          cb({
-            error: {
-              response: RESPONSE_SERVER_ERROR,
-              message: 'Could not get ai-answers response in the expected data format'
-            }
-          });
-        }
-      })
-      .catch(function (error) {
-        console.error(error);
-        cb({
-          error: {
-            response: RESPONSE_SERVER_ERROR,
-            message: 'invalid server response'
-          }
-        });
-      });
+    // Delegate to the AI Answers API module
+    if (settings?.useAiAnswersStream) {
+      executeAiAnswersStreamingFetch(apiHostname, sitekey, settings, cb);
+    } else {
+      executeAiAnswersNonStreamingFetch(apiHostname, sitekey, settings, cb);
+    }
+    return; // Exit early, no need to continue to the generic handler
   }
 
   // Suggest
@@ -450,60 +415,58 @@ const executeApiFetch: ExecuteApiFetch = function (
     apiEndpoint = 'https://' + apiHostname + '/v1/' + apiPath;
   }
 
-  // Handle API response for all types except ai-answers
-  if (type !== 'ai-answers') {
-    const handleApiResponse = function (response: AxiosResponse<GenericApiResponse>) {
-      const json = response.data;
+  // Handle API response for remaining types (ai-answers already handled above)
+  const handleApiResponse = function (response: AxiosResponse<GenericApiResponse>) {
+    const json = response.data;
 
-      // Search again with fuzzy=true if no hits
-      if (
-        type === 'search' &&
-        settings?.fuzzy === 'retry' &&
-        json.total_hits === 0 &&
-        fuzzyRetry !== true
-      ) {
-        executeApiFetch(apiHostname, sitekey, type, settings, cb, true);
-      } else {
-        // Cap fuzzy results to one page as quality decreases quickly
-        if (fuzzyRetry === true) {
-          json.total_hits = Math.min(
-            json.total_hits ?? Infinity,
-            settings?.paging?.pageSize ?? Infinity
-          );
-        }
-
-        // Callback
-        cb(json);
-      }
-    };
-
-    const handleApiError = function (error: any) {
-      console.error(error);
-      cb({
-        error: {
-          response: RESPONSE_SERVER_ERROR,
-          message: 'invalid server response'
-        }
-      });
-    };
-
-    if (settings?.apiMethod === 'POST' && ['search', 'suggest', 'autocomplete'].includes(type)) {
-      apiEndpoint = 'https://' + apiHostname + '/v1/' + apiPath + '/' + sitekey;
-      const term = type === 'search' ? decodeURIComponent(keyword) : keyword;
-      requestPayloadObject = {
-        term,
-        ...requestPayloadObject
-      };
-      apiInstance
-        .post(apiEndpoint, requestPayloadObject)
-        .then(handleApiResponse)
-        .catch(handleApiError);
+    // Search again with fuzzy=true if no hits
+    if (
+      type === 'search' &&
+      settings?.fuzzy === 'retry' &&
+      json.total_hits === 0 &&
+      fuzzyRetry !== true
+    ) {
+      executeApiFetch(apiHostname, sitekey, type, settings, cb, true);
     } else {
-      apiInstance
-        .get(apiEndpoint as string)
-        .then(handleApiResponse)
-        .catch(handleApiError);
+      // Cap fuzzy results to one page as quality decreases quickly
+      if (fuzzyRetry === true) {
+        json.total_hits = Math.min(
+          json.total_hits ?? Infinity,
+          settings?.paging?.pageSize ?? Infinity
+        );
+      }
+
+      // Callback
+      cb(json);
     }
+  };
+
+  const handleApiError = function (error: any) {
+    console.error(error);
+    cb({
+      error: {
+        response: RESPONSE_SERVER_ERROR,
+        message: 'invalid server response'
+      }
+    });
+  };
+
+  if (settings?.apiMethod === 'POST' && ['search', 'suggest', 'autocomplete'].includes(type)) {
+    apiEndpoint = 'https://' + apiHostname + '/v1/' + apiPath + '/' + sitekey;
+    const term = type === 'search' ? decodeURIComponent(keyword) : keyword;
+    requestPayloadObject = {
+      term,
+      ...requestPayloadObject
+    };
+    apiInstance
+      .post(apiEndpoint, requestPayloadObject)
+      .then(handleApiResponse)
+      .catch(handleApiError);
+  } else {
+    apiInstance
+      .get(apiEndpoint as string)
+      .then(handleApiResponse)
+      .catch(handleApiError);
   }
 };
 
