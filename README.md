@@ -283,12 +283,15 @@ client.addFacetField('category');
 client.addFacetField('custom_fields.genre');
 ```
 
-By default, 10 facets with most hits are returned per field. Use the following function to get more
-or less facets.
+Facet values are returned in alphabetical order, 10 values per field by default. Use the following
+function to get more or less facets.
 
 ```js
 client.setNumberOfFacets(20);
 ```
+
+Note: if a field has more values than the defined limit, the returned values are the first N in
+alphabetical order, not the N with most hits. Increase the limit if you need more values.
 
 #### Numerical range facets
 
