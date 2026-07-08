@@ -291,8 +291,7 @@ client.setNumberOfFacets(20);
 ```
 
 Note: if a field has more values than the defined limit, the returned values are the first N in
-alphabetical order, not the N with most hits. Increase the limit if you need to make sure that all
-values are included.
+alphabetical order, not the N with most hits. Increase the limit if you need more values.
 
 #### Numerical range facets
 
