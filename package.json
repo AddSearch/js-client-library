@@ -1,6 +1,6 @@
 {
   "name": "addsearch-js-client",
-  "version": "1.2.5",
+  "version": "1.2.6",
   "description": "AddSearch API JavaScript client",
   "repository": {
     "type": "git",
@@ -46,7 +46,7 @@
     "lint:watch": "nodemon --exec 'npm run lint' --watch src --ext ts"
   },
   "dependencies": {
-    "axios": "^1.16.0",
+    "axios": "^1.18.1",
     "buffer": "^6.0.3",
     "cookie": "^1.0.2",
     "es6-promise": "^4.2.8",
@@ -87,12 +87,12 @@
   "overrides": {
     "braces": "3.0.3",
     "serialize-javascript": "^7.0.5",
-    "brace-expansion": "^2.0.3",
+    "brace-expansion": "^2.1.2",
     "picomatch": "^4.0.2",
     "follow-redirects": "^1.16.0",
-    "fast-uri": "^3.1.2",
+    "fast-uri": "^3.1.4",
     "@babel/plugin-transform-modules-systemjs": "^7.29.4",
     "form-data": "^4.0.6",
-    "js-yaml": "^4.2.0"
+    "js-yaml": "^4.3.0"
   }
 }
