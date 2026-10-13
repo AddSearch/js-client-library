@@ -354,7 +354,7 @@ const executeApiFetch: ExecuteApiFetch = function (
       '/' +
       sitekey +
       '?term=' +
-      keyword +
+      encodeURIComponent(keyword) +
       queryParamsString;
   }
 
@@ -373,7 +373,7 @@ const executeApiFetch: ExecuteApiFetch = function (
       '/' +
       sitekey +
       '?term=' +
-      keyword +
+      encodeURIComponent(keyword) +
       queryParamsString;
 
     requestPayloadObject = {
