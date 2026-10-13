@@ -104,7 +104,7 @@ class AddSearchClient {
       );
     }
 
-    this.settings.setCallback(() => callback);
+    this.settings.setCallback(callback);
     this.settings.setKeyword(keyword as string);
 
     this.throttledSearchFetch ??= throttle(
@@ -122,7 +122,7 @@ class AddSearchClient {
   }
 
   aiAnswers(keyword: string, callback: ApiFetchCallback): void {
-    this.settings.setCallback(() => callback);
+    this.settings.setCallback(callback);
     this.settings.setKeyword(keyword);
 
     this.throttledAiAnswersFetch ??= throttle(
