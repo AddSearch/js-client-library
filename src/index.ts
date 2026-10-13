@@ -216,8 +216,10 @@ class AddSearchClient {
   ): void {
     const settingsCloned = { ...this.settings.getSettings() };
 
-    settingsCloned.rangeFacets ??= [];
-    settingsCloned.rangeFacets.push({ field: options.field, ranges: options.ranges });
+    settingsCloned.rangeFacets = [
+      ...(settingsCloned.rangeFacets ?? []),
+      { field: options.field, ranges: options.ranges }
+    ];
 
     executeApiFetch(
       this.apiHostname,

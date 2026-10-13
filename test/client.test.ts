@@ -37,4 +37,22 @@ describe('AddSearchClient', function () {
       assert.equal(calls, 2);
     });
   });
+
+  // CR-02
+  describe('fetchRangeFacets()', function () {
+    it('does not change the client settings', async function () {
+      mock.onAny().reply(200, {});
+      const client = createClient();
+      client.addRangeFacet('price', [{ from: 0, to: 10 }]);
+
+      client.fetchRangeFacets({ field: 'x', ranges: [] }, {}, () => {});
+      client.fetchRangeFacets({ field: 'y', ranges: [] }, {}, () => {});
+      await wait(20);
+
+      assert.deepEqual(
+        client.getSettings().rangeFacets?.map((r) => r.field),
+        ['price']
+      );
+    });
+  });
 });
