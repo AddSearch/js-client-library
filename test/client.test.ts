@@ -55,4 +55,23 @@ describe('AddSearchClient', function () {
       );
     });
   });
+
+  // CR-04
+  describe("fuzzy 'retry'", function () {
+    it('keeps the custom filter on the retry request', async function () {
+      const requestUrls: string[] = [];
+      mock.onAny().reply((config) => {
+        requestUrls.push(config.url as string);
+        return [200, { total_hits: 0, hits: [] }];
+      });
+      const client = createClient();
+      client.setFuzzyMatch('retry');
+
+      client.fetchCustomApi('category', { and: [{ custom_fields: { a: 'b' } }] }, () => {});
+      await wait(20);
+
+      assert.equal(requestUrls.length, 2);
+      assert.ok(requestUrls.every((url) => url.includes('filter=')));
+    });
+  });
 });

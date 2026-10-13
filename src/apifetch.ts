@@ -426,7 +426,16 @@ const executeApiFetch: ExecuteApiFetch = function (
       json.total_hits === 0 &&
       fuzzyRetry !== true
     ) {
-      executeApiFetch(apiHostname, sitekey, type, settings, cb, true);
+      executeApiFetch(
+        apiHostname,
+        sitekey,
+        type,
+        settings,
+        cb,
+        true,
+        customFilterObject,
+        recommendOptions
+      );
     } else {
       // Cap fuzzy results to one page as quality decreases quickly
       if (fuzzyRetry === true) {
