@@ -288,7 +288,7 @@ class SettingsManager {
   }
 
   previousPage(): void {
-    if (this.settings.paging.page > 0) {
+    if (this.settings.paging.page > 1) {
       this.settings.paging.page--;
     }
   }
