@@ -34,7 +34,7 @@ const getDocument = (
 ): Promise<SearchResponse> => {
   return new Promise((resolve, reject) => {
     axios
-      .get(`https://${apiHostname}/v2/indices/${sitekey}/documents/${id}`, {
+      .get(`https://${apiHostname}/v2/indices/${sitekey}/documents/${encodeURIComponent(id)}`, {
         headers: getHeaders(sitekey, privatekey)
       })
       .then((response: AxiosResponse) => {
@@ -121,7 +121,7 @@ const deleteDocument = (
 ): Promise<ApiResponse> => {
   return new Promise((resolve, reject) => {
     axios
-      .delete(`https://${apiHostname}/v2/indices/${sitekey}/documents/${id}`, {
+      .delete(`https://${apiHostname}/v2/indices/${sitekey}/documents/${encodeURIComponent(id)}`, {
         headers: getHeaders(sitekey, privatekey)
       })
       .then((response: AxiosResponse) => {
