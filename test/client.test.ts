@@ -5,6 +5,9 @@ import AddSearchClient from '../src/index';
 
 const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
+const termOf = (url?: string): string =>
+  decodeURIComponent(/[?&]term=([^&]*)/.exec(url ?? '')?.[1] ?? '');
+
 /**
  * Collect errors thrown asynchronously (e.g. a user callback error rethrown by the library)
  * instead of letting Mocha fail the test on them.
@@ -143,6 +146,72 @@ describe('AddSearchClient', function () {
       assert.ok(responses.every((r) => r.error === undefined));
       assert.equal(responses[responses.length - 1].is_streaming_complete, true);
       assert.equal(uncaught.errors.length, 1);
+    });
+  });
+
+  // CR-29
+  describe('out-of-order responses', function () {
+    const replyWithDelays = (delays: Record<string, number>) => {
+      mock.onAny().reply((config) => {
+        const term = termOf(config.url);
+        return new Promise((resolve) =>
+          setTimeout(() => resolve([200, { term, total_hits: 1 }]), delays[term] ?? 0)
+        );
+      });
+    };
+
+    it('search only delivers the latest response', async function () {
+      replyWithDelays({ ab: 100, abc: 10 });
+      const client = createClient();
+      const received: string[] = [];
+      const callback = (response: { term: string }) => received.push(response.term);
+
+      client.search('ab', callback);
+      await wait(20);
+      client.search('abc', callback);
+      await wait(150);
+
+      assert.deepEqual(received, ['abc']);
+    });
+
+    it('suggestions only delivers the latest response', async function () {
+      replyWithDelays({ ab: 100, abc: 10 });
+      const client = createClient();
+      const received: string[] = [];
+      const callback = (response: unknown) => received.push((response as { term: string }).term);
+
+      client.suggestions('ab', callback);
+      await wait(20);
+      client.suggestions('abc', callback);
+      await wait(150);
+
+      assert.deepEqual(received, ['abc']);
+    });
+
+    it('autocomplete only delivers the latest response', async function () {
+      replyWithDelays({ ab: 100, abc: 10 });
+      const client = createClient();
+      const received: string[] = [];
+      const callback = (response: { term: string }) => received.push(response.term);
+
+      client.autocomplete('title', 'ab', callback);
+      await wait(20);
+      client.autocomplete('title', 'abc', callback);
+      await wait(150);
+
+      assert.deepEqual(received, ['abc']);
+    });
+
+    it('still delivers every response for separate facet requests', async function () {
+      mock.onAny().reply(200, { total_hits: 1 });
+      const client = createClient();
+      let calls = 0;
+
+      client.fetchCustomApi('a', {}, () => calls++);
+      client.fetchCustomApi('b', {}, () => calls++);
+      await wait(20);
+
+      assert.equal(calls, 2);
     });
   });
 });
