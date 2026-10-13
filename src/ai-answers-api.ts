@@ -4,6 +4,7 @@ import 'es6-promise/auto';
 import { RESPONSE_SERVER_ERROR, aiAnswersInteractionsInstance } from './api';
 import { Settings } from './settings';
 import { ApiFetchCallback } from './apifetch';
+import { invokeCallback } from './util';
 
 /**
  * Source document from AI Answers response
@@ -99,7 +100,7 @@ class CallbackThrottler {
   callImmediate(response: AiAnswersResponse): void {
     this.cleanup();
     this.lastCallbackTime = Date.now();
-    this.cb(response);
+    invokeCallback(this.cb, response);
   }
 
   /**
@@ -128,7 +129,7 @@ class CallbackThrottler {
     if (timeSinceLastCallback >= CallbackThrottler.THROTTLE_MS) {
       this.lastCallbackTime = now;
       this.pendingCallback = false;
-      this.cb(response);
+      invokeCallback(this.cb, response);
     } else {
       this.scheduleCallback(response, CallbackThrottler.THROTTLE_MS - timeSinceLastCallback);
     }
@@ -143,7 +144,7 @@ class CallbackThrottler {
       if (this.pendingCallback) {
         this.lastCallbackTime = Date.now();
         this.pendingCallback = false;
-        this.cb(response);
+        invokeCallback(this.cb, response);
       }
     }, delay);
   }
@@ -267,7 +268,7 @@ const executeStreamingAiAnswers = (
   const handleError = (error: Error) => {
     console.error('AI Answers streaming error:', error);
     throttler.cleanup();
-    cb({
+    invokeCallback(cb, {
       conversation_id: '',
       answer: '',
       sources: [],
@@ -282,7 +283,7 @@ const executeStreamingAiAnswers = (
   const handleUnexpectedDisconnection = () => {
     console.warn('AI Answers: Stream ended unexpectedly, returning partial data');
     throttler.cleanup();
-    cb({
+    invokeCallback(cb, {
       conversation_id: state.conversationId || '',
       answer: state.answer,
       sources: state.sources,
@@ -387,13 +388,13 @@ const executeNonStreamingAiAnswers = (
     })
     .then((data: ConversationsApiResponse) => {
       if (data.response) {
-        cb({
+        invokeCallback(cb, {
           conversation_id: data.response.conversation_id,
           answer: data.response.answer,
           sources: data.response.sources
         });
       } else {
-        cb({
+        invokeCallback(cb, {
           conversation_id: '',
           answer: '',
           sources: [],
@@ -407,7 +408,7 @@ const executeNonStreamingAiAnswers = (
     })
     .catch((error) => {
       console.error(error);
-      cb({
+      invokeCallback(cb, {
         conversation_id: '',
         answer: '',
         sources: [],

@@ -5,6 +5,25 @@ import AddSearchClient from '../src/index';
 
 const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
+/**
+ * Collect errors thrown asynchronously (e.g. a user callback error rethrown by the library)
+ * instead of letting Mocha fail the test on them.
+ */
+const captureUncaughtErrors = () => {
+  const mochaListeners = process.listeners('uncaughtException');
+  const errors: unknown[] = [];
+  const listener = (error: unknown) => errors.push(error);
+  process.removeAllListeners('uncaughtException');
+  process.on('uncaughtException', listener);
+  return {
+    errors,
+    restore() {
+      process.removeListener('uncaughtException', listener);
+      mochaListeners.forEach((l) => process.on('uncaughtException', l));
+    }
+  };
+};
+
 const createClient = (): AddSearchClient => {
   const client = new AddSearchClient('sitekey');
   client.setThrottleTime(0);
@@ -72,6 +91,58 @@ describe('AddSearchClient', function () {
 
       assert.equal(requestUrls.length, 2);
       assert.ok(requestUrls.every((url) => url.includes('filter=')));
+    });
+  });
+
+  // CR-03
+  describe('a callback that throws', function () {
+    it('is called only once and its error is not swallowed', async function () {
+      mock.onAny().reply(200, { total_hits: 1, hits: [] });
+      const client = createClient();
+      const responses: unknown[] = [];
+      const uncaught = captureUncaughtErrors();
+
+      try {
+        client.search('foo', (response) => {
+          responses.push(response);
+          throw new Error('bug in user callback');
+        });
+        await wait(20);
+      } finally {
+        uncaught.restore();
+      }
+
+      assert.equal(responses.length, 1);
+      assert.equal((responses[0] as { error?: unknown }).error, undefined);
+      assert.equal((uncaught.errors[0] as Error).message, 'bug in user callback');
+    });
+
+    it('is called only once for streaming AI Answers', async function () {
+      const originalFetch = globalThis.fetch;
+      const sse =
+        'data: {"type":"metadata","conversation_id":"c1"}\n\n' + 'data: {"type":"done"}\n\n';
+      globalThis.fetch = () => Promise.resolve(new Response(sse, { status: 200 }));
+      const client = createClient();
+      client.useAiAnswersStream(true);
+      const responses: { error?: unknown; is_streaming_complete?: boolean }[] = [];
+      const uncaught = captureUncaughtErrors();
+
+      try {
+        client.aiAnswers('question', (response) => {
+          responses.push(response);
+          if (responses.length === 1) {
+            throw new Error('bug in user callback');
+          }
+        });
+        await wait(50);
+      } finally {
+        uncaught.restore();
+        globalThis.fetch = originalFetch;
+      }
+
+      assert.ok(responses.every((r) => r.error === undefined));
+      assert.equal(responses[responses.length - 1].is_streaming_complete, true);
+      assert.equal(uncaught.errors.length, 1);
     });
   });
 });

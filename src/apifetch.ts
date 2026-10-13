@@ -2,7 +2,7 @@ import 'es6-promise/auto';
 import { apiInstance, RESPONSE_BAD_REQUEST, RESPONSE_SERVER_ERROR } from './api';
 import { Settings } from './settings';
 import { AxiosResponse } from 'axios';
-import { isEmptyObject } from './util';
+import { invokeCallback, isEmptyObject } from './util';
 import { executeAiAnswersStreamingFetch, executeAiAnswersNonStreamingFetch } from './ai-answers-api';
 
 interface RecommendOptions {
@@ -446,13 +446,13 @@ const executeApiFetch: ExecuteApiFetch = function (
       }
 
       // Callback
-      cb(json);
+      invokeCallback(cb, json);
     }
   };
 
   const handleApiError = function (error: any) {
     console.error(error);
-    cb({
+    invokeCallback(cb, {
       error: {
         response: RESPONSE_SERVER_ERROR,
         message: 'invalid server response'
