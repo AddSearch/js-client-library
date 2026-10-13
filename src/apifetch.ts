@@ -385,34 +385,24 @@ const executeApiFetch: ExecuteApiFetch = function (
     };
   } else if (type === 'recommend') {
     if (recommendOptions?.type === 'RELATED_ITEMS') {
-      queryParamsString = settingToQueryParam(recommendOptions.itemId, 'itemId');
       apiPath =
         'recommendations/index/' +
         sitekey +
         '/block/' +
         encodeURIComponent(recommendOptions.blockId as string) +
-        '?' +
-        queryParamsString;
-
-      requestPayloadObject = {
-        ...requestPayloadObject,
-        itemId: recommendOptions.itemId ?? undefined,
-        blockId: recommendOptions.blockId
-      };
+        settingToQueryParam(recommendOptions.itemId, 'itemId').replace('&', '?');
     } else if (recommendOptions?.type === 'FREQUENTLY_BOUGHT_TOGETHER') {
-      queryParamsString = settingToQueryParam(recommendOptions.itemId, 'itemId');
       apiPath =
         'recommendations/' +
         sitekey +
         '?configurationKey=' +
         encodeURIComponent(recommendOptions.configurationKey as string) +
-        queryParamsString;
-
-      requestPayloadObject = {
-        ...requestPayloadObject,
-        itemId: recommendOptions.itemId ?? undefined,
-        configurationKey: recommendOptions.configurationKey
-      };
+        settingToQueryParam(recommendOptions.itemId, 'itemId');
+    } else {
+      cb({
+        error: { response: RESPONSE_BAD_REQUEST, message: 'invalid recommendation type' }
+      });
+      return;
     }
     apiEndpoint = 'https://' + apiHostname + '/v1/' + apiPath;
   }

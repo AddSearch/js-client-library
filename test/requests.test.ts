@@ -137,4 +137,48 @@ describe('request URLs and bodies', function () {
       assert.equal(togetherUrl.searchParams.get('itemId'), value);
     });
   });
+
+  describe('recommendation URLs', function () {
+    it('has a well-formed query string for related items', async function () {
+      const client = createClient();
+      const withItem = await requestOf((done) =>
+        client.recommendations({ type: 'RELATED_ITEMS', blockId: 'b1', itemId: 'i1' }, done)
+      );
+      const withoutItem = await requestOf((done) =>
+        client.recommendations({ type: 'RELATED_ITEMS', blockId: 'b1' }, done)
+      );
+      assert.equal(
+        withItem.url,
+        'https://api.addsearch.com/v1/recommendations/index/sitekey/block/b1?itemId=i1'
+      );
+      assert.equal(
+        withoutItem.url,
+        'https://api.addsearch.com/v1/recommendations/index/sitekey/block/b1'
+      );
+    });
+
+    it('is unchanged for frequently bought together', async function () {
+      const request = await requestOf((done) =>
+        createClient().recommendations(
+          { type: 'FREQUENTLY_BOUGHT_TOGETHER', configurationKey: 'k1', itemId: 'i1' },
+          done
+        )
+      );
+      assert.equal(
+        request.url,
+        'https://api.addsearch.com/v1/recommendations/sitekey?configurationKey=k1&itemId=i1'
+      );
+    });
+
+    it('returns an error without a request for an unknown type', async function () {
+      const response = await new Promise<{ error?: { response: number } }>((resolve) =>
+        createClient().recommendations(
+          { type: 'UNKNOWN' } as unknown as Parameters<AddSearchClient['recommendations']>[0],
+          resolve
+        )
+      );
+      assert.equal(response.error?.response, 400);
+      assert.equal(requests.length, 0);
+    });
+  });
 });
