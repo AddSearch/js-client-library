@@ -28,15 +28,32 @@
       "url": "https://www.addsearch.com"
     }
   ],
-  "main": "dist/index.js",
+  "main": "dist/cjs.js",
   "jsdelivr": "./dist/addsearch-js-client.min.js",
-  "types": "dist/types/index.d.ts",
+  "types": "dist/types/cjs.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/types/cjs.d.ts",
+      "require": "./dist/cjs.js",
+      "module": "./dist/esm/index.js",
+      "default": "./dist/cjs.js"
+    },
+    "./dist/index": "./dist/cjs.js",
+    "./dist/index.js": "./dist/cjs.js",
+    "./dist/types/index": "./dist/types/cjs.d.ts",
+    "./dist/types/index.d.ts": "./dist/types/cjs.d.ts",
+    "./dist/types/*.d.ts": "./dist/types/*.d.ts",
+    "./dist/types/*": "./dist/types/*.d.ts",
+    "./dist/*.js": "./dist/*.js",
+    "./dist/*": "./dist/*.js",
+    "./package.json": "./package.json"
+  },
   "files": [
     "dist",
     "index.d.ts"
   ],
   "scripts": {
-    "build": "npm run test && webpack && tsc",
+    "build": "npm run test && webpack && tsc && tsc -p tsconfig.esm.json",
     "watch": "webpack --watch",
     "watch:tsc": "tsc --watch",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md}\"",
