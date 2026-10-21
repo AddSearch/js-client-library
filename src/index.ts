@@ -547,4 +547,4 @@ let isPersonalizationTrackingEnabled = false;
 let isAddSearchCookieConsented = false;
 let personalizationCookieExpireDays = 180;
 
-export = AddSearchClient;
+export default AddSearchClient;
