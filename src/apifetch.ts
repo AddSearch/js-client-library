@@ -74,7 +74,7 @@ export type ExecuteApiFetch = (
 /* eslint-disable @typescript-eslint/no-explicit-any */
 const settingToQueryParam = function (setting: any, key: string): string {
   if (setting !== null && setting !== undefined && setting !== '') {
-    return '&' + key + '=' + setting;
+    return '&' + key + '=' + encodeURIComponent(String(setting));
   }
   return '';
 };
@@ -231,7 +231,8 @@ const executeApiFetch: ExecuteApiFetch = function (
     if (settings?.facetFields) {
       const facetFieldsValues: string[] = [];
       for (let i = 0; i < settings?.facetFields.length; i++) {
-        queryParamsString = queryParamsString + '&facet=' + settings?.facetFields[i];
+        queryParamsString =
+          queryParamsString + '&facet=' + encodeURIComponent(settings?.facetFields[i]);
         facetFieldsValues.push(settings?.facetFields[i]);
       }
       requestPayloadObject = {
@@ -268,7 +269,8 @@ const executeApiFetch: ExecuteApiFetch = function (
     if (settings?.statsFields) {
       const statsFieldsValues: string[] = [];
       for (let i = 0; i < settings?.statsFields.length; i++) {
-        queryParamsString = queryParamsString + '&fieldStat=' + settings?.statsFields[i];
+        queryParamsString =
+          queryParamsString + '&fieldStat=' + encodeURIComponent(settings?.statsFields[i]);
         statsFieldsValues.push(settings?.statsFields[i]);
       }
       requestPayloadObject = {
@@ -354,7 +356,7 @@ const executeApiFetch: ExecuteApiFetch = function (
       '/' +
       sitekey +
       '?term=' +
-      keyword +
+      encodeURIComponent(keyword) +
       queryParamsString;
   }
 
@@ -373,7 +375,7 @@ const executeApiFetch: ExecuteApiFetch = function (
       '/' +
       sitekey +
       '?term=' +
-      keyword +
+      encodeURIComponent(keyword) +
       queryParamsString;
 
     requestPayloadObject = {
@@ -383,34 +385,24 @@ const executeApiFetch: ExecuteApiFetch = function (
     };
   } else if (type === 'recommend') {
     if (recommendOptions?.type === 'RELATED_ITEMS') {
-      queryParamsString = settingToQueryParam(recommendOptions.itemId, 'itemId');
       apiPath =
         'recommendations/index/' +
         sitekey +
         '/block/' +
-        recommendOptions.blockId +
-        '?' +
-        queryParamsString;
-
-      requestPayloadObject = {
-        ...requestPayloadObject,
-        itemId: recommendOptions.itemId ?? undefined,
-        blockId: recommendOptions.blockId
-      };
+        encodeURIComponent(recommendOptions.blockId as string) +
+        settingToQueryParam(recommendOptions.itemId, 'itemId').replace('&', '?');
     } else if (recommendOptions?.type === 'FREQUENTLY_BOUGHT_TOGETHER') {
-      queryParamsString = settingToQueryParam(recommendOptions.itemId, 'itemId');
       apiPath =
         'recommendations/' +
         sitekey +
         '?configurationKey=' +
-        recommendOptions.configurationKey +
-        queryParamsString;
-
-      requestPayloadObject = {
-        ...requestPayloadObject,
-        itemId: recommendOptions.itemId ?? undefined,
-        configurationKey: recommendOptions.configurationKey
-      };
+        encodeURIComponent(recommendOptions.configurationKey as string) +
+        settingToQueryParam(recommendOptions.itemId, 'itemId');
+    } else {
+      cb({
+        error: { response: RESPONSE_BAD_REQUEST, message: 'invalid recommendation type' }
+      });
+      return;
     }
     apiEndpoint = 'https://' + apiHostname + '/v1/' + apiPath;
   }
