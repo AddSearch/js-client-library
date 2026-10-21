@@ -2,7 +2,7 @@ import 'es6-promise/auto';
 import { apiInstance, RESPONSE_BAD_REQUEST, RESPONSE_SERVER_ERROR } from './api';
 import { Settings } from './settings';
 import { AxiosResponse } from 'axios';
-import { isEmptyObject } from './util';
+import { invokeCallback, isEmptyObject } from './util';
 import { executeAiAnswersStreamingFetch, executeAiAnswersNonStreamingFetch } from './ai-answers-api';
 
 interface RecommendOptions {
@@ -426,7 +426,16 @@ const executeApiFetch: ExecuteApiFetch = function (
       json.total_hits === 0 &&
       fuzzyRetry !== true
     ) {
-      executeApiFetch(apiHostname, sitekey, type, settings, cb, true);
+      executeApiFetch(
+        apiHostname,
+        sitekey,
+        type,
+        settings,
+        cb,
+        true,
+        customFilterObject,
+        recommendOptions
+      );
     } else {
       // Cap fuzzy results to one page as quality decreases quickly
       if (fuzzyRetry === true) {
@@ -437,13 +446,13 @@ const executeApiFetch: ExecuteApiFetch = function (
       }
 
       // Callback
-      cb(json);
+      invokeCallback(cb, json);
     }
   };
 
   const handleApiError = function (error: any) {
     console.error(error);
-    cb({
+    invokeCallback(cb, {
       error: {
         response: RESPONSE_SERVER_ERROR,
         message: 'invalid server response'

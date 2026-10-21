@@ -1,3 +1,4 @@
+import type { ApiFetchCallback } from './apifetch';
 import { validateSetPagingParams } from './util';
 
 export type SortOrder = 'asc' | 'desc';
@@ -34,7 +35,7 @@ export type FuzzyMatch = boolean | 'auto' | 'retry';
 
 export type Settings = {
   keyword: string;
-  callback: (() => void) | null;
+  callback: ApiFetchCallback | null;
   throttleTimeMs: number;
   fuzzy: FuzzyMatch;
   paging: PagingSettings;
@@ -111,7 +112,7 @@ class SettingsManager {
     this.settings.keyword = keyword || '*';
   }
 
-  setCallback(cb: (() => void) | null): void {
+  setCallback(cb: ApiFetchCallback | null): void {
     this.settings.callback = cb;
   }
 
@@ -287,7 +288,7 @@ class SettingsManager {
   }
 
   previousPage(): void {
-    if (this.settings.paging.page > 0) {
+    if (this.settings.paging.page > 1) {
       this.settings.paging.page--;
     }
   }

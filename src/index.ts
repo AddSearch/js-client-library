@@ -56,6 +56,8 @@ type ClickEventPayload = {
 };
 type StatsEventPayload = SearchEventPayload | ClickEventPayload;
 
+type LatestOnlyRequestKind = 'search' | 'ai-answers' | 'suggest' | 'autocomplete';
+
 class AddSearchClient {
   private readonly sitekey: string;
   private readonly privatekey: string;
@@ -70,6 +72,12 @@ class AddSearchClient {
   private throttledSuggestionsFetch?: ExecuteApiFetch;
   private throttledRecommendationFetch?: ExecuteApiFetch;
   private throttledAutocompleteFetch?: ExecuteApiFetch;
+  private latestRequestIds: Record<LatestOnlyRequestKind, number> = {
+    'search': 0,
+    'ai-answers': 0,
+    'suggest': 0,
+    'autocomplete': 0
+  };
 
   constructor(sitekey: string, privatekey?: string) {
     this.sitekey = sitekey;
@@ -104,7 +112,7 @@ class AddSearchClient {
       );
     }
 
-    this.settings.setCallback(() => callback);
+    this.settings.setCallback(callback);
     this.settings.setKeyword(keyword as string);
 
     this.throttledSearchFetch ??= throttle(
@@ -117,12 +125,12 @@ class AddSearchClient {
       this.sitekey,
       'search',
       this.settings.getSettings(),
-      callback as ApiFetchCallback
+      this.latestOnly('search', callback as ApiFetchCallback)
     );
   }
 
   aiAnswers(keyword: string, callback: ApiFetchCallback): void {
-    this.settings.setCallback(() => callback);
+    this.settings.setCallback(callback);
     this.settings.setKeyword(keyword);
 
     this.throttledAiAnswersFetch ??= throttle(
@@ -135,7 +143,7 @@ class AddSearchClient {
       this.sitekey,
       'ai-answers',
       this.settings.getSettings(),
-      callback
+      this.latestOnly('ai-answers', callback)
     );
   }
 
@@ -162,7 +170,7 @@ class AddSearchClient {
       this.sitekey,
       'suggest',
       this.settings.getSettings(),
-      callback
+      this.latestOnly('suggest', callback)
     );
   }
 
@@ -184,7 +192,7 @@ class AddSearchClient {
       this.sitekey,
       'autocomplete',
       this.settings.getSettings(),
-      callback
+      this.latestOnly('autocomplete', callback)
     );
   }
 
@@ -216,8 +224,10 @@ class AddSearchClient {
   ): void {
     const settingsCloned = { ...this.settings.getSettings() };
 
-    settingsCloned.rangeFacets ??= [];
-    settingsCloned.rangeFacets.push({ field: options.field, ranges: options.ranges });
+    settingsCloned.rangeFacets = [
+      ...(settingsCloned.rangeFacets ?? []),
+      { field: options.field, ranges: options.ranges }
+    ];
 
     executeApiFetch(
       this.apiHostname,
@@ -540,6 +550,20 @@ class AddSearchClient {
 
   useAiAnswersStream(enable: boolean): void {
     this.settings.useAiAnswersStream(enable);
+  }
+
+  /**
+   * Wrap a callback so that it only receives responses for the latest request of the given kind.
+   * A slower response to an earlier request (e.g. "ab" arriving after "abc" while the user is
+   * typing) would otherwise overwrite the newer results.
+   */
+  private latestOnly<T>(kind: LatestOnlyRequestKind, callback: ApiFetchCallback<T>) {
+    const requestId = ++this.latestRequestIds[kind];
+    return (response: T): void => {
+      if (requestId === this.latestRequestIds[kind]) {
+        callback(response);
+      }
+    };
   }
 }
 
