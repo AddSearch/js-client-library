@@ -42,8 +42,7 @@
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md}\"",
     "test": "mocha --recursive --require ts-node/register 'test/**/*.test.ts'",
     "lint": "eslint . --ext .ts,.js",
-    "lint:fix": "eslint . --ext .ts,.js --fix",
-    "lint:watch": "nodemon --exec 'npm run lint' --watch src --ext ts"
+    "lint:fix": "eslint . --ext .ts,.js --fix"
   },
   "dependencies": {
     "axios": "^1.20.0",
@@ -70,7 +69,6 @@
     "esm": "^3.2.25",
     "fetch-mock": "^12.1.0",
     "mocha": "^10.8.2",
-    "nodemon": "^3.1.9",
     "prettier": "^3.3.3",
     "terser-webpack-plugin": "^5.3.17",
     "ts-loader": "^9.5.1",
