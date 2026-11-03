@@ -87,13 +87,15 @@
   "overrides": {
     "braces": "3.0.3",
     "serialize-javascript": "^7.0.5",
-    "brace-expansion": "^2.1.7",
+    "brace-expansion": "^5.0.12",
     "picomatch": "^4.0.2",
     "follow-redirects": "^1.16.2",
     "fast-uri": "^3.1.9",
     "browserslist": "^4.28.8",
     "@babel/plugin-transform-modules-systemjs": "^7.29.4",
     "form-data": "^4.0.6",
-    "js-yaml": "^4.3.2"
+    "js-yaml": "^4.3.2",
+    "minimatch": "^11.0.1",
+    "glob": "^14.0.2"
   }
 }
