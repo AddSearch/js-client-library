@@ -61,4 +61,20 @@ describe('settings', function () {
       assert.equal(JSON.stringify(sharedSettings.getSettings().customFieldFilters), expected);
     });
   });
+
+  // CR-06
+  describe('previousPage', function () {
+    it('does not go below page 1', function () {
+      const settings = new Settings();
+      settings.previousPage();
+      assert.equal(settings.getSettings().paging.page, 1);
+    });
+
+    it('goes back one page', function () {
+      const settings = new Settings();
+      settings.nextPage();
+      settings.previousPage();
+      assert.equal(settings.getSettings().paging.page, 1);
+    });
+  });
 });

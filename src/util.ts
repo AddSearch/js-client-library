@@ -65,4 +65,19 @@ const isEmptyObject = (obj: unknown): boolean => {
   return Object.keys(obj as Record<string, unknown>).length === 0;
 };
 
-export { isFunction, base64, validateSetPagingParams, generateUUID, isEmptyObject };
+/**
+ * Call a user-supplied callback. If the callback throws, the error is rethrown asynchronously so
+ * it surfaces as an uncaught error instead of being caught by the library's promise handlers
+ * (which would call the callback a second time with an error response).
+ */
+const invokeCallback = <T>(cb: (value: T) => void, value: T): void => {
+  try {
+    cb(value);
+  } catch (error) {
+    setTimeout(() => {
+      throw error;
+    });
+  }
+};
+
+export { isFunction, base64, validateSetPagingParams, generateUUID, isEmptyObject, invokeCallback };
