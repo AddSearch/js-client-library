@@ -450,9 +450,10 @@ export const putSentimentClick = (
   conversationId: string,
   sentimentValue: SentimentValue
 ): Promise<boolean> => {
+  const id = encodeURIComponent(conversationId);
   return new Promise((resolve, reject) => {
     aiAnswersInteractionsInstance
-      .put(`https://${apiHostname}/v2/indices/${sitekey}/conversations/${conversationId}/rating`, {
+      .put(`https://${apiHostname}/v2/indices/${sitekey}/conversations/${id}/rating`, {
         value: sentimentToNumericRating(sentimentValue)
       })
       .then((response) => {
