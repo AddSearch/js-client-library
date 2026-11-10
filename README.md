@@ -115,6 +115,18 @@ Fuzzy matching is used for typo tolerance. There are four options:
 client.setFuzzyMatch(false);
 ```
 
+With **"retry"**, results that come from the fuzzy retry have `fuzzyRetry: true` in the response, so
+you can tell the user that no exact matches were found:
+
+```js
+client.setFuzzyMatch('retry');
+client.search('cancle subscription', (res) => {
+  if (res.fuzzyRetry) {
+    // e.g. 'No exact matches for "cancle subscription". Showing similar results.'
+  }
+});
+```
+
 #### Search operator
 
 When a user searches with multiple keywords, we return only documents that contain all the terms

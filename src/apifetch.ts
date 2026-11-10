@@ -53,6 +53,7 @@ export interface ApiFetchCallback<T = any> {
 
 interface GenericApiResponse {
   total_hits?: number;
+  fuzzyRetry?: boolean;
 }
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -434,6 +435,8 @@ const executeApiFetch: ExecuteApiFetch = function (
           json.total_hits ?? Infinity,
           settings?.paging?.pageSize ?? Infinity
         );
+        // Tell the caller that these are fuzzy results, so the UI can say that no exact matches were found
+        json.fuzzyRetry = true;
       }
 
       // Callback
